@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
-import { frames } from "../../frames"
+import { frames } from "../../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { getTransactionReceipt, NFT } from '@/app/utils'
 import { decodeEventLog } from 'viem'

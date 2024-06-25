@@ -1,4 +1,4 @@
-import { frames } from "../../frames"
+import { frames } from "../../../frames"
 import { NextResponse } from "next/server";
 import { encodeFunctionData } from "viem";
 import { baseSepolia } from "viem/chains"

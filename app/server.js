@@ -9,17 +9,17 @@ const handle = app.getRequestHandler()
 app.prepare().then(() => {
   const server = express()
 
-  // Redirect root to /landingpage
+  // Redirect root to /home
   server.get('/', (req, res) => {
-    res.redirect(301, '/landingpage')
+    res.redirect(301, '/home')
   })
 
-  // Proxy /landingpage to the WordPress site
-  server.use('/landingpage', createProxyMiddleware({
+  // Proxy /home to the WordPress site
+  server.use('/home', createProxyMiddleware({
     target: 'https://farconic.xyz',
     changeOrigin: true,
     pathRewrite: {
-      '^/landingpage': '/'
+      '^/home': '/'
     }
   }))
 

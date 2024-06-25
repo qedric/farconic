@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { Button } from "frames.js/next"
-import { frames } from "./frames"
+import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
 import { CardImage } from '@/app/components/Card'
 import { getRandomBuildingAmongFavourites, getBuildingByName, NFT } from '@/app/utils'

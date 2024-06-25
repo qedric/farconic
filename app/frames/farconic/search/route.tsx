@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
-import { frames } from "../frames"
+import { frames } from "../../frames"
 import { searchJsonArray, getFavouriteBuildings, getNFTBalance } from '@/app/utils'
 import { CardImage } from '@/app/components/Card'
 import { getUserDataForFid } from 'frames.js'

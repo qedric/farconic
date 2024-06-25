@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
-import { frames } from "../frames"
+import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { NFT, estimatePriceMiddleware } from '@/app/utils'
 import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
