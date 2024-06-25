@@ -1,6 +1,5 @@
 import { fetchMetadata } from "frames.js/next"
 import { NFT, getBuildingByName } from "@/app/utils"
-import { CardImage } from "@/app/components/Card"
 
 // Update to accept context or query parameters
 export async function generateMetadata(props:any) {
