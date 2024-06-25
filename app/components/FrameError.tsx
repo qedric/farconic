@@ -2,7 +2,7 @@
 import { Button } from "frames.js/next"
 import { FramesHandlerFunctionReturnType } from "frames.js/types"
 
-export const ErrorFrame = async (message: string, post_button_label:string | null=null, post_button_query: string | null=null, suggestion: string | undefined=undefined):Promise<FramesHandlerFunctionReturnType<any>> =>({
+export const ErrorFrame = async (message: string, post_button_label:string | null=null, post_button_query: string | null=null, suggestion: string | undefined=undefined, mode: 'building' | 'search' | undefined=undefined ):Promise<FramesHandlerFunctionReturnType<any>> =>({
     image: (
         <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(https://ipfs.filebase.io/ipfs/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
             <div tw="flex flex-col absolute px-20 justify-center items-center">
@@ -20,7 +20,7 @@ export const ErrorFrame = async (message: string, post_button_label:string | nul
             <Button action="post" target={ JSON.parse(post_button_query) }>
                 { `${post_button_label}` }
             </Button>,
-            <Button action="post" target="/">
+            <Button action="post" target={ mode === 'search' ? '/farconic' : '/building' }>
                 Reset
             </Button>,
             <Button action="link" target={process.env.NEXT_PUBLIC_MORE_INFO_LINK as string}>
@@ -28,7 +28,7 @@ export const ErrorFrame = async (message: string, post_button_label:string | nul
             </Button>
         ]
     :   [
-            <Button action="post" target="/">
+            <Button action="post" target={ mode === 'search' ? '/farconic' : '/building' }>
                 Reset
             </Button>,
             <Button action="link" target={process.env.NEXT_PUBLIC_MORE_INFO_LINK as string}>

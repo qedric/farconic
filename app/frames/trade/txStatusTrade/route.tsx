@@ -6,8 +6,8 @@ import { getTransactionReceipt, NFT } from '@/app/utils'
 import { decodeEventLog } from 'viem'
 import { baseSepolia } from "viem/chains"
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
-import { ErrorFrame } from "@/app/components/Error"
-import { CardImage } from '@/app/components/Card'
+import { ErrorFrame } from "@/app/components/FrameError"
+import { CardImage } from '@/app/components/FrameCard'
 import abi from '@/app/data/mcv2bond_abi.json'
 import buildings from '@/app/data/buildings.json'
 
@@ -112,7 +112,7 @@ const handleRequest = frames(async (ctx) => {
                     aspectRatio: "1:1",
                 },
                 buttons: [
-                    <Button action="post" target="/">
+                    <Button action="post" target={ ctx.searchParams.mode === 'search' ? '/farconic' : '/building' }>
                         Home
                     </Button>,
                     <Button action="link" target={ targetUrl }>
@@ -140,7 +140,7 @@ const handleRequest = frames(async (ctx) => {
                     aspectRatio: "1:1",
                 },
                 buttons: [
-                    <Button action="post" target="/">
+                    <Button action="post" target={ ctx.searchParams.mode === 'search' ? '/farconic' : '/building' }>
                         Reset
                     </Button>,
                     <Button action="link" target={url}>

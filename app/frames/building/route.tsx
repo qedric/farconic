@@ -2,7 +2,7 @@
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
-import { CardImage } from '@/app/components/Card'
+import { CardImage } from '@/app/components/FrameCard'
 import { getRandomBuildingAmongFavourites, getBuildingByName, NFT } from '@/app/utils'
 
 export const maxDuration = 20
@@ -32,10 +32,10 @@ const handleRequest = frames(async (ctx) => {
             <Button action="link" target={process.env.NEXT_PUBLIC_APP_LINK as string}>
                 App 🌐
             </Button>,
-            <Button action="post" target={{ query: { building: JSON.stringify(building) }, pathname: "/trade" }}>
+            <Button action="post" target={{ query: { building: JSON.stringify(building), mode: 'building' }, pathname: "/trade" }}>
                 Buy 🛒
             </Button>,
-            <Button action="post" target={{ query: { building: JSON.stringify(building), isSell:true }, pathname: "/trade" }}>
+            <Button action="post" target={{ query: { building: JSON.stringify(building), isSell:true, mode: 'building' }, pathname: "/trade" }}>
                 Sell 💰
             </Button>,
             <Button action="link" target={ targetUrl }>

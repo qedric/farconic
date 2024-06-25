@@ -2,7 +2,7 @@
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
-import { CardImage } from '@/app/components/Card'
+import { CardImage } from '@/app/components/FrameCard'
 import { getRandomBuildingAmongFavourites, getBuildingByName, NFT } from '@/app/utils'
 
 export const maxDuration = 20
@@ -30,7 +30,7 @@ const handleRequest = frames(async (ctx) => {
             <Button action="tx" target={{ query: { contractAddress: building.address }, pathname: "/trade/txdata" }} post_url="/trade/txStatusTrade">
                 Buy 🛒
             </Button>,
-            <Button action="post" target={{ query: { building: JSON.stringify(getRandomBuildingAmongFavourites(building.metadata.name)) }, pathname: "/" }}>
+            <Button action="post" target={{ query: { building: JSON.stringify(getRandomBuildingAmongFavourites(building.metadata.name)) }, pathname: "/farconic" }}>
                 Random 🎲
             </Button>,
             <Button action="post" target="/search">
@@ -39,7 +39,8 @@ const handleRequest = frames(async (ctx) => {
         ],
         headers: {  
             "Cache-Control": "max-age=0", 
-        }
+        },
+        state: { mode: 'search' }
     }
 })
 

@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
-import { frames } from "../../../frames"
+import { frames } from "../../frames"
 import { getTransactionReceipt, getNFTBalance } from '@/app/utils'
 import buildings from '@/app/data/buildings.json'
-import { ErrorFrame } from "@/app/components/Error"
+import { ErrorFrame } from "@/app/components/FrameError"
 import { decodeEventLog } from 'viem'
 import abi from '@/app/data/mc_building_abi.json'
 
@@ -116,7 +116,7 @@ const handleRequest = frames(async (ctx) => {
                     aspectRatio: "1:1",
                 },
                 buttons: [
-                    <Button action="post" target="/">
+                    <Button action="post" target={ ctx.searchParams.mode === 'search' ? '/farconic' : '/building' }>
                         Reset
                     </Button>,
                     <Button action="link" target={url}>

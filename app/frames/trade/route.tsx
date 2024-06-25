@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
-import { frames } from "../../frames"
+import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
 import { NFT, estimatePriceMiddleware } from '@/app/utils'
 import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ethers } from 'ethers'
-import { ErrorFrame } from "@/app/components/Error"
+import { ErrorFrame } from "@/app/components/FrameError"
 import { baseSepolia } from "viem/chains"
 import { getOpenseaData, getDetail } from '@/app/utils'
 
@@ -82,7 +82,7 @@ const handleRequest = frames(async (ctx) => {
         }
 
         const buttons:any = [
-            <Button action="post" target="/">
+            <Button action="post" target={ ctx.searchParams.mode === 'search' ? '/farconic' : '/building' }>
                 Home
             </Button>,
             <Button 
@@ -202,14 +202,15 @@ const handleRequest = frames(async (ctx) => {
             textInput: 'Set Quantity & Refresh Price',
             headers: {  
                 "Cache-Control": "max-age=0", 
-            },
+            }
         }
     } else {
         return ErrorFrame(
             "Building Not Found",
             null,
             null,
-            "If the issue persists, let us know!"
+            "If the issue persists, let us know!",
+            (ctx.searchParams.mode as 'building' | 'search' | undefined)
         )
     }
 },

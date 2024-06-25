@@ -1,8 +1,13 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import localFont from 'next/font/local'
 import "./globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+// load the Quicksand-Bold.ttf font from the public directory
+const quicksandFont = localFont({
+  src: '../public/Quicksand-Bold.ttf',
+  display: 'swap',
+  variable: '--font-quicksand',
+})
 
 export const metadata: Metadata = {
   title: "Farconic",
@@ -16,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{background:'green'}} className={inter.className}>{children}</body>
+      <body><main className={`${quicksandFont.className} flex items-center justify-center `}>{children}</main></body>
     </html>
   )
 }

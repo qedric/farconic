@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
-import { frames } from "../../frames"
+import { frames } from "../frames"
 import { searchJsonArray, getFavouriteBuildings, getNFTBalance } from '@/app/utils'
-import { CardImage } from '@/app/components/Card'
+import { CardImage } from '@/app/components/FrameCard'
 import { getUserDataForFid } from 'frames.js'
 
 const handleRequest = frames(async (ctx: any) => {
@@ -90,7 +90,7 @@ const handleRequest = frames(async (ctx: any) => {
                             <Button action="post" target={{ query: { building: JSON.stringify(building) }, pathname: "/trade/" }}>
                                 Buy 🛒
                             </Button>,
-                            <Button action="post" target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(balance) }, pathname: "/trade/" } : "/" }>
+                            <Button action="post" target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(balance) }, pathname: "/trade/" } : "/farconic" }>
                                 { totalBalance > 0 ? 'Sell 💰' : 'Home' }
                             </Button>,
                             <Button action="post" target={{ query: { page: page-1, searchTerm: searchTerm }, pathname: "/search" }}>
@@ -104,7 +104,7 @@ const handleRequest = frames(async (ctx: any) => {
                             <Button action="post" target={{ query: { building: JSON.stringify(building) }, pathname: "/trade/" }}>
                                 Buy 🛒
                             </Button>,
-                            <Button action="post" target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(balance) }, pathname: "/trade/" } : "/" }>
+                            <Button action="post" target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(balance) }, pathname: "/trade/" } : "/farconic" }>
                                 { totalBalance > 0 ? 'Sell 💰' : 'Home' }
                             </Button>,
                             <Button action="post" target={{ query: { page: page+1, searchTerm: searchTerm }, pathname: "/search" }}>
@@ -122,7 +122,7 @@ const handleRequest = frames(async (ctx: any) => {
 
     return { 
         image: (
-            <div tw="flex w-full h-full" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(https://ipfs.filebase.io/ipfs/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
+            <div tw="flex w-full h-full" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
                 <div tw="flex flex-col px-20 justify-center items-center">
                     <h1 tw="text-[50px] mb-5 leading-6">Search for a building</h1>
                     <p tw="text-[30px] text-center">or enter a keyword like &apos;bridge&apos;, &apos;Shanghai&apos;, or perhaps &apos;magnificent Flemish Renaissance style building&apos;</p>
@@ -134,7 +134,7 @@ const handleRequest = frames(async (ctx: any) => {
         },
         textInput: "e.g. 'Bridge', 'Rome', 'Eiffel'",
         buttons: [
-            <Button action="post" target="/">
+            <Button action="post" target="/farconic">
                 Home
             </Button>,
             <Button action="post" target={{ query: { searchTerm: 'random' }, pathname: "/search" }}>
