@@ -132,7 +132,7 @@ const handleRequest = frames(async (ctx:any) => {
                     }
                 >{
                     ctx.isSell 
-                    ? (isApproved ? 'Sell 💰' : 'Sell Preview') 
+                    ? (isApproved ? 'Sell 💰' : 'Approve Sell') 
                     : 'Sell Preview'
                   }
                 </Button>
