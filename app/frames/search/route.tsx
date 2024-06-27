@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
-import { searchJsonArray, getFavouriteBuildings, getNFTBalance } from '@/app/utils'
+import { searchJsonArray, getFavouriteBuildings, getTokenBalancesForAddresses } from '@/app/utils'
 import { CardImage } from '@/app/components/FrameCard'
 import { getUserDataForFid } from 'frames.js'
 
@@ -28,23 +28,11 @@ const handleRequest = frames(async (ctx: any) => {
 
         const building = searchResults[page-1]
 
-        let balance: { address: string, balance: string }[] = []
-        let totalBalance:number = 0
         // find how many of this building the user has among their verified addresses
         const addresses = ctx.message?.requesterVerifiedAddresses || []
-        for (const address of addresses) {
-            let addressBalance = BigInt(0)
-            try {
-                addressBalance = await getNFTBalance(building.address as `0x${string}`, address as `0x${string}`) as bigint
-                if (addressBalance > BigInt(0)) {
-                    totalBalance += Number(addressBalance)
-                    balance.push({ address, balance: addressBalance.toString() })
-                }
-            } catch (e) {
-                // do nothing
-            }
-        }
+        const { balances, totalBalance } = await getTokenBalancesForAddresses(building.address as `0x${string}`, addresses)
 
+        // get the userData to load PFP on the card
         const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
 
         //console.log(`balance:`, balance)
@@ -55,9 +43,13 @@ const handleRequest = frames(async (ctx: any) => {
                 aspectRatio: "1:1",
             },
             textInput: "Search, or Set Buy/Sell Quantity",
+            headers: {  
+                "Cache-Control": "max-age=0", 
+            },
+            state: { searchMode: true },
             buttons: searchResults.length == 1 // just one result
             ?   [
-                    <Button action={ totalBalance > 0 ? 'post' : 'link' } target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(balance) }, pathname: "/trade/" } : "https://farconic.xyz" }>
+                    <Button action={ totalBalance > 0 ? 'post' : 'link' } target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balances:JSON.stringify(balances) }, pathname: "/trade/" } : "https://farconic.xyz" }>
                         { totalBalance > 0 ? 'Sell 💰' : 'App 🌐' }
                     </Button>,
                     <Button action="post" target={{ query: { building: JSON.stringify(building) }, pathname: "/trade/" }}>
@@ -72,7 +64,7 @@ const handleRequest = frames(async (ctx: any) => {
                 ]
             :   page > 1 && searchResults.length > page // multiple results and we are somewhere in the middle
                 ?   [
-                        <Button action="post" target={{ query: { building: JSON.stringify(building), balance:JSON.stringify(balance) }, pathname: "/trade/" }}>
+                        <Button action="post" target={{ query: { building: JSON.stringify(building), balances:JSON.stringify(balances) }, pathname: "/trade/" }}>
                             { totalBalance > 0 ? 'Buy/Sell' : 'Buy 🛒' }
                         </Button>,
                         <Button action="post" target={{ query: { page: page-1, searchTerm: searchTerm }, pathname: "/search" }}>
@@ -90,7 +82,7 @@ const handleRequest = frames(async (ctx: any) => {
                             <Button action="post" target={{ query: { building: JSON.stringify(building) }, pathname: "/trade/" }}>
                                 Buy 🛒
                             </Button>,
-                            <Button action="post" target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(balance) }, pathname: "/trade/" } : "/farconic" }>
+                            <Button action="post" target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balances:JSON.stringify(balances) }, pathname: "/trade/" } : "/farconic" }>
                                 { totalBalance > 0 ? 'Sell 💰' : 'Home' }
                             </Button>,
                             <Button action="post" target={{ query: { page: page-1, searchTerm: searchTerm }, pathname: "/search" }}>
@@ -104,7 +96,7 @@ const handleRequest = frames(async (ctx: any) => {
                             <Button action="post" target={{ query: { building: JSON.stringify(building) }, pathname: "/trade/" }}>
                                 Buy 🛒
                             </Button>,
-                            <Button action="post" target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(balance) }, pathname: "/trade/" } : "/farconic" }>
+                            <Button action="post" target={ totalBalance > 0 ? { query: { building: JSON.stringify(building), isSell:true, balances:JSON.stringify(balances) }, pathname: "/trade/" } : "/farconic" }>
                                 { totalBalance > 0 ? 'Sell 💰' : 'Home' }
                             </Button>,
                             <Button action="post" target={{ query: { page: page+1, searchTerm: searchTerm }, pathname: "/search" }}>
@@ -113,10 +105,7 @@ const handleRequest = frames(async (ctx: any) => {
                             <Button action="post" target="/search">
                                 Search 🔎
                             </Button>
-                        ],
-                        headers: {  
-                            "Cache-Control": "max-age=0", 
-                        },
+                        ]
         }
     }
 
@@ -147,6 +136,7 @@ const handleRequest = frames(async (ctx: any) => {
         headers: {  
             "Cache-Control": "max-age=0", 
         },
+        state: { searchMode: true }
     }
 })
 

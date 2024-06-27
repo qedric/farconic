@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { fetchMetadata } from "frames.js/next"
 import { NFT, getBuildingByName } from "@/app/utils"
 
@@ -43,7 +44,13 @@ export default function Page({
     <>
       <div className="m-20">
           <div className="flex justify-center items-center">
-              <img className="w-2/3" src={ building.metadata.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`) as string } />
+              <Image
+                alt={ building.metadata.name }
+                className="w-2/3"
+                src={ building.metadata.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`) as string }
+                width='2000'
+                height='2000'
+              />
           </div>
       </div>
     </>

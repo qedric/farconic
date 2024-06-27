@@ -21,6 +21,28 @@ const favBuildingNames: string[] = [
 
 const publicClient = mintclub.network('basesepolia').getPublicClient()
 
+const levenshteinDistance = (a: string, b: string): number => {
+    const dp: number[][] = [];
+
+    for (let i = 0; i <= a.length; i++) {
+        dp[i] = [];
+        for (let j = 0; j <= b.length; j++) {
+            if (i === 0) {
+                dp[i][j] = j;
+            } else if (j === 0) {
+                dp[i][j] = i;
+            } else {
+                dp[i][j] = Math.min(
+                    dp[i - 1][j - 1] + (a[i - 1] !== b[j - 1] ? 1 : 0),
+                    dp[i - 1][j] + 1,
+                    dp[i][j - 1] + 1
+                );
+            }
+        }
+    }
+    return dp[a.length][b.length];
+}
+
 export interface Metadata {
     name: string;
     description: string;
@@ -62,28 +84,6 @@ export const fetchImageUrlFromTokenId = async (id: number, abi:any) => {
         args: [id]
     }) as string
     return fetchImageUrlFromIPFS(ipfs_link)
-}
-
-export const levenshteinDistance = (a: string, b: string): number => {
-    const dp: number[][] = [];
-
-    for (let i = 0; i <= a.length; i++) {
-        dp[i] = [];
-        for (let j = 0; j <= b.length; j++) {
-            if (i === 0) {
-                dp[i][j] = j;
-            } else if (j === 0) {
-                dp[i][j] = i;
-            } else {
-                dp[i][j] = Math.min(
-                    dp[i - 1][j - 1] + (a[i - 1] !== b[j - 1] ? 1 : 0),
-                    dp[i - 1][j] + 1,
-                    dp[i][j - 1] + 1
-                );
-            }
-        }
-    }
-    return dp[a.length][b.length];
 }
 
 export const getOpenseaData = async (address: string) => {
@@ -153,12 +153,33 @@ export const searchJsonArray = (query: string): NFT[] => {
     return matchingElements
 }
 
-export const getNFTBalance = async (tokenAddress: `0x${string}`, userAddress: `0x${string}`) => await publicClient.readContract({
+export const getTokenBalanceByAddress = async (tokenAddress: `0x${string}`, accountAddress: `0x${string}`) => await publicClient.readContract({
     address: tokenAddress,
     abi: mc_building_abi,
     functionName: 'balanceOf',
-    args: [userAddress, 0]
+    args: [accountAddress, 0]
 })
+
+export const getTokenBalancesForAddresses = async (tokenAddress: `0x${string}`, accountAddresses: `0x${string}`[]) => {
+
+    let balances: { address: string, balance: string }[] = []
+    let totalBalance:number = 0
+
+    for (const address of accountAddresses) {
+        let addressBalance = BigInt(0)
+        try {
+            addressBalance = await getTokenBalanceByAddress(tokenAddress as `0x${string}`, address as `0x${string}`) as bigint
+            if (addressBalance > BigInt(0)) {
+                totalBalance += Number(addressBalance)
+                balances.push({ address, balance: addressBalance.toString() })
+            }
+        } catch (e) {
+            // do nothing
+        }
+    }
+
+    return { balances, totalBalance }
+}
 
 export const getRandomBuildingAmongFavourites = (excludeName?: string): NFT => {
     // Remove the excluded name from the favorite building names array

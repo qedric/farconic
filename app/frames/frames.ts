@@ -2,8 +2,13 @@ import { createFrames } from "frames.js/next"
 import { farcasterHubContext } from "frames.js/middleware"
 import { imagesWorkerMiddleware } from "frames.js/middleware/images-worker"
 
-export const frames = createFrames({
+export type State = {
+  searchMode: boolean
+}
+
+export const frames = createFrames<State>({
   basePath: "/frames",
+  initialState: { searchMode: false },
   middleware: [
     farcasterHubContext({
       ...(process.env.NODE_ENV === "production"

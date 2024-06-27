@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
-import { getTransactionReceipt, getNFTBalance } from '@/app/utils'
+import { getTransactionReceipt, getTokenBalanceByAddress } from '@/app/utils'
 import buildings from '@/app/data/buildings.json'
 import { ErrorFrame } from "@/app/components/FrameError"
 import { decodeEventLog } from 'viem'
@@ -25,7 +25,8 @@ const handleRequest = frames(async (ctx) => {
                 "Transaction Receipt Not Found",
                 'Refresh',
                 JSON.stringify({ query: { transactionId: txId }, pathname: "/trade/txStatusApprove" }),
-                "Refresh and see if that helps. If not, let us know!"
+                "Refresh and see if that helps. If not, let us know!",
+                ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
             )
         }
 
@@ -51,7 +52,8 @@ const handleRequest = frames(async (ctx) => {
                 "Approve Event Not Found",
                 'Refresh',
                 JSON.stringify({ query: { transactionId: txId }, pathname: "/trade/txStatusApprove" }),
-                "A refresh might do the trick.  If not, try again from the start. If the issue persists, let us know!"
+                "A refresh might do the trick.  If not, try again from the start. If the issue persists, let us know!",
+                ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
             )
         }
 
@@ -70,13 +72,14 @@ const handleRequest = frames(async (ctx) => {
                     "Building Not Found",
                     'Refresh',
                     JSON.stringify({ query: { transactionId: txId }, pathname: "/trade/txStatusApprove" }),
-                    "A refresh might do the trick.  If not, try again from the start. If the issue persists, let us know!"
+                    "A refresh might do the trick.  If not, try again from the start. If the issue persists, let us know!",
+                    ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
                 )
             }
 
             // find how many of this building the user has in their newly-approved address
             let balance: { address: string, balance: string }[] = []
-            balance.push({ address:approvedAddress, balance:(await getNFTBalance(building.address as `0x${string}`, approvedAddress as `0x${string}`) as bigint).toString() })
+            balance.push({ address:approvedAddress, balance:(await getTokenBalanceByAddress(building.address as `0x${string}`, approvedAddress as `0x${string}`) as bigint).toString() })
 
             return {
                 image: (
@@ -93,9 +96,6 @@ const handleRequest = frames(async (ctx) => {
                 buttons: [
                     <Button action="post" target={{ query: { building: JSON.stringify(building), isSell: true, balance:JSON.stringify(balance) }, pathname: "/trade" }}>
                         {`Sell ${building?.metadata.name.length > 14 ? building?.metadata.name.substring(0, 14) + '...' : building?.metadata.name}`}
-                    </Button>,
-                    <Button action="link" target={process.env.NEXT_PUBLIC_MORE_INFO_LINK as string}>
-                        My Cards / Learn more
                     </Button>
                 ],
                 headers: {  
@@ -116,13 +116,13 @@ const handleRequest = frames(async (ctx) => {
                     aspectRatio: "1:1",
                 },
                 buttons: [
-                    <Button action="post" target={ ctx.searchParams.mode === 'search' ? '/farconic' : '/building' }>
+                    <Button action="post" target={ ctx.searchParams.mode === 'search' || ctx.state.searchMode ? '/farconic' : '/building' }>
                         Reset
                     </Button>,
                     <Button action="link" target={url}>
                         View tx
                     </Button>,
-                    <Button action="post" target={{ query: { transactionId: txId }, pathname: "/trade/txStatusApprove" }}>
+                    <Button action="post" target={{ query: { transactionId: txId, mode: ctx.searchParams.mode }, pathname: "/trade/txStatusApprove" }}>
                         Refresh
                     </Button>
                 ],
@@ -132,7 +132,13 @@ const handleRequest = frames(async (ctx) => {
             }
         }
     } else {
-        return ErrorFrame("Transaction Not Found", null, null, "A fresh start might do the trick. If the problem persists, let us know!")
+        return ErrorFrame(
+            "Transaction Not Found", 
+            null, 
+            null, 
+            "A fresh start might do the trick. If the problem persists, let us know!",
+            ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
+        )
     }
 })
 

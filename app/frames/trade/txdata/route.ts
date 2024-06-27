@@ -5,7 +5,8 @@ import { baseSepolia } from "viem/chains"
 import zap_abi from '@/app/data/zap_abi.json'
 import building_abi from '@/app/data/mc_building_abi.json'
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
-import { estimatePrice, getNFTBalance } from '@/app/utils'
+import { estimatePrice, getTokenBalanceByAddress } from '@/app/utils'
+import { transaction } from "frames.js/core"
 
 const SLIPPAGE_PERCENT = 1
 
@@ -60,7 +61,7 @@ export const POST = frames(async (ctx) => {
 
     if (isSell) {
         // check that the connected address has balance to sell
-        const balance:bigint = (await getNFTBalance((building_address as `0x${string}`), userAddress as `0x${string}` ) as bigint)
+        const balance:bigint = (await getTokenBalanceByAddress((building_address as `0x${string}`), userAddress as `0x${string}` ) as bigint)
         console.log(`Balance: ${balance}`)
         if (balance < qty) {
             qty = balance
@@ -125,7 +126,7 @@ export const POST = frames(async (ctx) => {
 
     //console.log('zap_contract_address', zap_contract_address)
 
-    const params = isSell ? {
+    const params:any = isSell ? {
         abi: zap_abi,
         to: zap_contract_address,
         data: calldata,
@@ -138,10 +139,11 @@ export const POST = frames(async (ctx) => {
     }
 
     //console.log('params', params)
-
-    return NextResponse.json({
+    
+    return transaction({
         chainId: `eip155:${baseSepolia.id}`,
         method: "eth_sendTransaction",
         params: params
     })
+
 })

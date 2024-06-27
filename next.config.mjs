@@ -1,4 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+    images: {
+        remotePatterns: [
+          {
+            protocol: 'https',
+            hostname: '7f211cfa0225cb2d8fd0c542435fd3cf.ipfscdn.io',
+            port: '',
+            pathname: '/ipfs/**',
+          },
+        ],
+      },
+};
 
 export default nextConfig;

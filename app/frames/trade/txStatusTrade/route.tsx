@@ -15,6 +15,8 @@ const handleRequest = frames(async (ctx) => {
 
     const txId = ctx.message?.transactionId || ctx.searchParams.transactionId
 
+    console.log('mode', ctx)
+
     if (txId) {
 
         //console.log('transactionId', txId)
@@ -29,7 +31,8 @@ const handleRequest = frames(async (ctx) => {
                 "Transaction Receipt Not Found",
                 'Refresh',
                 JSON.stringify({ query: { transactionId: txId }, pathname: "/trade/txStatusTrade" }),
-                "Refresh and see if that helps. If not, let us know!"
+                "Refresh and see if that helps. If not, let us know!",
+                ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
             )
         }
 
@@ -54,7 +57,8 @@ const handleRequest = frames(async (ctx) => {
                 "Transaction Details Not Found",
                 'Refresh',
                 JSON.stringify({ query: { transactionId: txId }, pathname: "/trade/txStatusTrade" }),
-                "Refresh and see if that helps. If not, let us know!"
+                "Refresh and see if that helps. If not, let us know!",
+                ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
             )
         }
 
@@ -70,14 +74,13 @@ const handleRequest = frames(async (ctx) => {
                     "Building Not Found",
                     'Refresh',
                     JSON.stringify({ query: { transactionId: txId }, pathname: "/trade/txStatusTrade" }),
-                    "A refresh might do the trick.  If not, try again from the start. If the issue persists, let us know!"
+                    "A refresh might do the trick.  If not, try again from the start. If the issue persists, let us know!",
+                    ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
                 )
             }
 
             const addThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
             const removeThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName.substring(4) : bulidingName
-            console.log('remove string:', removeThe(building.metadata.name))
-            console.log('add string:', addThe(building.metadata.name))
             const successString = `${isSell ? "You've parted with" : "You've acquired"} ${ amount > BigInt(1) ? `${amount} ${removeThe(building.metadata.name)} cards!` : `${addThe(building.metadata.name)} card!`}`
 
             const shareText = isSell 
@@ -86,7 +89,7 @@ const handleRequest = frames(async (ctx) => {
 
             const nameWithHyphens = building.metadata.name.replaceAll(/\s/g, '-').toLowerCase()
 
-            const targetUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}%0Ahttps://farconic-mintclub-building-trade.vercel.app?buildingName=${encodeURIComponent(nameWithHyphens)}`
+            const targetUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}%0A${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}`
 
             return {
                 image: (
@@ -112,7 +115,7 @@ const handleRequest = frames(async (ctx) => {
                     aspectRatio: "1:1",
                 },
                 buttons: [
-                    <Button action="post" target={ ctx.searchParams.mode === 'search' ? '/farconic' : '/building' }>
+                    <Button action="post" target={ ctx.searchParams.mode === 'search' || ctx.state.searchMode ? '/farconic' : '/building' }>
                         Home
                     </Button>,
                     <Button action="link" target={ targetUrl }>
@@ -140,13 +143,13 @@ const handleRequest = frames(async (ctx) => {
                     aspectRatio: "1:1",
                 },
                 buttons: [
-                    <Button action="post" target={ ctx.searchParams.mode === 'search' ? '/farconic' : '/building' }>
+                    <Button action="post" target={ ctx.searchParams.mode === 'search' || ctx.state.searchMode ? '/farconic' : '/building' }>
                         Reset
                     </Button>,
                     <Button action="link" target={url}>
                         View tx
                     </Button>,
-                    <Button action="post" target={{ query: { transactionId: txId }, pathname: "/trade/txStatusTrade" }}>
+                    <Button action="post" target={{ query: { transactionId: txId, mode: ctx.searchParams.mode }, pathname: "/trade/txStatusTrade" }}>
                         Refresh
                     </Button>
                 ],
@@ -156,7 +159,13 @@ const handleRequest = frames(async (ctx) => {
             }
         }
     } else {
-        return ErrorFrame("Transaction Not Found", null, null, "A fresh start might do the trick. If the problem persists, let us know!")
+        return ErrorFrame(
+            "Transaction Not Found",
+            null,
+            null, 
+            "A fresh start might do the trick. If the problem persists, let us know!",
+            ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
+        )
     }
 })
 

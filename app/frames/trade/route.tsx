@@ -7,35 +7,50 @@ import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ethers } from 'ethers'
 import { ErrorFrame } from "@/app/components/FrameError"
 import { baseSepolia } from "viem/chains"
-import { getOpenseaData, getDetail } from '@/app/utils'
+import { getOpenseaData, getDetail, getTokenBalancesForAddresses } from '@/app/utils'
 
-const handleRequest = frames(async (ctx) => {
+const handleRequest = frames(async (ctx:any) => {
     
     if (ctx.searchParams?.building) {
 
-        let qty = ctx.qty
+        let qty = ctx.qty 
 
-        const estimation = BigInt(ctx.priceEstimate)
-        if (!estimation) {
-            return ErrorFrame("Couldn't Get Price Estimate", null, null, "A fresh start might do the trick. If the problem persists, let us know!")
+        if (ctx.priceEstimate === undefined) {
+            return ErrorFrame(
+                "Couldn't Get Price Estimate", 
+                null, 
+                null, 
+                "A fresh start might do the trick. If the problem persists, let us know!", 
+                ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
+            )
         }
 
+        const estimation = BigInt(ctx.priceEstimate)
         const building:NFT = JSON.parse(ctx.searchParams.building)
 
         let isApproved = false
-        let approvedAddresses: { address: string, balance: bigint }[] = []
-        let balances: { address: string, balance: bigint }[] = []
-        if (ctx.searchParams.balance) {
-            balances = JSON.parse(ctx.searchParams.balance)
+        let approvedAddresses: { address: string, balance: string }[] = []
+        let buildingBalances: { address: string, balance: string }[] = []
+        if (ctx.searchParams.balances) {
+            buildingBalances = JSON.parse(ctx.searchParams.balances)
+        } else {
+            // find how many of this building the user has among their verified addresses
+            const addresses = ctx.message?.requesterVerifiedAddresses || []
+            console.log('addresses', addresses)
+            const { balances } = await getTokenBalancesForAddresses(building.address as `0x${string}`, addresses)
+            buildingBalances = balances
         }
-        if (balances.length > 0) {
+        
+        let totalBalance = buildingBalances.reduce((acc, b) => acc + BigInt(b.balance), BigInt(0))
+
+        if (buildingBalances.length > 0) {
             if (ctx.searchParams.approvedAddress) {
                 console.log(`Address ${JSON.parse(ctx.searchParams.approvedAddress)} approved`)
                 approvedAddresses.push(JSON.parse(ctx.searchParams.approvedAddress))
                 isApproved = true
             } else {
                 // check that the seller has approved the contract to spend the NFT
-                await Promise.all(balances.map(async (balance) => {
+                await Promise.all(buildingBalances.map(async (balance) => {
                     const isApproved = await mintclub.network(baseSepolia.id).nft(building.address).getIsApprovedForAll({
                         owner: (balance.address as `0x${string}`),
                         spender: getMintClubContractAddress('ZAP', baseSepolia.id)
@@ -49,11 +64,11 @@ const handleRequest = frames(async (ctx) => {
             }
 
             // sort by the largest balance
-            balances = balances.sort((a, b) => Number(b.balance) - Number(a.balance))
+            buildingBalances = buildingBalances.sort((a, b) => Number(b.balance) - Number(a.balance))
             approvedAddresses = approvedAddresses.sort((a, b) => Number(b.balance) - Number(a.balance))
 
-            if (ctx.isSell && isApproved && BigInt(balances[0].balance) < qty) {
-                qty = BigInt(balances[0].balance)
+            if (ctx.isSell && isApproved && BigInt(buildingBalances[0].balance) < qty) {
+                qty = BigInt(buildingBalances[0].balance)
             }
         }
 
@@ -82,14 +97,14 @@ const handleRequest = frames(async (ctx) => {
         }
 
         const buttons:any = [
-            <Button action="post" target={ ctx.searchParams.mode === 'search' ? '/farconic' : '/building' }>
+            <Button action="post" target={ ctx.searchParams.mode === 'search' || ctx.state.searchMode ? '/farconic' : '/building' }>
                 Home
             </Button>,
             <Button 
                 action={ ctx.isSell ? "post" : "tx" }
                 target={
                     ctx.isSell
-                        ? { query: { building: JSON.stringify(building), qty: qty.toString(), balance:JSON.stringify(balances) }, pathname: "/trade" }
+                        ? { query: { building: JSON.stringify(building), qty: qty.toString(), balances:JSON.stringify(buildingBalances) }, pathname: "/trade" }
                         : { query: { contractAddress: building.address, qty: qty.toString(), estimation: estimation.toString() }, pathname: "/trade/txdata" }
                     }
                     post_url="/trade/txStatusTrade">
@@ -97,7 +112,7 @@ const handleRequest = frames(async (ctx) => {
             </Button>
         ]
 
-        if (balances.length > 0) {
+        if (buildingBalances.length > 0) {
             buttons.push(
                 <Button 
                     action={
@@ -108,7 +123,7 @@ const handleRequest = frames(async (ctx) => {
                     target={
                         ctx.isSell 
                             ? { query: { contractAddress: building.address, isSell:true, isApproved, qty: qty.toString(), estimation: estimation.toString() }, pathname: "/trade/txdata" }
-                            : { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(balances) }, pathname: "/trade" }
+                            : { query: { building: JSON.stringify(building), isSell:true, balance:JSON.stringify(buildingBalances) }, pathname: "/trade" }
                     }
                     post_url={
                         isApproved
@@ -125,7 +140,7 @@ const handleRequest = frames(async (ctx) => {
         }
 
         buttons.push(
-            <Button action="post" target={{ query: { building: JSON.stringify(building), qty: qty.toString(), isSell: ctx.isSell, balance:JSON.stringify(balances) }, pathname: "/trade" }}>
+            <Button action="post" target={{ query: { building: JSON.stringify(building), qty: qty.toString(), isSell: ctx.isSell, balances:JSON.stringify(buildingBalances) }, pathname: "/trade" }}>
                 Refresh Price
             </Button>
         )
@@ -134,7 +149,7 @@ const handleRequest = frames(async (ctx) => {
             image: (
                 <div tw="flex w-full h-full" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
                     <div tw="flex flex-col mt-[100px] mb-[240px] w-full items-center justify-center">
-                        <h1 tw="text-[36px]">{ `${ctx.isSell ? isApproved ? 'Sell Preview' : 'Approve Selling' : 'Buy Preview'}` }</h1>
+                        <h1 tw="text-[36px]">{ `${ctx.isSell ? isApproved || totalBalance == BigInt(0) ? 'Sell Preview' : 'Approve Selling' : 'Buy Preview'}` }</h1>
                         <div tw="relative flex w-[600px] h-[600px] items-center justify-center" style={{ backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5)`}}>
                             <div tw="flex flex-wrap relative w-[26.5vw] text-white p-0 m-0">
                                 <div tw={ `flex flex-col relative w-full ${ containerStyle } h-[32.25vw]` }>
@@ -169,7 +184,12 @@ const handleRequest = frames(async (ctx) => {
                                 </div>
                             }
                         </div>
-                        { ctx.isSell && isApproved && (
+                        { ctx.isSell && totalBalance == BigInt(0) && (
+                            <div tw="flex flex-col px-20 justify-center items-center flex-grow">
+                                <h1 tw="text-[40px] mb-4 text-center">{ `You don't own any ${ building.metadata.name } Cards, so you can't sell any.` }</h1>
+                            </div>
+                        )}
+                        { ctx.isSell && isApproved && totalBalance > BigInt(0) && (
                             <div tw="flex flex-col px-20 justify-center items-center flex-grow">
                                 <h1 tw="text-[50px] mb-6 leading-6">{ `Quantity: ${qty} | Total Value: ${ (parseFloat(ethers.formatUnits(estimation, 18)).toFixed(4)) } ETH` }</h1>
                                 <p tw="text-[30px] leading-6 text-center">
@@ -178,11 +198,11 @@ const handleRequest = frames(async (ctx) => {
                                 <p tw="text-[30px] leading-6">Slippage will be applied when you approve the transaction.</p>
                             </div>
                         )}
-                        { ctx.isSell && !isApproved && (
+                        { ctx.isSell && !isApproved && totalBalance > BigInt(0) && (
                             <div tw="flex flex-col px-20 justify-center items-center flex-grow">
                                 <h1 tw="text-[40px] mb-4 leading-8 text-center">{ `Your approval is required to sell your cards` }</h1>
                                 <p tw="text-[30px] leading-6 text-center">
-                                    {`${balances.map(a => `Address: ${a.address.substring(0, 5)}...${a.address.substring(a.address.length - 4)} | Balance: ${a.balance}`).join(', ')}\n`}
+                                    {`${buildingBalances.map(a => `Address: ${a.address.substring(0, 5)}...${a.address.substring(a.address.length - 4)} | Balance: ${a.balance}`).join(', ')}\n`}
                                 </p>
                             </div>
                         )}
@@ -210,7 +230,7 @@ const handleRequest = frames(async (ctx) => {
             null,
             null,
             "If the issue persists, let us know!",
-            (ctx.searchParams.mode as 'building' | 'search' | undefined)
+            ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
         )
     }
 },

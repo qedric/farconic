@@ -27,7 +27,7 @@ const handleRequest = frames(async (ctx) => {
             <Button action="link" target="https://farconic.xyz">
                 App 🌐
             </Button>,
-            <Button action="tx" target={{ query: { contractAddress: building.address }, pathname: "/trade/txdata" }} post_url="/trade/txStatusTrade">
+            <Button action="tx" target={{ query: { contractAddress: building.address }, pathname: "/trade/txdata" }} post_url="/trade/txStatusTrade?mode=search">
                 Buy 🛒
             </Button>,
             <Button action="post" target={{ query: { building: JSON.stringify(getRandomBuildingAmongFavourites(building.metadata.name)) }, pathname: "/farconic" }}>
@@ -39,8 +39,7 @@ const handleRequest = frames(async (ctx) => {
         ],
         headers: {  
             "Cache-Control": "max-age=0", 
-        },
-        state: { mode: 'search' }
+        }
     }
 })
 
