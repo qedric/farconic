@@ -33,7 +33,7 @@ export default function Page({
   if (!building) {
     return (
       <>
-        <div className="m-20">
+        <div className="m-20 h-screen">
           <h1>Building not found</h1>
         </div>
       </>
