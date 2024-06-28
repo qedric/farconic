@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 import { ethers } from 'ethers'
-import { getOpenseaData, getDetail, NFT } from '@/app/utils'
+import { getOpenseaData, getDetail, NFT } from '@/lib/utils'
 
 export const CardImage = async ( 
     building:NFT,

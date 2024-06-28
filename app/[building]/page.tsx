@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { fetchMetadata } from "frames.js/next"
-import { NFT, getBuildingByName } from "@/app/utils"
+import { NFT, getBuildingByName } from "@/lib/utils"
 
 // Update to accept context or query parameters
 export async function generateMetadata(props:any) {
@@ -27,8 +27,6 @@ export default function Page({
 }) {
 
   const building:NFT = getBuildingByName(params.building.replaceAll('-', ' '))
-
-  console.log(building)
 
   if (!building) {
     return (

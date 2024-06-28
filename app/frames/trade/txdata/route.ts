@@ -2,10 +2,10 @@ import { frames } from "../../frames"
 import { NextResponse } from "next/server";
 import { encodeFunctionData } from "viem";
 import { baseSepolia } from "viem/chains"
-import zap_abi from '@/app/data/zap_abi.json'
-import building_abi from '@/app/data/mc_building_abi.json'
+import zap_abi from '@/data/zap_abi.json'
+import building_abi from '@/data/mc_building_abi.json'
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
-import { estimatePrice, getTokenBalanceByAddress } from '@/app/utils'
+import { estimatePrice, getTokenBalanceByAddress } from '@/lib/utils'
 import { transaction } from "frames.js/core"
 
 const SLIPPAGE_PERCENT = 1

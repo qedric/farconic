@@ -1,6 +1,6 @@
 import { mintclub } from 'mint.club-v2-sdk'
-import mc_building_abi from './data/mc_building_abi.json'
-import buildings from '@/app/data/buildings.json'
+import mc_building_abi from '@/data/mc_building_abi.json'
+import buildings from '@/data/buildings.json'
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
 

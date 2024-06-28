@@ -2,14 +2,14 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
-import { getTransactionReceipt, NFT } from '@/app/utils'
+import { getTransactionReceipt, NFT } from '@/lib/utils'
 import { decodeEventLog } from 'viem'
 import { baseSepolia } from "viem/chains"
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
-import { ErrorFrame } from "@/app/components/FrameError"
-import { CardImage } from '@/app/components/FrameCard'
-import abi from '@/app/data/mcv2bond_abi.json'
-import buildings from '@/app/data/buildings.json'
+import { ErrorFrame } from "@/components/FrameError"
+import { CardImage } from '@/components/FrameCard'
+import abi from '@/data/mcv2bond_abi.json'
+import buildings from '@/data/buildings.json'
 
 const handleRequest = frames(async (ctx) => {
 

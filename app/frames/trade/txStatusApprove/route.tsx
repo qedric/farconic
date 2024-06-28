@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
-import { getTransactionReceipt, getTokenBalanceByAddress } from '@/app/utils'
-import buildings from '@/app/data/buildings.json'
-import { ErrorFrame } from "@/app/components/FrameError"
+import { getTransactionReceipt, getTokenBalanceByAddress } from '@/lib/utils'
+import buildings from '@/data/buildings.json'
+import { ErrorFrame } from "@/components/FrameError"
 import { decodeEventLog } from 'viem'
-import abi from '@/app/data/mc_building_abi.json'
+import abi from '@/data/mc_building_abi.json'
 
 const handleRequest = frames(async (ctx) => {
 

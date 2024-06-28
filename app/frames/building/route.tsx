@@ -2,8 +2,8 @@
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
-import { CardImage } from '@/app/components/FrameCard'
-import { getRandomBuildingAmongFavourites, getBuildingByName, NFT } from '@/app/utils'
+import { CardImage } from '@/components/FrameCard'
+import { getRandomBuildingAmongFavourites, getBuildingByName, NFT } from '@/lib/utils'
 
 export const maxDuration = 20
 

@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
-import { searchJsonArray, getFavouriteBuildings, getTokenBalancesForAddresses } from '@/app/utils'
-import { CardImage } from '@/app/components/FrameCard'
+import { searchJsonArray, getFavouriteBuildings, getTokenBalancesForAddresses } from '@/lib/utils'
+import { CardImage } from '@/components/FrameCard'
 import { getUserDataForFid } from 'frames.js'
 
 const handleRequest = frames(async (ctx: any) => {

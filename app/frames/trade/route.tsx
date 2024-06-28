@@ -2,12 +2,12 @@
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
-import { NFT, estimatePriceMiddleware } from '@/app/utils'
+import { NFT, estimatePriceMiddleware } from '@/lib/utils'
 import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ethers } from 'ethers'
-import { ErrorFrame } from "@/app/components/FrameError"
+import { ErrorFrame } from "@/components/FrameError"
 import { baseSepolia } from "viem/chains"
-import { getOpenseaData, getDetail, getTokenBalancesForAddresses } from '@/app/utils'
+import { getOpenseaData, getDetail, getTokenBalancesForAddresses } from '@/lib/utils'
 
 const handleRequest = frames(async (ctx:any) => {
     
@@ -40,6 +40,8 @@ const handleRequest = frames(async (ctx:any) => {
             const { balances } = await getTokenBalancesForAddresses(building.address as `0x${string}`, addresses)
             buildingBalances = balances
         }
+
+        console.log('buildingBalances', buildingBalances)
         
         let totalBalance = buildingBalances.reduce((acc, b) => acc + BigInt(b.balance), BigInt(0))
 
