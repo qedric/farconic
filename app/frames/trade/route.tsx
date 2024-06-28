@@ -97,7 +97,7 @@ const handleRequest = frames(async (ctx:any) => {
         }
 
         const buttons:any = [
-            <Button action="post" target={ ctx.searchParams.mode === 'search' || ctx.state.searchMode ? '/farconic' : '/building' }>
+            <Button action="post" target={ ctx.searchParams.mode === 'search' || ctx.state.searchMode ? '/farconic' : { query: { building: JSON.stringify(building) }, pathname: "/building" } }>
                 Home
             </Button>,
             <Button 

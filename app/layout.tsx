@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex flex-col justify-between">
-        <header>there'll be a header here before too long, mark my words</header>
+        <header>there&apos;ll be a header here before too long, mark my words</header>
         <main className={`${quicksandFont.className} flex items-center justify-center `}>{children}</main>
         <footer>
             <figure >

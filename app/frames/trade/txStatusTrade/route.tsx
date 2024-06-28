@@ -115,7 +115,7 @@ const handleRequest = frames(async (ctx) => {
                     aspectRatio: "1:1",
                 },
                 buttons: [
-                    <Button action="post" target={ ctx.searchParams.mode === 'search' || ctx.state.searchMode ? '/farconic' : '/building' }>
+                    <Button action="post" target={ ctx.searchParams.mode === 'search' || ctx.state.searchMode ? '/farconic' : { query: { building: JSON.stringify(building) }, pathname: "/building" } }>
                         Home
                     </Button>,
                     <Button action="link" target={ targetUrl }>
