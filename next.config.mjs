@@ -8,6 +8,12 @@ const nextConfig = {
             port: '',
             pathname: '/ipfs/**',
           },
+          {
+            protocol: 'https',
+            hostname: 'farconic.xyz',
+            port: '',
+            pathname: '/**',
+          },
         ],
       },
 };
