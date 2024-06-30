@@ -1,11 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from 'next/navigation'
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 //import localFont from 'next/font/local'
 import { Montserrat } from 'next/font/google'
 import "./globals.css"
+import { MainNav } from "@/components/MainNav"
 
 /* // load the Quicksand-Bold.ttf font from the public directory
 const quicksandFont = localFont({
@@ -15,16 +15,6 @@ const quicksandFont = localFont({
 }) */
 
 const montserratFont = Montserrat({ subsets: ['latin'] })
-let currentPath = ''
-
-const ActiveLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
-  //const router = useRouter()
-  const isActive = currentPath === href
-
-  return (
-    <Link href={href} className={isActive ? 'active' : ''}>{children}</Link>
-  )
-}
 
 export const metadata: Metadata = {
   title: "Farconic",
@@ -37,9 +27,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  currentPath = headers().get('x-next-pathname') as string
-  console.log('currentPath', currentPath)
-
   return (
     <html lang="en">
       <body className="flex flex-col justify-between">
@@ -47,22 +34,7 @@ export default function RootLayout({
           <figure >
             <Image className="w-fit" width="2560" height="128" src="/logo.png" alt="logo" sizes="(max-width: 2560px) 100vw, 2560px" />
           </figure>
-          <nav className="w-fit flex items-center">
-            <ul className="flex gap-x-4 text-3xl">
-              <li>
-                <ActiveLink href="/gallery">Gallery</ActiveLink>
-              </li>
-              <li>
-                <ActiveLink href="/">My Cards</ActiveLink>
-              </li>
-              <li>
-                <ActiveLink href="/about">About</ActiveLink>
-              </li>
-              <li>
-                <ActiveLink href="/team">Team</ActiveLink>
-              </li>
-            </ul>
-          </nav>
+          <MainNav />
         </header>
         <main className={`${montserratFont.className} flex items-center justify-center `}>{children}</main>
         <footer className="bg-black">

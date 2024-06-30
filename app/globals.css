@@ -17,6 +17,10 @@ body {
     @apply text-4xl font-bold;
   }
 
+  h2 {
+    @apply text-xl font-bold;
+  }
+
   a.active {
     @apply text-pink-700;
   
