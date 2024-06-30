@@ -14,13 +14,10 @@ export const MainNav = () => {
     }
 
     return (
-        <nav className="w-fit flex items-center">
-            <ul className="flex gap-x-4 text-3xl">
+        <nav className="w-fit flex items-start lg:items-center">
+            <ul className="flex gap-x-4 text-lg lg:text-3xl">
               <li>
                 <ActiveLink href="/gallery">Gallery</ActiveLink>
-              </li>
-              <li>
-                <ActiveLink href="/">My Cards</ActiveLink>
               </li>
               <li>
                 <ActiveLink href="/about">About</ActiveLink>
