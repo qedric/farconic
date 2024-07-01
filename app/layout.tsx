@@ -32,7 +32,7 @@ export default function RootLayout({
       <body className="flex flex-col justify-between">
         <header className="flex justify-between h-32 p-6">
           <figure >
-            <Image className="w-fit" width="2560" height="128" src="/logo.png" alt="logo" sizes="(max-width: 2560px) 100vw, 2560px" />
+            <Image className="w-fit" width="2560" height="128" src="/logo.png" priority={true} alt="logo" sizes="(max-width: 2560px) 100vw, 2560px" />
           </figure>
           <MainNav />
         </header>

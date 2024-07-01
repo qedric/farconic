@@ -1,84 +1,77 @@
 'use client'
-import { NFT } from "@/lib/utils"
 import { useState, useEffect } from 'react'
 import buildings from '@/data/buildings.json'
 import CardSVG from "@/components/CardSVG"
 import WalletConnect from "@/components/WalletConnect"
-import { getOwnedTokens } from "@/lib/utils"
+import { NFT } from "@/lib/utils"
+import { getOwnedTokens } from '@/app/api/getOwnedTokens'
 import { Refresh } from "@/components/Refresh"
 
 export default function Gallery() {
-
     const [connected, setConnected] = useState(false)
     const [address, setAddress] = useState('')
     const [view, setView] = useState('All Buildings') // State to manage the selected view
     const [filteredBuildings, setFilteredBuildings] = useState<NFT[]>([])
     const [ownedTokens, setOwnedTokens] = useState<any[] | "Error" | null>(null) // State to store owned tokens
+    const [isLoading, setIsLoading] = useState(false) // State for loading spinner
 
     const handleWalletConnect = (isConnected: boolean, walletAddress: string) => {
         setConnected(isConnected)
         setAddress(walletAddress)
     }
 
-    const fetchOwnedTokens = async () => {
+    const fetchOwnedTokensAndFilter = async (walletAddress: string) => {
+        setIsLoading(true) // Start loading spinner
+        setFilteredBuildings([]) // Clear filtered buildings while loading
         try {
-            const tokens = await getOwnedTokens(address as `0x${string}`)
+            const tokens = await getOwnedTokens(walletAddress as `0x${string}`)
             setOwnedTokens(tokens)
-            return tokens
+            filterBuildings(tokens)
         } catch (error) {
             console.error('Error getting owned tokens:', error)
-            return "Error"
+            setOwnedTokens('Error')
+        } finally {
+            setIsLoading(false) // Stop loading spinner
         }
     }
 
-    const filterBuildings = async (tokens: any[] | "Error") => {
+    const filterBuildings = (tokens: any[] | "Error") => {
         if (tokens === "Error") {
             setFilteredBuildings([])
             return
         }
 
-        if (Array.isArray(tokens)) {
-            const ownedContractAddresses = new Set(
-                tokens.map((token: any) => token.contractAddress.toLowerCase())
-            )
-            console.log(ownedContractAddresses)
+        const ownedContractAddresses = new Set(
+            tokens.map((token: any) => token.contractAddress.toLowerCase())
+        )
 
-            const filtered = buildings.filter((building: any) => {
-                return ownedContractAddresses.has(building.address?.toLowerCase())
-            })
+        const filtered = buildings.filter((building: any) => {
+            return ownedContractAddresses.has(building.address?.toLowerCase())
+        })
 
-            setFilteredBuildings(filtered as NFT[])
-            console.log(filtered)
-        } else {
-            setFilteredBuildings([])
-        }
+        setFilteredBuildings(filtered as NFT[])
     }
 
     useEffect(() => {
-        const handleFilter = async () => {
-            if (view === 'My Buildings' && address) {
-                if (ownedTokens === null) {
-                    const tokens = await fetchOwnedTokens()
-                    filterBuildings(tokens)
-                } else {
-                    filterBuildings(ownedTokens)
-                }
+        if (view === 'My Buildings' && address) {
+            if (!ownedTokens) {
+                fetchOwnedTokensAndFilter(address)
             } else {
-                setFilteredBuildings(buildings as NFT[])
+                filterBuildings(ownedTokens)
             }
+        } else {
+            setFilteredBuildings(buildings as NFT[])
         }
-
-        handleFilter()
-    }, [view, address])
+    }, [view, address]) // Dependency array includes view and address
 
     const handleRefresh = async () => {
-        const tokens = await fetchOwnedTokens()
-        filterBuildings(tokens)
+        if (view === 'My Buildings' && address) {
+            await fetchOwnedTokensAndFilter(address)
+        }
     }
 
     return (
         <section className="w-11/12 lg:w-1/2 mx-auto">
-
             <WalletConnect onConnect={handleWalletConnect} />
 
             <div className="flex px-20 justify-center items-center">
@@ -99,21 +92,20 @@ export default function Gallery() {
                     >
                         My Buildings
                     </button>
-                    { view === 'My Buildings' &&
-
+                    { view === 'My Buildings' && (
                         <Refresh
                             onRefresh={handleRefresh}
                             onComplete={() => console.log('Refresh complete')}
+                            isLoading={isLoading}
                             label="Refresh my buildings"
                         />
-
-                    }
+                    )}
                 </div>
             )}
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 lg:gap-x-12 lg:gap-y-5 lg:pt-7 lg:max-w-90 lg:mx-auto mb-5 lg:mb-20">
                 {
-                    (filteredBuildings as NFT[]).slice(0, 60).map((nft) => (
+                    filteredBuildings.slice(0, 60).map((nft: NFT) => (
                         <div className="" key={nft.metadata.name}>
                             <div className="flex items-end justify-center h-20">
                                 <h2 className={`m-0 text-center text-base leading-0`}>{nft.metadata.name}</h2>

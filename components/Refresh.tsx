@@ -1,20 +1,16 @@
-import { useState } from 'react'
-
-export const Refresh = ({ onRefresh, onComplete, label }: { onRefresh:Function, onComplete:Function, label:string }) => {
-    const [isLoading, setIsLoading] = useState(false)
+export const Refresh = ({ onRefresh, onComplete, isLoading, label }: { onRefresh: Function, onComplete: Function, isLoading: boolean, label: string }) => {
 
     const handleClick = async () => {
-        setIsLoading(true)
-        onRefresh()
-            .then(() => {
-                setIsLoading(false)
-                onComplete()
-            })
-            .catch((error:any) => {
-                setIsLoading(false)
-                // Handle error if needed
-                console.error('Error during refresh:', error)
-            })
+        if (!isLoading) {
+            onRefresh()
+                .then(() => {
+                    onComplete()
+                })
+                .catch((error: any) => {
+                    // Handle error if needed
+                    console.error('Error during refresh:', error)
+                })
+        }
     }
 
     return (
@@ -36,7 +32,7 @@ export const Refresh = ({ onRefresh, onComplete, label }: { onRefresh:Function, 
                     fill="black"
                 />
             </svg>
-            { isLoading ? 'loading...' : label }
+            {isLoading ? 'loading...' : label}
         </button>
     )
 }

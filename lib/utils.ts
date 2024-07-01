@@ -3,7 +3,6 @@ import mc_building_abi from '@/data/mc_building_abi.json'
 import buildings from '@/data/buildings.json'
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
-import { Network, Alchemy } from 'alchemy-sdk'
 
 const favBuildingNames: string[] = [
     "Eiffel Tower",
@@ -19,12 +18,6 @@ const favBuildingNames: string[] = [
     "Golden Gate Bridge",
     "Funkturm Berlin"
 ]
-
-// Alchemy Config object
-const settings = {
-    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
-    network: Network.BASE_SEPOLIA, // Replace with your network.
-}
 
 const publicClient = mintclub.network('basesepolia').getPublicClient()
 
@@ -166,37 +159,6 @@ export const getTokenBalanceByAddress = async (tokenAddress: `0x${string}`, acco
     functionName: 'balanceOf',
     args: [accountAddress, 0]
 })
-
-export const getOwnedTokens = async (accountAddress: `0x${string}`) => {
-    const batchSize = 45 // maximum number of results allowed by alchemy
-    const batches: `0x${string}`[][] = []
-
-    // Create batches of contract addresses directly from the buildings array
-    for (let i = 0; i < buildings.length; i += batchSize) {
-        batches.push(buildings.slice(i, i + batchSize).map(building => building.address as `0x${string}`))
-    }
-
-    const alchemy = new Alchemy(settings)
-    const options = {
-        omitMetadata: true,
-        contractAddresses: [] as `0x${string}`[]
-    }
-
-    const ownedNfts: any[] = []
-
-    try {
-        for (const batch of batches) {
-            options.contractAddresses = batch
-            const response = await alchemy.nft.getNftsForOwner(accountAddress, options)
-            ownedNfts.push(...response.ownedNfts)
-        }
-        //console.log('Owned NFTs:', ownedNfts)
-        return ownedNfts
-    } catch (error) {
-        console.error('Error fetching owned tokens:', error)
-        return 'Error'
-    }
-}
 
 export const getTokenBalancesForAddresses = async (tokenAddress: `0x${string}`, accountAddresses: `0x${string}`[]) => {
 
