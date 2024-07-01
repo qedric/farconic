@@ -8,15 +8,14 @@ import { getOwnedTokens } from '@/app/api/getOwnedTokens'
 import { Refresh } from "@/components/Refresh"
 
 export default function Gallery() {
-    const [connected, setConnected] = useState(false)
     const [address, setAddress] = useState('')
     const [view, setView] = useState('All Buildings') // State to manage the selected view
     const [filteredBuildings, setFilteredBuildings] = useState<NFT[]>([])
     const [ownedTokens, setOwnedTokens] = useState<any[] | "Error" | null>(null) // State to store owned tokens
     const [isLoading, setIsLoading] = useState(false) // State for loading spinner
 
-    const handleWalletConnect = (isConnected: boolean, walletAddress: string) => {
-        setConnected(isConnected)
+    const handleWalletConnect = (walletAddress: string) => {
+        console.log('address:', walletAddress)
         setAddress(walletAddress)
     }
 
@@ -78,7 +77,7 @@ export default function Gallery() {
                 filter & sort will be here
             </div>
 
-            {connected && (
+            {address && (
                 <div className="flex justify-start items-center mt-4 gap-x-5">
                     <button
                         className={`btn ${view === 'All Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}

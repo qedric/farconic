@@ -1,31 +1,47 @@
-'use client'
-
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createWalletClient, custom } from 'viem'
 import { baseSepolia } from 'viem/chains'
 
-const WalletConnect = ({ onConnect }: { onConnect: (connected: boolean, address: string) => void }) => {
-    const [address, setAddress] = useState('')
-    const [connected, setConnected] = useState(false)
+async function ConnectWalletClient() {
+    // Check for window.ethereum
+    let transport
+    if (window.ethereum) {
+        transport = custom(window.ethereum)
+    } else {
+        throw new Error("MetaMask or another web3 wallet is not installed.")
+    }
+
+    // Declare a Wallet Client
+    const walletClient = createWalletClient({
+        chain: baseSepolia,
+        transport: transport,
+    })
+
+    return walletClient
+}
+
+const WalletConnect = ({ onConnect }: { onConnect: (address: string) => void }) => {
+    const [address, setAddress] = useState<string | null>(null)
 
     const connectWallet = async () => {
         try {
-            const client = createWalletClient({
-                chain: baseSepolia,
-                transport: custom(window.ethereum!)
-            })
-            const [address] = await client.getAddresses()
-            setAddress(address)
-            setConnected(true)
-            onConnect(true, address) // Pass the state to the parent component
+            const client = await ConnectWalletClient()
+            const [walletAddress] = await client.requestAddresses() 
+            setAddress(walletAddress)
         } catch (error) {
             console.error('Failed to connect wallet:', error)
         }
     }
 
+    useEffect(() => {
+        if (address) {
+            onConnect(address)
+        }
+    }, [address, onConnect])
+
     return (
         <div className="flex justify-center items-center h-40">
-            {connected ? (
+            {address ? (
                 <p className="font-bold text-center">
                     {`Connected to: ${address.substring(0, 5)}...${address.substring(address.length - 4)}`}
                 </p>
