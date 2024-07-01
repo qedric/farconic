@@ -3,6 +3,7 @@ import mc_building_abi from '@/data/mc_building_abi.json'
 import buildings from '@/data/buildings.json'
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
+import { Network, Alchemy } from 'alchemy-sdk'
 
 const favBuildingNames: string[] = [
     "Eiffel Tower",
@@ -19,53 +20,59 @@ const favBuildingNames: string[] = [
     "Funkturm Berlin"
 ]
 
+// Alchemy Config object
+const settings = {
+    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
+    network: Network.BASE_SEPOLIA, // Replace with your network.
+}
+
 const publicClient = mintclub.network('basesepolia').getPublicClient()
 
 const levenshteinDistance = (a: string, b: string): number => {
-    const dp: number[][] = [];
+    const dp: number[][] = []
 
     for (let i = 0; i <= a.length; i++) {
-        dp[i] = [];
+        dp[i] = []
         for (let j = 0; j <= b.length; j++) {
             if (i === 0) {
-                dp[i][j] = j;
+                dp[i][j] = j
             } else if (j === 0) {
-                dp[i][j] = i;
+                dp[i][j] = i
             } else {
                 dp[i][j] = Math.min(
                     dp[i - 1][j - 1] + (a[i - 1] !== b[j - 1] ? 1 : 0),
                     dp[i - 1][j] + 1,
                     dp[i][j - 1] + 1
-                );
+                )
             }
         }
     }
-    return dp[a.length][b.length];
+    return dp[a.length][b.length]
 }
 
 export interface Metadata {
-    name: string;
-    description: string;
-    image: string;
-    external_url: string;
-    background_color: string;
-    attributes: Attribute[];
+    name: string
+    description: string
+    image: string
+    external_url: string
+    background_color: string
+    attributes: Attribute[]
 }
 
 export interface Attribute {
-    trait_type?: string;
-    value: string;
+    trait_type?: string
+    value: string
 }
 
 export interface NFT {
-    metadata: Metadata;
-    id: string;
-    tokenURI: string;
-    building_color: string;
-    address: string;
+    metadata: Metadata
+    id: string
+    tokenURI: string
+    building_color: string
+    address: string
 }
 
-export const getTransactionReceipt = async (txId: `0x${string}`) => await publicClient.waitForTransactionReceipt({ hash: txId,  pollingInterval: 500, retryCount: 8})
+export const getTransactionReceipt = async (txId: `0x${string}`) => await publicClient.waitForTransactionReceipt({ hash: txId, pollingInterval: 500, retryCount: 8 })
 
 export const fetchImageUrlFromIPFS = async (ipfs_link: string) => {
     // get the image value from the metadata resolved by the ipfs link
@@ -76,7 +83,7 @@ export const fetchImageUrlFromIPFS = async (ipfs_link: string) => {
     return json.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`)
 }
 
-export const fetchImageUrlFromTokenId = async (id: number, abi:any) => {
+export const fetchImageUrlFromTokenId = async (id: number, abi: any) => {
     const ipfs_link: string = await publicClient.readContract({
         address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string}`,
         abi: (abi.filter((item: any) => item.name === "uri") as any),
@@ -125,7 +132,7 @@ export const searchJsonArray = (query: string): NFT[] => {
         const metadataValues = Object.values(element.metadata)
             .filter(value => typeof value === 'string')
             .map(value => (value as string).toLowerCase())
-        
+
         let found = false // Flag to indicate if the element has been found
         for (const value of metadataValues) {
             if (value.includes(lowerCaseQuery) || levenshteinDistance(value, lowerCaseQuery) <= 2) {
@@ -140,7 +147,7 @@ export const searchJsonArray = (query: string): NFT[] => {
         for (const attribute of element.metadata.attributes) {
             if (typeof attribute.value === 'string' &&
                 (attribute.value.toLowerCase().includes(lowerCaseQuery) ||
-                levenshteinDistance(attribute.value.toLowerCase(), lowerCaseQuery) <= 2)) {
+                    levenshteinDistance(attribute.value.toLowerCase(), lowerCaseQuery) <= 2)) {
                 if (!found) {
                     matchingElements.push(element)
                     found = true // Set found flag to true
@@ -160,10 +167,41 @@ export const getTokenBalanceByAddress = async (tokenAddress: `0x${string}`, acco
     args: [accountAddress, 0]
 })
 
+export const getOwnedTokens = async (accountAddress: `0x${string}`) => {
+    const batchSize = 45 // maximum number of results allowed by alchemy
+    const batches: `0x${string}`[][] = []
+
+    // Create batches of contract addresses directly from the buildings array
+    for (let i = 0; i < buildings.length; i += batchSize) {
+        batches.push(buildings.slice(i, i + batchSize).map(building => building.address as `0x${string}`))
+    }
+
+    const alchemy = new Alchemy(settings)
+    const options = {
+        omitMetadata: true,
+        contractAddresses: [] as `0x${string}`[]
+    }
+
+    const ownedNfts: any[] = []
+
+    try {
+        for (const batch of batches) {
+            options.contractAddresses = batch
+            const response = await alchemy.nft.getNftsForOwner(accountAddress, options)
+            ownedNfts.push(...response.ownedNfts)
+        }
+        //console.log('Owned NFTs:', ownedNfts)
+        return ownedNfts
+    } catch (error) {
+        console.error('Error fetching owned tokens:', error)
+        return 'Error'
+    }
+}
+
 export const getTokenBalancesForAddresses = async (tokenAddress: `0x${string}`, accountAddresses: `0x${string}`[]) => {
 
     let balances: { address: string, balance: string }[] = []
-    let totalBalance:number = 0
+    let totalBalance: number = 0
 
     for (const address of accountAddresses) {
         let addressBalance = BigInt(0)
@@ -183,10 +221,10 @@ export const getTokenBalancesForAddresses = async (tokenAddress: `0x${string}`, 
 
 export const getRandomBuildingAmongFavourites = (excludeName?: string): NFT => {
     // Remove the excluded name from the favorite building names array
-    const filteredBuildingNames = excludeName ? favBuildingNames.filter(name => name !== excludeName) : favBuildingNames;
+    const filteredBuildingNames = excludeName ? favBuildingNames.filter(name => name !== excludeName) : favBuildingNames
 
     // get a random name from the filteredBuildingNames array and find the matching building
-    const buildingName = filteredBuildingNames[Math.floor(Math.random() * filteredBuildingNames.length)];
+    const buildingName = filteredBuildingNames[Math.floor(Math.random() * filteredBuildingNames.length)]
     return buildings.find((b) => b.metadata.name === buildingName) as NFT
 }
 
@@ -199,29 +237,29 @@ export const estimatePrice = async (buildingAddress: `0x${string}`, qty: bigint,
     const details = await mintclub.network('basesepolia').token(buildingAddress).getDetail()
     if (qty > details.info.maxSupply - details.info.currentSupply) {
         qty = details.info.maxSupply - details.info.currentSupply
-    } 
+    }
 
     if (isSell && qty > details.info.currentSupply) {
         qty = details.info.currentSupply
     }
 
     const [priceEstimate, royalty] = isSell
-    ? await mintclub
-        .network('basesepolia')
-        .token(buildingAddress)
-        .getSellEstimation(qty)
-    : await mintclub
-        .network('basesepolia')
-        .token(buildingAddress)
-        .getBuyEstimation(qty)
+        ? await mintclub
+            .network('basesepolia')
+            .token(buildingAddress)
+            .getSellEstimation(qty)
+        : await mintclub
+            .network('basesepolia')
+            .token(buildingAddress)
+            .getBuyEstimation(qty)
     console.log(`Estimate for ${qty} of ${buildingAddress}: ${ethers.formatUnits(priceEstimate, 18)} ETH`)
     console.log('Royalties paid:', ethers.formatUnits(royalty.toString(), 18).toString())
 
     return { priceEstimate, qty }
 }
 
-export const estimatePriceMiddleware: FramesMiddleware<any, {priceEstimate: bigint, qty: bigint, isSell: boolean, details: object}> = async (
-    ctx:any,
+export const estimatePriceMiddleware: FramesMiddleware<any, { priceEstimate: bigint, qty: bigint, isSell: boolean, details: object }> = async (
+    ctx: any,
     next
 ) => {
     if (!ctx.message) {
@@ -232,7 +270,7 @@ export const estimatePriceMiddleware: FramesMiddleware<any, {priceEstimate: bigi
         throw new Error("No building in searchParams")
     }
 
-    const building:NFT = JSON.parse(ctx.searchParams.building)
+    const building: NFT = JSON.parse(ctx.searchParams.building)
     const details = await mintclub.network('basesepolia').token(building.address).getDetail()
 
     let qty: bigint = BigInt(1)
@@ -260,7 +298,7 @@ export const estimatePriceMiddleware: FramesMiddleware<any, {priceEstimate: bigi
         }
     }
 
-    const isSell:boolean = ctx.searchParams.isSell === 'true'
+    const isSell: boolean = ctx.searchParams.isSell === 'true'
     if (isSell && qty > details.info.currentSupply) {
         qty = details.info.currentSupply
     }
@@ -268,14 +306,14 @@ export const estimatePriceMiddleware: FramesMiddleware<any, {priceEstimate: bigi
     //console.log('estimating price for', qty, building.metadata.name, building.address)
 
     const [estimation, royalty] = isSell
-    ? await mintclub
-        .network('basesepolia')
-        .token(building.address)
-        .getSellEstimation(qty)
-    : await mintclub
-        .network('basesepolia')
-        .token(building.address)
-        .getBuyEstimation(qty)
+        ? await mintclub
+            .network('basesepolia')
+            .token(building.address)
+            .getSellEstimation(qty)
+        : await mintclub
+            .network('basesepolia')
+            .token(building.address)
+            .getBuyEstimation(qty)
     console.log(`Estimate for ${qty} ${building.metadata.name}: ${ethers.formatUnits(estimation, 18)} ETH`)
     console.log('Royalties paid:', ethers.formatUnits(royalty.toString(), 18).toString())
 

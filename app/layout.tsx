@@ -36,7 +36,7 @@ export default function RootLayout({
           </figure>
           <MainNav />
         </header>
-        <main className={`${montserratFont.className} flex items-center justify-center `}>{children}</main>
+        <main className={`${montserratFont.className} flex flex-col items-center justify-center `}>{children}</main>
         <footer className="bg-black">
             <figure >
               <Image width="2560" height="639" src="https://farconic.xyz/wp-content/uploads/2024/04/bottom-strip-1.jpg" alt="" sizes="(max-width: 2560px) 100vw, 2560px" />
