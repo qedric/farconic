@@ -1,6 +1,44 @@
 [
   {
     "metadata": {
+      "name": "Statue of Liberty test",
+      "description": "The Statue of Liberty, dedicated in 1886 in New York Harbor, is a colossal neoclassical sculpture gifted by France, symbolizing freedom and democracy.",
+      "image": "ipfs://QmP9vCNLyKT3VeJSGJ3sgrEsxD5TELg97uMd2QCKcT4AZg/building%20card__8.gif",
+      "external_url": "https://farconic.xyz",
+      "background_color": "F7F3EE",
+      "attributes": [
+        {
+          "trait_type": "City",
+          "value": "New York"
+        },
+        {
+          "trait_type": "State",
+          "value": "New York"
+        },
+        {
+          "trait_type": "Country",
+          "value": "United States"
+        },
+        {
+          "trait_type": "Height (m)",
+          "value": "\"92\""
+        },
+        {
+          "trait_type": "Construction Era",
+          "value": "1880s"
+        },
+        {
+          "value": "Building"
+        }
+      ]
+    },
+    "id": "1303",
+    "tokenURI": "ipfs://QmVnVZttKMUzmNxqFKz7ATWC2AqhD65uQY9jAuDVGkDfBC",
+    "address": "0x44c821e3744d9c039b5274b604e8cf85ff338cf1",
+    "building_color": "#ea5046"
+  },
+  {
+    "metadata": {
       "name": "A'DAM Tower",
       "description": "A'DAM Tower, also known as Amsterdam Tower, renovated in 2016, was originally an office building and now includes a mix of entertainment and observation facilities.",
       "image": "ipfs://QmQqkVAdurVv2bHZNHdams4PsHCD3K93ti9QBioypy4P8S/building%20card_Amsterdam-A_DAM%20Toren.gif",
