@@ -52,7 +52,7 @@ const handleRequest = frames(async (ctx:any) => {
             image: (
                 <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
                     <h1 tw="text-4xl">🎉 Raffle 🎉</h1>
-                    <p tw="text-3xl px-12 text-center">"You&quot;ve Won! Press the &quot;Claim&quot; button below to get your prize."</p>
+                    <p tw="text-3xl px-12 text-center">You&quot;ve Won! Press the &quot;Claim&quot; button below to get your prize.</p>
                     <h2 tw="text-3xl mt-5">Your prize will be delivered to your farcaster verfied address:</h2>
                     <p tw="text-3xl px-12 text-center">{ address }</p>
                 </div>
