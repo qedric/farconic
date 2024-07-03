@@ -194,6 +194,8 @@ export const getFavouriteBuildings = () => buildings.filter((b) => favBuildingNa
 
 export const getBuildingByName = (name: string) => buildings.find((b) => b.metadata.name.toLowerCase() === name.toLowerCase()) as NFT
 
+export const getBuildingById = (id: number) => buildings.find((b) => parseInt(b.id) === id) as NFT
+
 export const estimatePrice = async (buildingAddress: `0x${string}`, qty: bigint, isSell: boolean) => {
 
     const details = await mintclub.network('basesepolia').token(buildingAddress).getDetail()
