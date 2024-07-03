@@ -16,7 +16,7 @@ const handleRequest = frames(async (ctx) => {
         },
         buttons: [
             <Button action="post" target={{ query: { raffleName: ctx.searchParams.name }, pathname: "/raffle/check" }}>
-                Check if you've won 👀
+                Check if you&quot;ve won 👀
             </Button>
         ]
     }

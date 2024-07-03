@@ -54,7 +54,7 @@ export const CardImage = async (
                 </div>
                 <div tw="mt-2 w-full flex justify-between">
                     <InfoDisplay label="Liquidity:" value={ `${Math.round(parseFloat(ethers.formatEther(detail.info.reserveBalance))*1e6) / 1e6} ETH` } />
-                    <InfoDisplay label="Holders:" value={ openseaData.owners.length } />
+                    <InfoDisplay label="Holders:" value={ openseaData?.owners?.length || 0 } />
                 </div>
             </div>
             { userImg && 

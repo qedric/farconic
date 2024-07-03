@@ -172,7 +172,7 @@ const handleRequest = frames(async (ctx:any) => {
                                 </div>
                                 <div tw="mt-1 w-full flex justify-between">
                                     <InfoDisplay label="Liquidity:" value={ `${Math.round(parseFloat(ethers.formatEther(detail.info.reserveBalance))*1e4) / 1e4} ETH` } />
-                                    <InfoDisplay label="Holders:" value={ openseaData.owners.length } />
+                                    <InfoDisplay label="Holders:" value={ openseaData?.owners?.length } />
                                 </div>
                             </div>
                             { userData && 
