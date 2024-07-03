@@ -7,7 +7,7 @@ import { markWinnerAsClaimed } from '@/lib/db'
 import { claim } from './claim'
 import abi from '@/data/mc_building_abi.json'
 
-const handleRequest = frames(async (ctx: any) => {
+const handleRequest = frames(async (ctx: any) => { 
 
     const txId = ctx.txId || ''
     console.log('txId:', txId)
