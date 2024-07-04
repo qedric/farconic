@@ -1,10 +1,10 @@
 [
   {
     "metadata": {
-      "name": "Statue of Liberty test",
-      "description": "The Statue of Liberty, dedicated in 1886 in New York Harbor, is a colossal neoclassical sculpture gifted by France, symbolizing freedom and democracy.",
+      "name": "Test 2 Statue of Liberty New York",
+      "description": "The Statue of Liberty, dedicated in 1886 in New York Harbor, is a colossal neoclassical sculpture gifted by France, symbolizing freedom and democracy. It was designed by French sculptor Frédéric Auguste Bartholdi and its metal framework was built by Gustave Eiffel, best known for the Eiffel Tower.",
       "image": "ipfs://QmP9vCNLyKT3VeJSGJ3sgrEsxD5TELg97uMd2QCKcT4AZg/building%20card__8.gif",
-      "external_url": "https://farconic.xyz",
+      "external_url": "https://farconic.xyz/statue-of-liberty-test-2",
       "background_color": "F7F3EE",
       "attributes": [
         {
@@ -28,13 +28,17 @@
           "value": "1880s"
         },
         {
+          "trait_type": "Type of Building",
+          "value": "Statue"
+        },
+        {
           "value": "Building"
         }
       ]
     },
     "id": "1303",
-    "tokenURI": "ipfs://QmVnVZttKMUzmNxqFKz7ATWC2AqhD65uQY9jAuDVGkDfBC",
-    "address": "0x44c821e3744d9c039b5274b604e8cf85ff338cf1",
+    "tokenURI": "ipfs://QmY9gX6T79f6B2FHNXTjJyL8GLiuxjtwNQnnBhzLqLwFzj",
+    "address": "0x30f8a91F44a74845A7bFf3d732766f4F98E41Db9",
     "building_color": "#ea5046"
   },
   {
