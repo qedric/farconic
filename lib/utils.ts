@@ -4,6 +4,8 @@ import buildings from '@/data/buildings.json'
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
 
+const chainString = process.env.NODE_ENV === 'production' ? 'base' : 'basesepolia'
+
 const favBuildingNames: string[] = [
     "Eiffel Tower",
     "Burj Khalifa",
@@ -19,7 +21,7 @@ const favBuildingNames: string[] = [
     "Funkturm Berlin"
 ]
 
-const publicClient = mintclub.network('basesepolia').getPublicClient()
+const publicClient = mintclub.network(chainString).getPublicClient()
 
 const levenshteinDistance = (a: string, b: string): number => {
     const dp: number[][] = []
@@ -88,7 +90,9 @@ export const fetchImageUrlFromTokenId = async (id: number, abi: any) => {
 
 export const getOpenseaData = async (address: string) => {
 
-    const url = `https://testnets-api.opensea.io/api/v2/chain/base_sepolia/contract/${address}/nfts/${0}`
+    const url = process.env.NODE_ENV === 'production' 
+        ? `https://api.opensea.io/api/v2/chain/base/contract/${address}/nfts/${0}`
+        : `https://testnets-api.opensea.io/api/v2/chain/base_sepolia/contract/${address}/nfts/${0}`
 
     try {
         const options = {
@@ -110,7 +114,7 @@ export const getOpenseaData = async (address: string) => {
     }
 }
 
-export const getDetail = async (address: string) => await mintclub.network('basesepolia').token(address).getDetail()
+export const getDetail = async (address: string) => await mintclub.network(chainString).token(address).getDetail()
 
 export const searchJsonArray = (query: string): NFT[] => {
     const lowerCaseQuery = query.toLowerCase()
@@ -198,7 +202,7 @@ export const getBuildingById = (id: number) => buildings.find((b) => parseInt(b.
 
 export const estimatePrice = async (buildingAddress: `0x${string}`, qty: bigint, isSell: boolean) => {
 
-    const details = await mintclub.network('basesepolia').token(buildingAddress).getDetail()
+    const details = await mintclub.network(chainString).token(buildingAddress).getDetail()
     if (qty > details.info.maxSupply - details.info.currentSupply) {
         qty = details.info.maxSupply - details.info.currentSupply
     }
@@ -209,11 +213,11 @@ export const estimatePrice = async (buildingAddress: `0x${string}`, qty: bigint,
 
     const [priceEstimate, royalty] = isSell
         ? await mintclub
-            .network('basesepolia')
+            .network(chainString)
             .token(buildingAddress)
             .getSellEstimation(qty)
         : await mintclub
-            .network('basesepolia')
+            .network(chainString)
             .token(buildingAddress)
             .getBuyEstimation(qty)
     console.log(`Estimate for ${qty} of ${buildingAddress}: ${ethers.formatUnits(priceEstimate, 18)} ETH`)
@@ -235,7 +239,7 @@ export const estimatePriceMiddleware: FramesMiddleware<any, { priceEstimate: big
     }
 
     const building: NFT = JSON.parse(ctx.searchParams.building)
-    const details = await mintclub.network('basesepolia').token(building.address).getDetail()
+    const details = await mintclub.network(chainString).token(building.address).getDetail()
 
     let qty: bigint = BigInt(1)
     if (ctx.message.inputText) {
@@ -271,11 +275,11 @@ export const estimatePriceMiddleware: FramesMiddleware<any, { priceEstimate: big
 
     const [estimation, royalty] = isSell
         ? await mintclub
-            .network('basesepolia')
+            .network(chainString)
             .token(building.address)
             .getSellEstimation(qty)
         : await mintclub
-            .network('basesepolia')
+            .network(chainString)
             .token(building.address)
             .getBuyEstimation(qty)
     console.log(`Estimate for ${qty} ${building.metadata.name}: ${ethers.formatUnits(estimation, 18)} ETH`)

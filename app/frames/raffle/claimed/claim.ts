@@ -1,5 +1,7 @@
 import { types } from "frames.js/next"
-import { baseSepolia } from "viem/chains"
+import { baseSepolia, base } from "viem/chains"
+
+const chainId = process.env.NODE_ENV === 'production' ? base.id : baseSepolia.id
 
 export const claim: types.FramesMiddleware<any, { raffleName:string, txId: string }> = async (
     ctx: any,
@@ -37,7 +39,7 @@ export const claim: types.FramesMiddleware<any, { raffleName:string, txId: strin
             Authorization: `Bearer ${process.env.SYNDICATE_API_KEY}`,
             'Content-Type': 'application/json'
             },
-            body: `{"projectId":"${process.env.SYNDICATE_PROJECT_ID}","contractAddress":"${buildingAddress}","chainId":${baseSepolia.id},"functionSignature":"${fSig}","args":${args}}`
+            body: `{"projectId":"${process.env.SYNDICATE_PROJECT_ID}","contractAddress":"${buildingAddress}","chainId":${chainId},"functionSignature":"${fSig}","args":${args}}`
         }
 
         const response = await fetch('https://api.syndicate.io/transact/sendTransaction', options)

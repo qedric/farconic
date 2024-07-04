@@ -6,8 +6,10 @@ import { NFT, estimatePriceMiddleware } from '@/lib/utils'
 import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ethers } from 'ethers'
 import { ErrorFrame } from "@/components/FrameError"
-import { baseSepolia } from "viem/chains"
+import { baseSepolia, base } from "viem/chains"
 import { getOpenseaData, getDetail, getTokenBalancesForAddresses } from '@/lib/utils'
+
+const chainId = process.env.NODE_ENV === 'production' ? base.id : baseSepolia.id
 
 const handleRequest = frames(async (ctx:any) => {
     
@@ -53,9 +55,9 @@ const handleRequest = frames(async (ctx:any) => {
             } else {
                 // check that the seller has approved the contract to spend the NFT
                 await Promise.all(buildingBalances.map(async (balance) => {
-                    const isApproved = await mintclub.network(baseSepolia.id).nft(building.address).getIsApprovedForAll({
+                    const isApproved = await mintclub.network(chainId).nft(building.address).getIsApprovedForAll({
                         owner: (balance.address as `0x${string}`),
-                        spender: getMintClubContractAddress('ZAP', baseSepolia.id)
+                        spender: getMintClubContractAddress('ZAP', chainId)
                     })
                     if (isApproved) {
                         approvedAddresses.push({address: balance.address, balance: balance.balance});

@@ -1,12 +1,14 @@
 import { frames } from "../../frames"
 import { NextResponse } from "next/server";
 import { encodeFunctionData } from "viem";
-import { baseSepolia } from "viem/chains"
+import { baseSepolia, base } from "viem/chains"
 import zap_abi from '@/data/zap_abi.json'
 import building_abi from '@/data/mc_building_abi.json'
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { estimatePrice, getTokenBalanceByAddress } from '@/lib/utils'
 import { transaction } from "frames.js/core"
+
+const chainId = process.env.NODE_ENV === 'production' ? base.id : baseSepolia.id
 
 const SLIPPAGE_PERCENT = 1
 
@@ -21,7 +23,7 @@ export const POST = frames(async (ctx) => {
         throw new Error("No Token Address")
     }
 
-    const zap_contract_address = getMintClubContractAddress('ZAP', baseSepolia.id)
+    const zap_contract_address = getMintClubContractAddress('ZAP', chainId)
     const building_address = ctx.searchParams.contractAddress;
 
     if (ctx.searchParams.isApproved === 'false') {
@@ -35,7 +37,7 @@ export const POST = frames(async (ctx) => {
         })
 
         return NextResponse.json({
-            chainId: `eip155:${baseSepolia.id}`,
+            chainId: `eip155:${chainId}`,
             method: "eth_sendTransaction",
             params: {
                 abi: building_abi,
@@ -141,7 +143,7 @@ export const POST = frames(async (ctx) => {
     //console.log('params', params)
     
     return transaction({
-        chainId: `eip155:${baseSepolia.id}`,
+        chainId: `eip155:${chainId}`,
         method: "eth_sendTransaction",
         params: params
     })

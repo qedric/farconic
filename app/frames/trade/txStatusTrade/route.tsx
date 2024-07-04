@@ -4,12 +4,14 @@ import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { getTransactionReceipt, NFT } from '@/lib/utils'
 import { decodeEventLog } from 'viem'
-import { baseSepolia } from "viem/chains"
+import { baseSepolia, base } from "viem/chains"
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ErrorFrame } from "@/components/FrameError"
 import { CardImage } from '@/components/FrameCard'
 import abi from '@/data/mcv2bond_abi.json'
 import buildings from '@/data/buildings.json'
+
+const chainId = process.env.NODE_ENV === 'production' ? base.id : baseSepolia.id
 
 const handleRequest = frames(async (ctx) => {
 
@@ -21,7 +23,7 @@ const handleRequest = frames(async (ctx) => {
 
         //console.log('transactionId', txId)
         const url = `${process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL}/${txId}`
-        const bond_contract_address = getMintClubContractAddress('BOND', baseSepolia.id)
+        const bond_contract_address = getMintClubContractAddress('BOND', chainId)
         let receipt
         try {
             receipt = await getTransactionReceipt(txId as `0x${string}`)

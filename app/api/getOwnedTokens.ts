@@ -5,8 +5,9 @@ import buildings from '@/data/buildings.json'
 // Alchemy Config object
 const settings = {
     apiKey: process.env.ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
-    network: Network.BASE_SEPOLIA, // Replace with your network.
+    network: process.env.NODE_ENV === 'production' ? Network.BASE_MAINNET : Network.BASE_SEPOLIA,
 }
+
 
 export const getOwnedTokens = async (accountAddress: `0x${string}`) => {
     const batchSize = 45 // maximum number of results allowed by alchemy

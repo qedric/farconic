@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { createWalletClient, custom } from 'viem'
-import { baseSepolia } from 'viem/chains'
+import { baseSepolia, base } from 'viem/chains'
+
+const chain = process.env.NODE_ENV === 'production' ? base : baseSepolia
 
 async function ConnectWalletClient() {
     // Check for window.ethereum
@@ -13,7 +15,7 @@ async function ConnectWalletClient() {
 
     // Declare a Wallet Client
     const walletClient = createWalletClient({
-        chain: baseSepolia,
+        chain: chain,
         transport: transport,
     })
 
