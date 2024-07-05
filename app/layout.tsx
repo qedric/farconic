@@ -29,14 +29,14 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className="flex flex-col justify-between">
-        <header className="flex justify-between h-32 p-6">
+      <body className="flex flex-col justify-between overflow-x-hidden">
+        <header className="flex justify-between lg:h-32 p-6">
           <figure >
             <Image className="w-fit" width="2560" height="128" src="/logo.png" priority={true} alt="logo" sizes="(max-width: 2560px) 100vw, 2560px" />
           </figure>
           <MainNav />
         </header>
-        <main className={`${montserratFont.className} flex flex-col items-center justify-center `}>{children}</main>
+        <main className={`${montserratFont.className} flex flex-col items-center justify-center mx-auto max-w-[940px] `}>{children}</main>
         <footer className="bg-black">
             <figure >
               <Image width="2560" height="639" src="https://farconic.xyz/wp-content/uploads/2024/04/bottom-strip-1.jpg" alt="" sizes="(max-width: 2560px) 100vw, 2560px" />
@@ -70,15 +70,15 @@ export default function RootLayout({
               </div>
 
               <div className="flex flex-col gap-y-6 justify-around items-center">
-                <p className="text-sm"><strong>In Collaboration with:</strong></p>
+                <p className="text-sm"><strong className="text-white">In Collaboration with:</strong></p>
                 <figure>
-                  <Link href="https://mint.club/"><Image className="my-2 lg:mt-0 w-[35vw lg:w-[8vw]" width="1000" height="1000" src="https://farconic.xyz/wp-content/uploads/2024/05/mintclub.jpg" alt="" sizes="(max-width: 612px) 100vw, 612px" /></Link> 
+                  <Link href="https://mint.club/"><Image className="my-2 lg:mt-0 w-[35vw] lg:w-[8vw]" width="1000" height="1000" src="https://farconic.xyz/wp-content/uploads/2024/05/mintclub.jpg" alt="" sizes="(max-width: 612px) 100vw, 612px" /></Link> 
                 </figure>
               </div>
             </div>
 
             <div className="my-5">
-              <p className="text-center text-sm"><strong>Shapes of Cities Featured in:</strong></p>
+              <p className="text-center text-sm"><strong className="text-white">Shapes of Cities Featured in:</strong></p>
               <div className="px-14 lg-px-0 mx-auto my-10 lg:mt-8 flex flex-col lg:flex-row gap-y-8 justify-center">
                 <div className="w-fit mr-4 flex gap-x-10 lg:gap-x-8 justify-center items-center">
                   <figure ><Link href="https://www.thisiscolossal.com/2014/05/colorful-city-silhouette-prints-by-yoni-alter/"><Image className="w-24" width="1000" height="188" src="https://farconic.xyz/wp-content/uploads/2024/05/colossal-logo-1000px-2.png" alt="" sizes="(max-width: 1000px) 100vw, 1000px" /></Link> </figure>
