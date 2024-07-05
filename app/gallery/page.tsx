@@ -1,11 +1,14 @@
 'use client'
 import { useState, useEffect } from 'react'
-import buildings from '@/data/buildings.json'
+import mainnet_buildings from '@/data/buildings.json'
+import testnet_buildings from '@/data/buildings_baseSepolia.json'
 import CardSVG from "@/components/CardSVG"
 import WalletConnect from "@/components/WalletConnect"
 import { NFT } from "@/lib/utils"
-import { getOwnedTokens } from '@/app/api/getOwnedTokens'
+import { getOwnedTokens } from '@/app/api/alchemy'
 import { Refresh } from "@/components/Refresh"
+
+const buildings = process.env.NODE_ENV === 'production' ? mainnet_buildings : testnet_buildings
 
 export default function Gallery() {
     const [address, setAddress] = useState('')

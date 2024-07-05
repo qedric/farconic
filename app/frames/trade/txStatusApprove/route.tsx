@@ -2,10 +2,13 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getTransactionReceipt, getTokenBalanceByAddress } from '@/lib/utils'
-import buildings from '@/data/buildings.json'
 import { ErrorFrame } from "@/components/FrameError"
 import { decodeEventLog } from 'viem'
 import abi from '@/data/mc_building_abi.json'
+import mainnet_buildings from '@/data/buildings.json'
+import testnet_buildings from '@/data/buildings_baseSepolia.json'
+
+const buildings = process.env.NODE_ENV === 'production' ? mainnet_buildings : testnet_buildings
 
 const handleRequest = frames(async (ctx) => {
 

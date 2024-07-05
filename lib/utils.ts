@@ -1,10 +1,12 @@
 import { mintclub } from 'mint.club-v2-sdk'
 import mc_building_abi from '@/data/mc_building_abi.json'
-import buildings from '@/data/buildings.json'
+import mainnet_buildings from '@/data/buildings.json'
+import testnet_buildings from '@/data/buildings_baseSepolia.json'
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
 
 const chainString = process.env.NODE_ENV === 'production' ? 'base' : 'basesepolia'
+const buildings = process.env.NODE_ENV === 'production' ? mainnet_buildings : testnet_buildings
 
 const favBuildingNames: string[] = [
     "Eiffel Tower",
@@ -64,7 +66,7 @@ export interface NFT {
     id: string
     tokenURI: string
     building_color: string
-    address: string
+    address: `0x${string}`
 }
 
 export const getTransactionReceipt = async (txId: `0x${string}`) => await publicClient.waitForTransactionReceipt({ hash: txId, pollingInterval: 500, retryCount: 8 })

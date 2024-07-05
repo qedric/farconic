@@ -9,9 +9,11 @@ import { getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ErrorFrame } from "@/components/FrameError"
 import { CardImage } from '@/components/FrameCard'
 import abi from '@/data/mcv2bond_abi.json'
-import buildings from '@/data/buildings.json'
+import mainnet_buildings from '@/data/buildings.json'
+import testnet_buildings from '@/data/buildings_baseSepolia.json'
 
 const chainId = process.env.NODE_ENV === 'production' ? base.id : baseSepolia.id
+const buildings = process.env.NODE_ENV === 'production' ? mainnet_buildings : testnet_buildings
 
 const handleRequest = frames(async (ctx) => {
 
