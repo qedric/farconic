@@ -15,8 +15,8 @@ export const CardImage = async (
         getDetail((building as NFT).address)
     ])
 
-    //const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(100))
-    const currentPriceValue = `${Math.round(parseFloat(ethers.formatEther(detail.info.priceForNextMint))*1e6) / 1e6} ETH`
+    const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(10000))
+    const currentPriceValue = `${Math.round(parseFloat(ethers.formatEther(priceForNextMintWithRoyalty))*1e6) / 1e6} ETH`
 
     const buildingName = building.metadata.name
     let buildingNameFontSize:string = buildingName.length > 28 

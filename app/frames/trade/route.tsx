@@ -82,9 +82,8 @@ const handleRequest = frames(async (ctx:any) => {
             getDetail((building as NFT).address)
         ])
     
-        const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(100))
-        console.log('priceForNextMintWithRoyalty', priceForNextMintWithRoyalty)
-        const currentBuyValue = `${Math.round(parseFloat(ethers.formatEther(detail.info.priceForNextMint))*1e6) / 1e6} ETH`
+        const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(10000))
+        const currentBuyValue = `${Math.round(parseFloat(ethers.formatEther(priceForNextMintWithRoyalty))*1e6) / 1e6} ETH`
 
         const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
 
