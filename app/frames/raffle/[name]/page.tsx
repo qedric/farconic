@@ -12,7 +12,7 @@ export async function generateMetadata(props:any) {
   )
 
   return {
-    title: "A Farconic Building Raffle Frame",
+    title: "Farconic: Collect Buildings",
     // provide the full URL to /frames endpoint with query parameters
     other: await fetchMetadata(url),
   }
