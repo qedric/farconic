@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 import { ethers } from 'ethers'
-import { getOpenseaData, getDetail, NFT } from '@/lib/utils'
+import { getDetail, NFT } from '@/lib/utils'
+import { getOwnersOfToken } from '@/app/api/alchemy'
 
 export const CardImage = async ( 
     building:NFT,
@@ -9,10 +10,13 @@ export const CardImage = async (
     scale:string | undefined = undefined
 ) => {
 
-    const [openseaData, detail] = await Promise.all([
-        getOpenseaData((building as NFT).address),
+    const [holders, detail] = await Promise.all([
+        getOwnersOfToken((building as NFT).address),
         getDetail((building as NFT).address)
     ])
+
+    const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(100))
+    const currentPriceValue = `${Math.round(parseFloat(ethers.formatEther(priceForNextMintWithRoyalty))*1e6) / 1e6} ETH`
 
     const buildingName = building.metadata.name
     let buildingNameFontSize:string = buildingName.length > 28 
@@ -49,12 +53,12 @@ export const CardImage = async (
                     </div>
                 </div>
                 <div tw="mt-4 w-full flex justify-between">
-                    <InfoDisplay label="Current Price:" value={ `${Math.round(parseFloat(ethers.formatEther(detail.info.priceForNextMint))*1e6) / 1e6} ETH` } />
-                    <InfoDisplay label="Supply:" value={ detail.info.currentSupply.toString() } />
+                    <InfoDisplay label="Current Price:" value={ currentPriceValue } />
+                    <InfoDisplay label="Total Minted:" value={ detail.info.currentSupply.toString() } />
                 </div>
                 <div tw="mt-2 w-full flex justify-between">
                     <InfoDisplay label="Liquidity:" value={ `${Math.round(parseFloat(ethers.formatEther(detail.info.reserveBalance))*1e6) / 1e6} ETH` } />
-                    <InfoDisplay label="Holders:" value={ openseaData?.owners?.length || 0 } />
+                    <InfoDisplay label="Holders:" value={ holders?.length.toString() || '0' } />
                 </div>
             </div>
             { userImg && 

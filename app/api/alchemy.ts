@@ -1,6 +1,9 @@
 'use server'
 import { Network, Alchemy } from 'alchemy-sdk'
-import buildings from '@/data/buildings.json'
+import mainnet_buildings from '@/data/buildings.json'
+import testnet_buildings from '@/data/buildings_baseSepolia.json'
+
+const buildings = process.env.NODE_ENV === 'production' ? mainnet_buildings : testnet_buildings
 
 // Alchemy Config object
 const settings = {
@@ -8,6 +11,16 @@ const settings = {
     network: process.env.NODE_ENV === 'production' ? Network.BASE_MAINNET : Network.BASE_SEPOLIA,
 }
 
+export const getOwnersOfToken = async (tokenAddress: `0x${string}`) => {
+    const alchemy = new Alchemy(settings)
+
+    //Call the method to fetch the owners for the collection
+    const response = await alchemy.nft.getOwnersForNft(tokenAddress, '0')
+
+    //Logging the response to the console
+    console.log('getOwnersOfToken response:', response)
+    return response.owners
+}
 
 export const getOwnedTokens = async (accountAddress: `0x${string}`) => {
     const batchSize = 45 // maximum number of results allowed by alchemy

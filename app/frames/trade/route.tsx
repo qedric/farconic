@@ -7,7 +7,8 @@ import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ethers } from 'ethers'
 import { ErrorFrame } from "@/components/FrameError"
 import { baseSepolia, base } from "viem/chains"
-import { getOpenseaData, getDetail, getTokenBalancesForAddresses } from '@/lib/utils'
+import { getDetail, getTokenBalancesForAddresses } from '@/lib/utils'
+import { getOwnersOfToken } from '@/app/api/alchemy'
 
 const chainId = process.env.NODE_ENV === 'production' ? base.id : baseSepolia.id
 
@@ -76,10 +77,13 @@ const handleRequest = frames(async (ctx:any) => {
             }
         }
 
-        const [openseaData, detail] = await Promise.all([
-            getOpenseaData((building as NFT).address),
+        const [holders, detail] = await Promise.all([
+            getOwnersOfToken((building as NFT).address),
             getDetail((building as NFT).address)
         ])
+    
+        const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(100))
+        const currentBuyValue = `${Math.round(parseFloat(ethers.formatEther(priceForNextMintWithRoyalty))*1e6) / 1e6} ETH`
 
         const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
 
@@ -169,12 +173,12 @@ const handleRequest = frames(async (ctx:any) => {
                                     </div>
                                 </div>
                                 <div tw="mt-2 w-full flex justify-between">
-                                    <InfoDisplay label="Current Price:" value={ `${Math.round(parseFloat(ethers.formatEther(detail.info.priceForNextMint))*1e4) / 1e4} ETH` } />
-                                    <InfoDisplay label="Supply:" value={ detail.info.currentSupply.toString() } />
+                                    <InfoDisplay label="Current Price:" value={ currentBuyValue } />
+                                    <InfoDisplay label="Total Minted:" value={ detail.info.currentSupply.toString() } />
                                 </div>
                                 <div tw="mt-1 w-full flex justify-between">
                                     <InfoDisplay label="Liquidity:" value={ `${Math.round(parseFloat(ethers.formatEther(detail.info.reserveBalance))*1e4) / 1e4} ETH` } />
-                                    <InfoDisplay label="Holders:" value={ openseaData?.owners?.length } />
+                                    <InfoDisplay label="Holders:" value={ holders?.length.toString() || '0' } />
                                 </div>
                             </div>
                             { userData && 
