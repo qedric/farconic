@@ -28,7 +28,7 @@ const handleRequest = frames(async (ctx) => {
         },
         buttons: [
             <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/check" }}>
-                Check if you&quot;ve won 👀
+                Check if you&apos;ve won 👀
             </Button>
         ]
     }
