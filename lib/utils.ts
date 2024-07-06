@@ -5,8 +5,8 @@ import testnet_buildings from '@/data/buildings_baseSepolia.json'
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
 
-const chainString = process.env.NODE_ENV === 'production' ? 'base' : 'basesepolia'
-const buildings = process.env.NODE_ENV === 'production' ? mainnet_buildings : testnet_buildings
+const chainString = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? 'base' : 'basesepolia'
+const buildings = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 
 const favBuildingNames: string[] = [
     "Eiffel Tower",
@@ -92,7 +92,7 @@ export const fetchImageUrlFromTokenId = async (id: number, abi: any) => {
 
 export const getOpenseaData = async (address: string) => {
 
-    const url = process.env.NODE_ENV === 'production' 
+    const url = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET'
         ? `https://api.opensea.io/api/v2/chain/base/contract/${address}/nfts/${0}`
         : `https://testnets-api.opensea.io/api/v2/chain/base_sepolia/contract/${address}/nfts/${0}`
 
