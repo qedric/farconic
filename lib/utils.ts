@@ -5,8 +5,8 @@ import testnet_buildings from '@/data/buildings_testnet.json'
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
 
-const chainString = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? 'base' : 'basesepolia'
-const buildings = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
+const chainString = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? 'base' : 'basesepolia'
+const buildings = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 
 const favBuildingNames_testnet: string[] = [
     "Eiffel Tower",
@@ -27,7 +27,7 @@ const favBuildingNames_mainnet: string[] = [
     "Statue of Liberty"
 ]
 
-const favBuildingNames = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? favBuildingNames_mainnet : favBuildingNames_testnet
+const favBuildingNames = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? favBuildingNames_mainnet : favBuildingNames_testnet
 
 const publicClient = mintclub.network(chainString).getPublicClient()
 
@@ -98,7 +98,7 @@ export const fetchImageUrlFromTokenId = async (id: number, abi: any) => {
 
 export const getOpenseaData = async (address: string) => {
 
-    const url = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET'
+    const url = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET'
         ? `https://api.opensea.io/api/v2/chain/base/contract/${address}/nfts/${0}`
         : `https://testnets-api.opensea.io/api/v2/chain/base_sepolia/contract/${address}/nfts/${0}`
 
