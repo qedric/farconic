@@ -1,7 +1,7 @@
 'use server'
 import { Network, Alchemy } from 'alchemy-sdk'
 import mainnet_buildings from '@/data/buildings.json'
-import testnet_buildings from '@/data/buildings_baseSepolia.json'
+import testnet_buildings from '@/data/buildings_testnet.json'
 
 const buildings = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' && process.env.CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 

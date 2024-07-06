@@ -1,7 +1,7 @@
 import { mintclub } from 'mint.club-v2-sdk'
 import mc_building_abi from '@/data/mc_building_abi.json'
 import mainnet_buildings from '@/data/buildings.json'
-import testnet_buildings from '@/data/buildings_baseSepolia.json'
+import testnet_buildings from '@/data/buildings_testnet.json'
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
 

@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import mainnet_buildings from '@/data/buildings.json'
-import testnet_buildings from '@/data/buildings_baseSepolia.json'
+import testnet_buildings from '@/data/buildings_testnet.json'
 import CardSVG from "@/components/CardSVG"
 import WalletConnect from "@/components/WalletConnect"
 import { NFT } from "@/lib/utils"
