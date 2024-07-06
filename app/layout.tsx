@@ -31,9 +31,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex flex-col justify-between overflow-x-hidden">
         <header className="flex justify-between lg:h-32 p-6">
-          <figure >
-            <Image className="w-fit" width="2560" height="128" src="/logo.png" priority={true} alt="logo" sizes="(max-width: 2560px) 100vw, 2560px" />
-          </figure>
+          <Link href="/">
+            <figure >
+              <Image className="w-fit" width="2560" height="128" src="/logo.png" priority={true} alt="logo" sizes="(max-width: 2560px) 100vw, 2560px" />
+            </figure>
+          </Link>
           <MainNav />
         </header>
         <main className={`${montserratFont.className} flex flex-col items-center justify-center mx-auto max-w-[940px] `}>{children}</main>
