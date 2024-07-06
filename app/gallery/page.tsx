@@ -8,7 +8,7 @@ import { NFT } from "@/lib/utils"
 import { getOwnedTokens } from '@/app/api/alchemy'
 import { Refresh } from "@/components/Refresh"
 
-const buildings = process.env.NEXT_PUBLIC_CHAIN == 'MAINNET' ? mainnet_buildings : testnet_buildings
+const buildings = process.env.NEXT_PUBLIC_CHAIN == 'MAINNET' ? mainnet_buildings : testnet_buildings 
 
 export default function Gallery() {
     const [address, setAddress] = useState('')
