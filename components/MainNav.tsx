@@ -19,12 +19,12 @@ export const MainNav = () => {
               <li>
                 <ActiveLink href="/gallery">Gallery</ActiveLink>
               </li>
-              <li>
+{/*               <li>
                 <ActiveLink href="/about">About</ActiveLink>
               </li>
               <li>
                 <ActiveLink href="/team">Team</ActiveLink>
-              </li>
+              </li> */}
             </ul>
           </nav>
     )

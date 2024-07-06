@@ -8,7 +8,7 @@ import abi from '@/data/mc_building_abi.json'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
 
-const buildings = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
+const buildings = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 
 const handleRequest = frames(async (ctx) => {
 
