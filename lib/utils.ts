@@ -8,7 +8,7 @@ import { FramesMiddleware } from "frames.js/types"
 const chainString = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? 'base' : 'basesepolia'
 const buildings = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 
-const favBuildingNames: string[] = [
+const favBuildingNames_testnet: string[] = [
     "Eiffel Tower",
     "Burj Khalifa",
     "Statue of Liberty",
@@ -22,6 +22,12 @@ const favBuildingNames: string[] = [
     "Golden Gate Bridge",
     "Funkturm Berlin"
 ]
+
+const favBuildingNames_mainnet: string[] = [
+    "Statue of Liberty"
+]
+
+const favBuildingNames = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? favBuildingNames_mainnet : favBuildingNames_testnet
 
 const publicClient = mintclub.network(chainString).getPublicClient()
 
