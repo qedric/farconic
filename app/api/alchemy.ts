@@ -3,12 +3,12 @@ import { Network, Alchemy } from 'alchemy-sdk'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
 
-const buildings = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' && process.env.CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
+const buildings = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 
 // Alchemy Config object
 const settings = {
     apiKey: process.env.ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
-    network: process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? Network.BASE_MAINNET : Network.BASE_SEPOLIA,
+    network: process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? Network.BASE_MAINNET : Network.BASE_SEPOLIA,
 }
 
 export const getOwnersOfToken = async (tokenAddress: `0x${string}`) => {

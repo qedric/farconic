@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { createWalletClient, custom } from 'viem'
 import { baseSepolia, base } from 'viem/chains'
 
-const chain = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? base : baseSepolia
+const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
 
 async function ConnectWalletClient() {
     // Check for window.ethereum
