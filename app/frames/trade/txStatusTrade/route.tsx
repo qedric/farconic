@@ -12,8 +12,8 @@ import abi from '@/data/mcv2bond_abi.json'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
 
-const chainId = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
-const buildings = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
+const chainId = process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
+const buildings = process.env.CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 
 const handleRequest = frames(async (ctx) => {
 

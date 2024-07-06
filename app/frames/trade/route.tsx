@@ -10,7 +10,7 @@ import { baseSepolia, base } from "viem/chains"
 import { getDetail, getTokenBalancesForAddresses } from '@/lib/utils'
 import { getOwnersOfToken } from '@/app/api/alchemy'
 
-const chainId = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
+const chainId = process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
 
 const handleRequest = frames(async (ctx:any) => {
     

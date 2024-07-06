@@ -8,7 +8,7 @@ import { getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { estimatePrice, getTokenBalanceByAddress } from '@/lib/utils'
 import { transaction } from "frames.js/core"
 
-const chainId = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
+const chainId = process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
 
 const SLIPPAGE_PERCENT = 1
 

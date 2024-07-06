@@ -1,7 +1,7 @@
 import { types } from "frames.js/next"
 import { baseSepolia, base } from "viem/chains"
 
-const chainId = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
+const chainId = process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
 
 export const claim: types.FramesMiddleware<any, { name:string, txId: string }> = async (
     ctx: any,
