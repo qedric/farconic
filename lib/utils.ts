@@ -208,6 +208,8 @@ export const getBuildingByName = (name: string) => buildings.find((b) => b.metad
 
 export const getBuildingById = (id: number) => buildings.find((b) => parseInt(b.id) === id) as NFT
 
+export const getBuildingByAddress = (address: string) => buildings.find((b) => b.address?.toLowerCase() === address.toLowerCase()) as NFT
+
 export const estimatePrice = async (buildingAddress: `0x${string}`, qty: bigint, isSell: boolean) => {
 
     const details = await mintclub.network(chainString).token(buildingAddress).getDetail()

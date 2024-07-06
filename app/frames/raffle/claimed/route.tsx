@@ -1,10 +1,12 @@
 /* eslint-disable react/jsx-key */
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
+import { getUserDataForFid } from 'frames.js'
 import { decodeEventLog, Abi } from 'viem'
-import { getTransactionReceipt } from '@/lib/utils'
+import { getTransactionReceipt, getBuildingByAddress, NFT } from '@/lib/utils'
 import { markWinnerAsClaimed } from '@/lib/db'
 import { claim } from './claim'
+import { CardImage } from '@/components/FrameCard'
 import abi from '@/data/mc_building_abi.json'
 
 const handleRequest = frames(async (ctx: any) => { 
@@ -23,7 +25,7 @@ const handleRequest = frames(async (ctx: any) => {
                 aspectRatio: "1:1",
             },
             buttons: [
-                <Button action="post" target="/">
+                <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/" }}>
                     reset
                 </Button>
             ]
@@ -44,15 +46,15 @@ const handleRequest = frames(async (ctx: any) => {
     if (requestStatus.invalid) {
         return { 
             image: (
-                <div tw="flex">
+                <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
                     <h1>Sorry you can&quot;t claim at this time</h1>
                 </div>
             ),
             imageOptions: {
-                aspectRatio: "1:1",
+                aspectRatio: "1.91:1"
             },
             buttons: [
-                <Button action="post" target="/">
+                <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/" }}>
                     reset
                 </Button>
             ]
@@ -77,49 +79,59 @@ const handleRequest = frames(async (ctx: any) => {
 
         console.log('success')
 
+        const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
+
         const eventABI = (abi.filter((item: any) => item.name === "TransferSingle") as Abi)
         const logs = txReceipt.logs
+
+        let bulidingAddress = ''
 
         // Filter logs to find TokensClaimed events
         logs.forEach((log:any) => {
             try {
                 const topics:any = decodeEventLog({abi: eventABI, data: log.data, topics: log.topics})
-                console.log('topics:', topics)
+                bulidingAddress = log.address
             } catch {
                 // not a safeTransferFrom event, do nothing
             }
         })
 
+        const building:NFT = getBuildingByAddress(bulidingAddress)
+        console.log('bulidingAddress:', bulidingAddress)
+
         // mark the winner as having claimed their prize, in the database
-        const result = await markWinnerAsClaimed(ctx.searchParams.raffleName, ctx.message.requesterFid, txId)
-        console.log('result:', result)
+        const result = await markWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
+
+        console.log('building:', building)
+        const addThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
+        const successString = `You now own ${addThe(building.metadata.name)} card!`
+
+        console.log('successString:', successString)
 
         return {
             image: (
-                <div tw="flex flex-col w-full h-full">
-                    <div tw="flex flex-col bg-black">
-                        <h1 tw="m-0 p-0 mx-auto text-white">YOUR BUILDING</h1>
+                <div tw="flex w-full h-full" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmRJx4BNegoXtzsZ64zqFwxqoXUFRZAmAQmG6ToLxU2SdV)`}}>
+                    <div tw="flex flex-col relative bottom-[40px] w-full h-full items-center justify-center">
+                        <h1 tw="relative top-[18%] text-[60px]">CONGRATULATIONS!</h1>
+                        { await CardImage(building, undefined, undefined, '0.50') }
+                        { userData && 
+                            <div tw="absolute top-[310px] w-full flex flex-col justify-center items-center">
+                                <img src={userData.profileImage} tw="w-[4.55vw] h-[4.55vw] rounded-full" />
+                                <div tw="flex lowercase text-[14px] text-white" style={{ transform: 'scale(0.6)' }}>@{ userData.username }</div>
+                            </div>
+                        }
+                        <h1 tw="relative px-20 text-center bottom-[280px] flex text-[32px]">{ successString }</h1>
                     </div>
-                    <div tw="flex flex-wrap justify-center mx-auto h-full mt-24">
-                        
-    
-                        {/* <img
-                            tw="absolute bottom-1/2 shadow-2xl"
-                            src={`${ipfsLinks[4]}`}
-                            width={220}
-                        /> */}
-                    </div>
-                </div>
-                
+                </div> 
             ),
             imageOptions: {
                 aspectRatio: "1:1",
             },
             buttons: [
-                <Button action="post" target="/">
+                <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/" }}>
                     reset
                 </Button>,
-                <Button action="link" target={process.env.NEXT_PUBLIC_OPENSEA_LINK as string}>
+                <Button action="link" target={`${process.env.NEXT_PUBLIC_OPENSEA_LINK as string}${bulidingAddress}`}>
                     view on opensea
                 </Button>,
                 <Button action="link" target='https://farconic.xyz'>
@@ -137,34 +149,29 @@ const handleRequest = frames(async (ctx: any) => {
             </div>
         ),
         imageOptions: {
-            aspectRatio: "1:1",
+            aspectRatio: "1.91:1"
         },
         buttons: [
-            <Button action="post" target={{ query: { txId: txId, raffleName: ctx.searchParams.raffleName }, pathname: "/raffle/claimed" }}>
+            <Button action="post" target={{ query: { txId: txId, name: ctx.searchParams.name }, pathname: "/raffle/claimed" }}>
                 refresh
-            </Button>,
-            <Button action="link" target={process.env.NEXT_PUBLIC_OPENSEA_LINK as string}>
-                view on opensea
             </Button>
         ]
     } : {
         image: (
-            <div tw="flex flex-col">
+            <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
                 <h1>{`Transaction status: ${status}.`}</h1>
+                <p>Please allow some time for the transaction to appear on the blockchain, and try a refresh.</p>
             </div>
         ),
         imageOptions: {
-            aspectRatio: "1:1",
+            aspectRatio: "1.91:1"
         },
         buttons: [
-            <Button action="post" target={{ query: { txId: txId, raffleName: ctx.searchParams.raffleName }, pathname: "/raffle/claimed" }}>
+            <Button action="post" target={{ query: { txId: txId, name: ctx.searchParams.name }, pathname: "/raffle/claimed" }}>
                 refresh
             </Button>,
-            <Button action="post" target="/">
+            <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/" }}>
                 reset
-            </Button>,
-            <Button action="link" target={process.env.NEXT_PUBLIC_OPENSEA_LINK as string}>
-                view on opensea
             </Button>
         ]
     }

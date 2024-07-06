@@ -10,7 +10,7 @@ const handleRequest = frames(async (ctx:any) => {
         throw new Error("Invalid Frame")
     }
 
-    const { raffle } = await getRaffleFromDb(ctx.searchParams.raffleName)
+    const { raffle } = await getRaffleFromDb(ctx.searchParams.name)
 
     if (!raffle) {
         throw new Error("Raffle not found")
@@ -61,7 +61,7 @@ const handleRequest = frames(async (ctx:any) => {
                 aspectRatio: "1.91:1"
             },
             buttons: [
-                <Button action="post" target={{ query: { to: address, buildingAddress: getBuildingById(raffle.buildingId).address, raffleName: raffle.name }, pathname: '/raffle/claimed' }}>
+                <Button action="post" target={{ query: { to: address, buildingAddress: getBuildingById(raffle.buildingId).address, name: raffle.name }, pathname: '/raffle/claimed' }}>
                     Claim 🎉
                 </Button>
             ]

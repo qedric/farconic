@@ -3,13 +3,13 @@ import { baseSepolia, base } from "viem/chains"
 
 const chainId = process.env.NODE_ENV === 'production' && process.env.CHAIN === 'MAINNET' ? base.id : baseSepolia.id
 
-export const claim: types.FramesMiddleware<any, { raffleName:string, txId: string }> = async (
+export const claim: types.FramesMiddleware<any, { name:string, txId: string }> = async (
     ctx: any,
     next
 ) => {
 
     if (ctx.searchParams.txId) {
-        return next({ raffleName: ctx.searchParams.raffleName, txId: ctx.searchParams.txId })
+        return next({ name: ctx.searchParams.name, txId: ctx.searchParams.txId })
     }
 
     const custodyAddress = process.env.RAFFLE_PRIZE_CUSTODY_ADDRESS
@@ -51,7 +51,7 @@ export const claim: types.FramesMiddleware<any, { raffleName:string, txId: strin
         console.error(err)
     }
 
-    console.log('raffleName:', ctx.searchParams.raffleName)
+    console.log('raffleName:', ctx.searchParams.name)
 
-    return next({ raffleName: ctx.searchParams.raffleName, txId: txId || '' })
+    return next({ name: ctx.searchParams.name, txId: txId || '' })
 }

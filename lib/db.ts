@@ -1,4 +1,3 @@
-import { get } from "http"
 import { MongoClient, ServerApiVersion } from "mongodb"
 
 if (!process.env.MONGODB_URI) {
@@ -43,7 +42,8 @@ export type Raffle = {
   name: string
   buildingId: number
   winnerFids: number[]
-  welcomeText: string
+  welcomeText?: string
+  welcomeImage?: string
   claimed?: {
     fid: number
     claims: string[]
@@ -61,6 +61,7 @@ export const getRaffleFromDb = async (name:string): Promise<ConnectionStatus> =>
         buildingId: record.buildingId,
         winnerFids : record.winnerFids,
         welcomeText: record.welcomeText,
+        welcomeImage: record.welcomeImage,
         claimed: record.claimed || null
       }
       : null
