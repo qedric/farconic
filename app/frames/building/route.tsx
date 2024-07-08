@@ -29,7 +29,7 @@ const handleRequest = frames(async (ctx) => {
         },
         textInput: 'Set Quantity',
         buttons: [
-            <Button action="link" target={process.env.NEXT_PUBLIC_FRAME_SHARE_LINK as string}>
+            <Button action="link" target={`${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}`}>
                 App 🌐
             </Button>,
             <Button action="post" target={{ query: { building: JSON.stringify(building), mode: 'building' }, pathname: "/trade" }}>
