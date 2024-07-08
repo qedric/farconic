@@ -2462,7 +2462,7 @@
       "name": "Obelisco de Buenos Aires",
       "description": "The Obelisco de Buenos Aires, erected in 1936, is an iconic monument in the heart of the city, standing as a symbol of the Argentine capital's quadricentennial.",
       "image": "ipfs://QmNr4cgNncXCT276AJJJtzBjuGUpsYghWQhmxqdN8Cp9Wr/building%20card_5.gif",
-      "external_url": "https://farconic.xyz",
+      "external_url": "https://farconic.xyz/obelisco-de-buenos-aires",
       "background_color": "F7F3EE",
       "attributes": [
         {
@@ -2482,13 +2482,17 @@
           "value": "1930s"
         },
         {
+          "trait_type": "Type of Building",
+          "value": "Monument"
+        },
+        {
           "value": "Building"
         }
       ]
     },
     "id": "69",
-    "tokenURI": "ipfs://Qmf1PZcgeGc3fDvdQMpdiqMmNRTZxJurtn1Ax8FAytoJYH",
-    "address": "0x2f14e0a17b5E5849e254e5B5b4C142227E07d7EF",
+    "tokenURI": "ipfs://QmaUX5Dpzsphw2PYErxQqyuHpKxm5hacp4SfYPK7VR37pb",
+    "address": "0xb6C2261f746C38CEec84F6DBbF1dD8fA9b609BBf",
     "building_color": "#ee3e7f"
   },
   {
@@ -15634,7 +15638,7 @@
       "name": "CN Tower",
       "description": "CN Tower, completed in 1976 in Toronto, was the world's tallest freestanding structure until 2007, famous for its communications and observation facilities.",
       "image": "ipfs://QmbmNUrNvQUWt6uq887NAGkeBxjFDZjBcpqBz4EWBMgbfj/building%20card_2.gif",
-      "external_url": "https://farconic.xyz",
+      "external_url": "https://farconic.xyz/cn-tower",
       "background_color": "F7F3EE",
       "attributes": [
         {
@@ -15654,13 +15658,17 @@
           "value": "1970s"
         },
         {
+          "trait_type": "Type of Building",
+          "value": "Tower"
+        },
+        {
           "value": "Building"
         }
       ]
     },
     "id": "440",
-    "tokenURI": "ipfs://QmdCfC15Kat83TBsWdhdRWmtRnqDVMV485Rzd2xGEFsswy",
-    "address": "0x93Ec500252eE00c72b161d6c02694E5C336DA09f",
+    "tokenURI": "ipfs://QmZqjg5SyCsY4X8LxzJCsBYcQ86sTxwRMPGnN9XpNwRFbk",
+    "address": "0x8282BEb138c88b22A03c927Bd30484B22f2937cF",
     "building_color": "#f9d414"
   },
   {

@@ -95,9 +95,9 @@ const handleRequest = frames(async (ctx:any) => {
         const containerStyle:string = `flex items-center bg-[${building.building_color}] rounded-[16px] uppercase`
         const InfoDisplay: React.FC<{ label: string, value: string }> = ({ label, value }) => {
             return (
-                <div tw="flex flex-col w-[12vw]">
-                    <div tw="text-[12px] font-bold mb-1">{ label }</div>
-                    <div tw={ `px-2 h-[2.625vw] text-[18px] ${containerStyle}` }>
+                <div tw="flex flex-col w-[15.6vw]">
+                    <div tw="text-[15.6px] font-bold mb-1">{ label }</div>
+                    <div tw={ `px-2 h-[3.4125vw] text-[24px] ${containerStyle}` }>
                         { value }
                     </div>
                 </div>
@@ -156,17 +156,19 @@ const handleRequest = frames(async (ctx:any) => {
         return {
             image: (
                 <div tw="flex w-full h-full" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
+                    <div tw="flex justify-center top-3 absolute w-[1200px] z-[999]">
+                        <h1 tw="text-center w-fit text-[36px]">{ `${ctx.isSell ? isApproved || totalBalance == BigInt(0) ? 'Sell Preview' : 'Approve Selling' : 'Buy Preview'}` }</h1>
+                    </div>
                     <div tw="flex flex-col mt-[100px] mb-[240px] w-full items-center justify-center">
-                        <h1 tw="text-[36px]">{ `${ctx.isSell ? isApproved || totalBalance == BigInt(0) ? 'Sell Preview' : 'Approve Selling' : 'Buy Preview'}` }</h1>
-                        <div tw="relative flex w-[600px] h-[600px] items-center justify-center" style={{ backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5)`}}>
-                            <div tw="flex flex-wrap relative w-[26.5vw] text-white p-0 m-0">
-                                <div tw={ `flex flex-col relative w-full ${ containerStyle } h-[32.25vw]` }>
-                                    <div tw="flex flex-1 text-[24px] w-[24vw] mb-1.5 items-end justify-between">
-                                        <div tw="text-[8px]">{ building.metadata.attributes.find(attr => attr.trait_type == 'Country')?.value }</div>
-                                        <div tw="text-[8px]">{ building.metadata.attributes.find(attr => attr.trait_type == 'City')?.value }</div>
+                        <div tw="relative flex w-[780px] h-[780px] items-center justify-center" style={{ backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5)`}}>
+                            <div tw="flex flex-wrap relative w-[34.45vw] text-white p-0 m-0">
+                                <div tw={ `flex flex-col relative w-full ${ containerStyle } h-[41.925vw]` }>
+                                    <div tw="flex flex-1 text-[31.2px] w-[31.2vw] mb-1.5 items-end justify-between">
+                                        <div tw="text-[10px]">{ building.metadata.attributes.find(attr => attr.trait_type == 'Country')?.value }</div>
+                                        <div tw="text-[10px]">{ building.metadata.attributes.find(attr => attr.trait_type == 'City')?.value }</div>
                                     </div>
-                                    <div tw="flex bg-red-200 items-center">
-                                        <img tw="bg-green-200 w-[24vw]" src={ building.metadata.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`) as string } />
+                                    <div tw="flex items-center">
+                                        <img tw="bg-green-200 w-[31.2vw]" src={ building.metadata.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`) as string } />
                                     </div>
                                     <div tw={`flex w-full flex-1 items-center justify-center px-4`}>
                                         <h1 tw={ `m-0 text-center ${buildingNameFontSize}` }>{ buildingName }</h1>
@@ -182,13 +184,13 @@ const handleRequest = frames(async (ctx:any) => {
                                 </div>
                             </div>
                             { userData && 
-                                <div tw="absolute top-[15px] w-full flex flex-col justify-center items-center">
-                                    <img src={userData.profileImage} tw="w-[4.55vw] h-[4.55vw] rounded-full" />
+                                <div tw="absolute top-[19.5px] w-full flex flex-col justify-center items-center">
+                                    <img src={userData.profileImage} tw="w-[5.915vw] h-[5.915vw] rounded-full" />
                                     {/* <div tw="flex flex-col w-[5.25vw] h-[5.25vw] rounded-full">
                                         <div tw="flex justify-center items-center bg-green-200 w-full h-1/2 rounded-t-full text-center"><div>T</div></div>
                                         <div tw="flex justify-center items-center bg-red-200 w-full h-1/2 rounded-b-full text-center"><div>B</div></div>
                                     </div> */}
-                                    <div tw="flex lowercase text-[14px] text-white" style={{ transform: 'scale(0.6)' }}>@{ userData.username }</div>
+                                    <div tw="flex lowercase text-[18px] text-white" style={{ transform: 'scale(0.78)' }}>@{ userData.username }</div>
                                 </div>
                             }
                         </div>
