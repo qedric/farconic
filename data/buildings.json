@@ -40,5 +40,81 @@
       "tokenURI": "ipfs://QmTKVhgNxgDbeybv3fNH35FSsTvaNVC9yKccbaavpArakE",
       "address": "0x5cE7941E9237f9A5Cd8b77E11A60c0cC4b08FcB9",
       "building_color": "#ea5046"
+    },
+    {
+      "metadata": {
+        "name": "CN Tower",
+        "description": "CN Tower, completed in 1976 in Toronto, was the world's tallest freestanding structure until 2007, famous for its communications and observation facilities.",
+        "image": "ipfs://QmbmNUrNvQUWt6uq887NAGkeBxjFDZjBcpqBz4EWBMgbfj/building%20card_2.gif",
+        "external_url": "https://farconic.xyz/cn-tower",
+        "background_color": "F7F3EE",
+        "attributes": [
+          {
+            "trait_type": "City",
+            "value": "Toronto"
+          },
+          {
+            "trait_type": "Country",
+            "value": "Canada"
+          },
+          {
+            "trait_type": "Height (m)",
+            "value": "\"553\""
+          },
+          {
+            "trait_type": "Construction Era",
+            "value": "1970s"
+          },
+          {
+            "trait_type": "Type of Building",
+            "value": "Tower"
+          },
+          {
+            "value": "Building"
+          }
+        ]
+      },
+      "id": "440",
+      "tokenURI": "ipfs://QmZqjg5SyCsY4X8LxzJCsBYcQ86sTxwRMPGnN9XpNwRFbk",
+      "address": "0xe35B5E6d5Ae9fE6b6Ee6CE2615eECAC945505b96",
+      "building_color": "#f9d414"
+    },
+    {
+      "metadata": {
+        "name": "Obelisco de Buenos Aires",
+        "description": "The Obelisco de Buenos Aires, erected in 1936, is an iconic monument in the heart of the city, standing as a symbol of the Argentine capital's quadricentennial.",
+        "image": "ipfs://QmNr4cgNncXCT276AJJJtzBjuGUpsYghWQhmxqdN8Cp9Wr/building%20card_5.gif",
+        "external_url": "https://farconic.xyz/obelisco-de-buenos-aires",
+        "background_color": "F7F3EE",
+        "attributes": [
+          {
+            "trait_type": "City",
+            "value": "Buenos Aires"
+          },
+          {
+            "trait_type": "Country",
+            "value": "Argentina"
+          },
+          {
+            "trait_type": "Height (m)",
+            "value": "\"68\""
+          },
+          {
+            "trait_type": "Construction Era",
+            "value": "1930s"
+          },
+          {
+            "trait_type": "Type of Building",
+            "value": "Monument"
+          },
+          {
+            "value": "Building"
+          }
+        ]
+      },
+      "id": "69",
+      "tokenURI": "ipfs://QmaUX5Dpzsphw2PYErxQqyuHpKxm5hacp4SfYPK7VR37pb",
+      "address": "0xE3c3Ca3e0b0D6865a6D853dBdC598421c25Bd829",
+      "building_color": "#ee3e7f"
     }
 ]
