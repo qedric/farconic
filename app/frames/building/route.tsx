@@ -20,7 +20,7 @@ const handleRequest = frames(async (ctx) => {
     const addThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
     const shareText = `Check out ${addThe(building.metadata.name)} card in /farconic! 👀`
     const nameWithHyphens = building.metadata.name.replaceAll(/\s/g, '-').toLowerCase()
-    const targetUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(shareText)}%0A${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}`
+    const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`
     
     return {
         image: await CardImage( building, userData?.profileImage, userData?.username, undefined),
