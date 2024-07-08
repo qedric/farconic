@@ -24,7 +24,7 @@ const handleRequest = frames(async (ctx) => {
         },
         textInput: "e.g. 'Bridge', 'Rome', 'Eiffel'",
         buttons: [
-            <Button action="link" target="https://farconic.xyz">
+            <Button action="link" target={process.env.NEXT_PUBLIC_FRAME_SHARE_LINK as string}>
                 App 🌐
             </Button>,
             <Button action="tx" target={{ query: { contractAddress: building.address }, pathname: "/trade/txdata" }} post_url="/trade/txStatusTrade?mode=search">
