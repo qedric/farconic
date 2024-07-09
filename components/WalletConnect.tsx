@@ -1,59 +1,62 @@
-import { useState, useEffect } from 'react'
+// components/WalletConnect.tsx
+'use client'
+
+import { useEffect } from 'react'
 import { createWalletClient, custom } from 'viem'
 import { baseSepolia, base } from 'viem/chains'
+import { useWallet } from '@/context/WalletContext'
 
 const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
 
 async function ConnectWalletClient() {
-    // Check for window.ethereum
-    let transport
-    if (window.ethereum) {
-        transport = custom(window.ethereum)
-    } else {
-        throw new Error("MetaMask or another web3 wallet is not installed.")
-    }
+  let transport
+  if (window.ethereum) {
+    transport = custom(window.ethereum)
+  } else {
+    throw new Error('MetaMask or another web3 wallet is not installed.')
+  }
 
-    // Declare a Wallet Client
-    const walletClient = createWalletClient({
-        chain: chain,
-        transport: transport,
-    })
+  const walletClient = createWalletClient({
+    chain: chain,
+    transport: transport,
+  })
 
-    return walletClient
+  return walletClient
 }
 
-const WalletConnect = ({ onConnect }: { onConnect: (address: string) => void }) => {
-    const [address, setAddress] = useState<string | null>(null)
+const WalletConnect = () => {
+  const { address, setAddress } = useWallet()
 
-    const connectWallet = async () => {
-        try {
-            const client = await ConnectWalletClient()
-            const [walletAddress] = await client.requestAddresses() 
-            setAddress(walletAddress)
-        } catch (error) {
-            console.error('Failed to connect wallet:', error)
-        }
+  const connectWallet = async () => {
+    try {
+      const client = await ConnectWalletClient()
+      const [walletAddress] = await client.requestAddresses()
+      setAddress(walletAddress)
+    } catch (error) {
+      console.error('Failed to connect wallet:', error)
     }
+  }
 
-    useEffect(() => {
-        if (address) {
-            onConnect(address)
-        }
-    }, [address, onConnect])
+  useEffect(() => {
+    if (address) {
+      console.log('Connected address:', address)
+    }
+  }, [address])
 
-    return (
-        <div className="flex justify-center items-center h-40">
-            {address ? (
-                <p className="font-bold text-center">
-                    {`Connected to: ${address.substring(0, 5)}...${address.substring(address.length - 4)}`}
-                </p>
-            ) : (
-                <button onClick={connectWallet} className="text-2xl btn rounded-[14px]">
-                    CONNECT WALLET
-                </button>
-            )}
-        </div>
-    )
+  // the idea is to show the connect button on the nav bar, but we don't want to wrap our client context around the whole app
+  return (
+    <div className="lg:absolute w-fit top-0 right-[12%] lg:h-32 flex justify-center items-center">
+      {address ? (
+        <p className="text-center">
+          {`Connected to: ${address.substring(0, 5)}...${address.substring(address.length - 4)}`}
+        </p>
+      ) : (
+        <button onClick={connectWallet} className="text-2xl btn">
+          Connect Wallet
+        </button>
+      )}
+    </div>
+  )
 }
 
 export default WalletConnect
