@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-key */
+/* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text, react/jsx-key */
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
@@ -116,7 +116,7 @@ const handleRequest = frames(async (ctx: any) => {
                         { await CardImage(building, undefined, undefined, '0.50') }
                         { userData && 
                             <div tw="absolute top-[310px] w-full flex flex-col justify-center items-center">
-                                <img src={userData.profileImage} tw="w-[4.55vw] h-[4.55vw] rounded-full" />
+                                <img src={userData.profileImage} alt="" tw="w-[4.55vw] h-[4.55vw] rounded-full" />
                                 <div tw="flex lowercase text-[14px] text-white" style={{ transform: 'scale(0.6)' }}>@{ userData.username }</div>
                             </div>
                         }
