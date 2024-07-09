@@ -32,7 +32,7 @@ const handleRequest = frames(async (ctx) => {
             <Button action="link" target={`${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}`}>
                 App 🌐
             </Button>,
-            <Button action="post" target={{ query: { building: JSON.stringify(building), mode: 'building' }, pathname: "/trade" }}>
+            <Button action="tx" target={{ query: { contractAddress: building.address }, pathname: "/trade/txdata" }} post_url="/trade/txStatusTrade?mode=search">
                 Buy 🛒
             </Button>,
             <Button action="post" target={{ query: { building: JSON.stringify(building), isSell:true, mode: 'building' }, pathname: "/trade" }}>
