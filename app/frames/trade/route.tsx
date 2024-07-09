@@ -156,9 +156,6 @@ const handleRequest = frames(async (ctx:any) => {
         return {
             image: (
                 <div tw="flex w-full h-full" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
-                    <div tw="flex justify-center top-3 absolute w-[1200px] z-[999]">
-                        <h1 tw="text-center w-fit text-[36px]">{ `${ctx.isSell ? isApproved || totalBalance == BigInt(0) ? 'Sell Preview' : 'Approve Selling' : 'Buy Preview'}` }</h1>
-                    </div>
                     <div tw="flex flex-col mt-[100px] mb-[240px] w-full items-center justify-center">
                         <div tw="relative flex w-[780px] h-[780px] items-center justify-center" style={{ backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5)`}}>
                             <div tw="flex flex-wrap relative w-[34.45vw] text-white p-0 m-0">
@@ -220,6 +217,9 @@ const handleRequest = frames(async (ctx:any) => {
                                 <h1 tw="text-[50px] mb-5 leading-6">{ `Quantity: ${qty} | Price: ${ (parseFloat(ethers.formatUnits(estimation, 18)).toFixed(6)) } ETH` }</h1>
                             </div>
                         )} 
+                    </div>
+                    <div tw="flex justify-center top-4 absolute w-[1200px]">
+                        <h1 tw="text-center text-[36px]">{ `${ctx.isSell ? isApproved || totalBalance == BigInt(0) ? 'Sell Preview' : 'Approve Selling' : 'Buy Preview'}` }</h1>
                     </div>
                 </div>
             ),
