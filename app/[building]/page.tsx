@@ -1,7 +1,9 @@
-import Image from 'next/image'
 import { fetchMetadata } from "frames.js/next"
-import { NFT, getBuildingByName } from "@/lib/utils"
+import { NFT, getBuildingByName, getDetail } from "@/lib/utils"
 import CardSVG from "@/components/CardSVG"
+import { getOwnersOfToken } from '@/app/api/alchemy'
+import { ethers } from 'ethers'
+import ReactDOM from 'react-dom'
 
 // Update to accept context or query parameters
 export async function generateMetadata(props: any) {
@@ -20,7 +22,7 @@ export async function generateMetadata(props: any) {
   }
 }
 
-export default function Page({
+export default async function Page({
   params
 }: {
   params: { building: string }
@@ -39,6 +41,19 @@ export default function Page({
     )
   }
 
+  ReactDOM.preload('/CardBG.jpeg', {
+    as: 'image',
+    fetchPriority: 'high',
+  })
+
+  const [holders, detail] = await Promise.all([
+      getOwnersOfToken((building as NFT).address),
+      getDetail((building as NFT).address)
+  ])
+
+  const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(10000))
+  const currentPriceValue = `${Math.round(parseFloat(ethers.formatEther(priceForNextMintWithRoyalty))*1e6) / 1e6} ETH`
+
   return (
 
     <div className="">
@@ -49,10 +64,10 @@ export default function Page({
           country={building.metadata.attributes.find(attr => attr.trait_type == 'Country')?.value || ''}
           city={building.metadata.attributes.find(attr => attr.trait_type == 'City')?.value || ''}
           name={building.metadata.name}
-          price="XXX ETH"
-          minted="XXX"
-          liquidity="XXX ETH"
-          holders="XXX"
+          price={ currentPriceValue }
+          minted={ detail.info.currentSupply.toString() }
+          liquidity={ `${Math.round(parseFloat(ethers.formatEther(detail.info.reserveBalance))*1e6) / 1e6} ETH` }
+          holders={ holders?.length.toString() || '0'}
         />
       </div>
     </div>
