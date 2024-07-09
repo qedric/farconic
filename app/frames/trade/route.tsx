@@ -201,11 +201,10 @@ const handleRequest = frames(async (ctx:any) => {
                         )}
                         { ctx.isSell && isApproved && totalBalance > BigInt(0) && (
                             <div tw="flex flex-col px-20 justify-center items-center flex-grow">
-                                <h1 tw="text-[50px] mb-6 leading-6">{ `Quantity: ${qty} | Total Value: ${ (parseFloat(ethers.formatUnits(estimation, 18)).toFixed(4)) } ETH` }</h1>
+                                <h1 tw="text-[50px] mb-6 leading-6">{ `Quantity: ${qty} | Total Value: ${ (parseFloat(ethers.formatUnits(estimation, 18)).toFixed(6)) } ETH` }</h1>
                                 <p tw="text-[30px] leading-6 text-center">
                                     {`${approvedAddresses.map(a => `Address: ${a.address.substring(0, 5)}...${a.address.substring(a.address.length - 4)} | Balance: ${a.balance}`).join(', ')}\n`}
                                 </p>
-                                <p tw="text-[30px] leading-6">Slippage will be applied when you approve the transaction.</p>
                             </div>
                         )}
                         { ctx.isSell && !isApproved && totalBalance > BigInt(0) && (
@@ -218,8 +217,7 @@ const handleRequest = frames(async (ctx:any) => {
                         )}
                         { !ctx.isSell && (
                             <div tw="flex flex-col px-20 justify-center items-center flex-grow">
-                                <h1 tw="text-[50px] mb-5 leading-6">{ `Quantity: ${qty} | Price: ${ (parseFloat(ethers.formatUnits(estimation, 18)).toFixed(4)) } ETH` }</h1>                                
-                                <p tw="text-[30px] leading-6">Slippage will be applied when you approve the transaction.</p>
+                                <h1 tw="text-[50px] mb-5 leading-6">{ `Quantity: ${qty} | Price: ${ (parseFloat(ethers.formatUnits(estimation, 18)).toFixed(6)) } ETH` }</h1>
                             </div>
                         )} 
                     </div>
