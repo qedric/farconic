@@ -15,7 +15,7 @@ export const MainNav = () => {
 
     return (
         <nav className="w-fit flex items-start lg:items-center">
-            <ul className="flex gap-x-4 text-lg lg:text-3xl">
+            <ul className="flex gap-x-4 text-lg lg:text-3xl font-semibold">
               <li>
                 <ActiveLink href="/gallery">Gallery</ActiveLink>
               </li>

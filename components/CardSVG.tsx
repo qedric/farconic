@@ -32,7 +32,7 @@ const lines = (name: string): [string, string] => {
 }
 
 const CardSVG: React.FC<{ colour:string, imageUrl:string, country:string, city:string, name:string, price:string, liquidity:string, minted:string, holders:string }> = ({ colour, imageUrl, country, city, name, price, liquidity, minted, holders }) =>
-  <div className="w-full h-fit" style={{ backgroundSize: '100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5)` }}>
+  <div className="w-full h-fit" style={{ backgroundSize: '100%', backgroundImage: `url('/CardBG.jpeg')` }}>
     <svg className="w-full h-full" width="1200" height="1200" viewBox="-4 -24 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M888 88H298C291.373 88 286 93.3726 286 100V852C286 858.627 291.373 864 298 864H888C894.627 864 900 858.627 900 852V100C900 93.3726 894.627 88 888 88Z" fill={ colour }/>
         <path d="M870 197H315V752H870V197Z" fill="#ebe7de" />

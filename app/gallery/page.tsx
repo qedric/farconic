@@ -3,24 +3,21 @@ import { useState, useEffect } from 'react'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
 import CardSVG from "@/components/CardSVG"
-import WalletConnect from "@/components/WalletConnect"
 import { NFT } from "@/lib/utils"
 import { getOwnedTokens } from '@/app/api/alchemy'
 import { Refresh } from "@/components/Refresh"
+import ReactDOM from 'react-dom'
+import { useWallet, WalletProvider } from "@/context/WalletContext"
+import WalletConnect from "@/components/WalletConnect"
 
-const buildings = process.env.NEXT_PUBLIC_CHAIN == 'MAINNET' ? mainnet_buildings : testnet_buildings 
+const buildings = process.env.NEXT_PUBLIC_CHAIN == 'MAINNET' ? mainnet_buildings : testnet_buildings
 
-export default function Gallery() {
-    const [address, setAddress] = useState('')
+const GalleryContent = () => {
+    const { address } = useWallet()  // Use the context values
     const [view, setView] = useState('All Buildings') // State to manage the selected view
     const [filteredBuildings, setFilteredBuildings] = useState<NFT[]>([])
     const [ownedTokens, setOwnedTokens] = useState<any[] | "Error" | null>(null) // State to store owned tokens
     const [isLoading, setIsLoading] = useState(false) // State for loading spinner
-
-    const handleWalletConnect = (walletAddress: string) => {
-        console.log('address:', walletAddress)
-        setAddress(walletAddress)
-    }
 
     const fetchOwnedTokensAndFilter = async (walletAddress: string) => {
         setIsLoading(true) // Start loading spinner
@@ -72,40 +69,37 @@ export default function Gallery() {
         }
     }
 
+    ReactDOM.preload('/CardBG.jpeg', {
+        as: 'image',
+        fetchPriority: 'high',
+    })
+
     return (
-        <section className="w-11/12 lg:w-1/2 mx-auto">
-            <WalletConnect onConnect={handleWalletConnect} />
-
-            <div className="flex px-20 justify-center items-center">
-                filter & sort will be here
-            </div>
-
+        <section className="w-full">
             {address && (
-                <div className="flex justify-start items-center mt-4 gap-x-5">
+                <div className="w-full flex justify-center flex-wrap lg:flex-row items-center mt-4 gap-x-2 lg:gap-x-8 gap-y-4">
                     <button
-                        className={`btn ${view === 'All Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}
+                        className={`btn basis-3/4 lg:basis-1/4 ${view === 'All Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}
                         onClick={() => setView('All Buildings')}
                     >
                         All Buildings
                     </button>
                     <button
-                        className={`btn ${view === 'My Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}
+                        className={`btn basis-1/2 lg:basis-1/4 ${view === 'My Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}
                         onClick={() => setView('My Buildings')}
                     >
-                        My Buildings
+                        My Cards
                     </button>
-                    { view === 'My Buildings' && (
-                        <Refresh
-                            onRefresh={handleRefresh}
-                            onComplete={() => console.log('Refresh complete')}
-                            isLoading={isLoading}
-                            label="Refresh my buildings"
-                        />
-                    )}
+                    <Refresh
+                        onRefresh={handleRefresh}
+                        onComplete={() => console.log('Refresh complete')}
+                        isLoading={isLoading}
+                        isDisabled={view !== 'My Buildings'}
+                        label="Refresh my Cards"
+                    />
                 </div>
             )}
-
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 lg:gap-x-12 lg:gap-y-5 lg:pt-7 lg:max-w-90 lg:mx-auto mb-5 lg:mb-20">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 lg:gap-x-12 lg:gap-y-5 lg:pt-7 lg:mx-auto mb-5 lg:mb-20">
                 {
                     filteredBuildings.slice(0, 60).map((nft: NFT) => (
                         <div className="" key={nft.metadata.name}>
@@ -133,5 +127,14 @@ export default function Gallery() {
                 }
             </div>
         </section>
+    )
+}
+
+export default function Gallery() {
+    return (
+        <WalletProvider>
+            <WalletConnect />
+            <GalleryContent />
+        </WalletProvider>
     )
 }
