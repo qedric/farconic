@@ -116,5 +116,43 @@
       "tokenURI": "ipfs://QmaUX5Dpzsphw2PYErxQqyuHpKxm5hacp4SfYPK7VR37pb",
       "address": "0xE3c3Ca3e0b0D6865a6D853dBdC598421c25Bd829",
       "building_color": "#ee3e7f"
+    },
+    {
+      "metadata": {
+        "name": "Stedelijk Museum",
+        "description": "The Stedelijk Museum, reopened in 2012 in Amsterdam, focuses on modern and contemporary art and design, known for its innovative bathtub-like addition.",
+        "image": "ipfs://QmQqkVAdurVv2bHZNHdams4PsHCD3K93ti9QBioypy4P8S/Amsterdam-Stedelijk%20Museum.gif",
+        "external_url": "https://farconic.xyz/stedelijk-museum",
+        "background_color": "F7F3EE",
+        "attributes": [
+          {
+            "trait_type": "City",
+            "value": "Amsterdam"
+          },
+          {
+            "trait_type": "Country",
+            "value": "Netherlands"
+          },
+          {
+            "trait_type": "Height (m)",
+            "value": "\"20\""
+          },
+          {
+            "trait_type": "Construction Era",
+            "value": "2010s"
+          },
+          {
+            "trait_type": "Type of Building",
+            "value": "Museum"
+          },
+          {
+            "value": "Building"
+          }
+        ]
+      },
+      "id": "2",
+      "tokenURI": "ipfs://QmTZCnXAQ5iz37G2Vm96ozqEmM5pv6Nb5jhc88vZ6Xa74H",
+      "address": "0x450277841248Ef1c32EF58Db68a0C9B05ED18800",
+      "building_color": "#806CA8"
     }
 ]
