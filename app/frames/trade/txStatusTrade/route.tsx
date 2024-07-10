@@ -8,6 +8,7 @@ import { baseSepolia, base } from "viem/chains"
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ErrorFrame } from "@/components/FrameError"
 import { CardImage } from '@/components/FrameCard'
+import { addTradeToUser } from '@/lib/db'
 import abi from '@/data/mcv2bond_abi.json'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
@@ -18,8 +19,6 @@ const buildings = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? mainnet_building
 const handleRequest = frames(async (ctx) => {
 
     const txId = ctx.message?.transactionId || ctx.searchParams.transactionId
-
-    console.log('mode', ctx)
 
     if (txId) {
 
@@ -54,7 +53,7 @@ const handleRequest = frames(async (ctx) => {
 
         const isSell = mintOrBurnEvent?.eventName === 'Burn'
 
-        //console.log('mintOrBurnEvent', mintOrBurnEvent)
+        console.log('mintOrBurnEvent', mintOrBurnEvent)
 
         if (!mintOrBurnEvent) {
             return ErrorFrame(
@@ -70,7 +69,8 @@ const handleRequest = frames(async (ctx) => {
 
             // get the building object from the buildings json based on the address
             const building_address = (mintOrBurnEvent as any).args.token
-            const amount:bigint = isSell ? (mintOrBurnEvent as any).args.amountBurned : (mintOrBurnEvent as any).args.amountMinted
+            const quantityTraded:number = isSell ? (mintOrBurnEvent as any).args.amountBurned : (mintOrBurnEvent as any).args.amountMinted
+            const amount:bigint = isSell ? (mintOrBurnEvent?.args as any).refundAmount : (mintOrBurnEvent?.args as any)?.reserveAmount
             const building = buildings.find((building) => building.address?.toLowerCase() === building_address.toLowerCase())
 
             if (!building) {
@@ -83,13 +83,18 @@ const handleRequest = frames(async (ctx) => {
                 )
             }
 
+            // update the database with the details of the transaction
+            const recordsUpdated = ctx.message?.requesterFid 
+                ? await addTradeToUser(ctx.message.requesterFid, building.id, amount, quantityTraded, isSell)
+                : 0
+                
             const addThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
             const removeThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName.substring(4) : bulidingName
-            const successString = `${isSell ? "You've parted with" : "You've acquired"} ${ amount > BigInt(1) ? `${amount} ${removeThe(building.metadata.name)} cards!` : `${addThe(building.metadata.name)} card!`}`
+            const successString = `${isSell ? "You've parted with" : "You've acquired"} ${ quantityTraded > BigInt(1) ? `${quantityTraded} ${removeThe(building.metadata.name)} cards!` : `${addThe(building.metadata.name)} card!`}`
 
             const shareText = isSell 
-                ? `Just sold ${amount > 1 ? `${amount} ${removeThe(building.metadata.name)} cards` : `${addThe(building.metadata.name)} card`} in /farconic! 💰`
-                : `Just bought ${amount > 1 ? `${amount} ${removeThe(building.metadata.name)} cards` : `${addThe(building.metadata.name)} card`} in /farconic! 👀`
+                ? `Just sold ${quantityTraded > 1 ? `${quantityTraded} ${removeThe(building.metadata.name)} cards` : `${addThe(building.metadata.name)} card`} in /farconic! 💰`
+                : `Just bought ${quantityTraded > 1 ? `${quantityTraded} ${removeThe(building.metadata.name)} cards` : `${addThe(building.metadata.name)} card`} in /farconic! 👀`
 
             const nameWithHyphens = building.metadata.name.replaceAll(/\s/g, '-').toLowerCase()
 
