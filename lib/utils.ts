@@ -206,7 +206,7 @@ export const getFavouriteBuildings = () => buildings.filter((b) => favBuildingNa
 
 export const getBuildingByName = (name: string) => buildings.find((b) => b.metadata.name.toLowerCase() === name.toLowerCase()) as NFT
 
-export const getBuildingById = (id: number) => buildings.find((b) => parseInt(b.id) === id) as NFT
+export const getBuildingById = (id: string) => buildings.find((b) => b.id === id) as NFT
 
 export const getBuildingByAddress = (address: string) => buildings.find((b) => b.address?.toLowerCase() === address.toLowerCase()) as NFT
 
