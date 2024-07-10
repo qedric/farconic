@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@airstack/airstack-react": "^0.6.4",
     "alchemy-sdk": "^3.3.1",
     "ethers": "^6.13.1",
     "express": "^4.19.2",
