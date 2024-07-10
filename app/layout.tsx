@@ -21,12 +21,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserratFont.className} flex flex-col justify-between overflow-x-hidden`}>
-        <header className="flex justify-between h-32 p-6">
-          <Link href="/">
+        <header className="flex justify-between h-20 px-6 my-3">
+          
+          <Link href="/" className="flex items-end" style={{ textDecoration: 'none' }}>
             <figure >
-              <Image className="w-[180px] lg:w-[225px]" width="2560" height="128" src="/logo.png" priority={true} alt="logo" sizes="(max-width: 2560px) 100vw, 2560px" />
+              <Image className="w-16 lg:w-20" width="183" height="183" src="/farconic_logo.png" priority={true} alt="logo" sizes="(max-width: 2560px) 100vw, 2560px" />
             </figure>
+            <label className="text-2xl ml-1 lg:text-4xl font-medium tracking-tight">farconic</label>
           </Link>
+       
           <MainNav />
         </header>
         <main className="flex flex-col items-center justify-center mx-auto lg:w-[940px]">{children}</main>

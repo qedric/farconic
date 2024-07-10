@@ -45,7 +45,7 @@ const WalletConnect = () => {
 
   // the idea is to show the connect button on the nav bar, but we don't want to wrap our client context around the whole app
   return (
-    <div className="lg:absolute w-fit top-0 right-[12%] lg:h-32 flex justify-center items-center">
+    <div className="lg:absolute my-3 w-fit top-0 right-[12%] lg:h-20 flex justify-center items-center">
       {address ? (
         <p className="text-center">
           {`Connected to: ${address.substring(0, 5)}...${address.substring(address.length - 4)}`}
