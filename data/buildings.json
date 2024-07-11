@@ -154,5 +154,47 @@
       "tokenURI": "ipfs://QmTZCnXAQ5iz37G2Vm96ozqEmM5pv6Nb5jhc88vZ6Xa74H",
       "address": "0x450277841248Ef1c32EF58Db68a0C9B05ED18800",
       "building_color": "#806CA8"
+    },
+    {
+      "metadata": {
+        "name": "Philadelphia City Hall",
+        "description": "Philadelphia City Hall, completed in 1901, is a National Historic Landmark, famous for its elaborate Second Empire style and towering statue of William Penn.",
+        "image": "ipfs://QmSmS3BgcRWpoPcUqpZLxkucZT318cqSeoCw9xxqGSDjpK/building%20card__6.gif",
+        "external_url": "https://farconic.xyz/philadelphia-city-hall",
+        "background_color": "F7F3EE",
+        "attributes": [
+          {
+            "trait_type": "City",
+            "value": "Philadelphia"
+          },
+          {
+            "trait_type": "State",
+            "value": "Pennsylvania"
+          },
+          {
+            "trait_type": "Country",
+            "value": "United States"
+          },
+          {
+            "trait_type": "Height (m)",
+            "value": "\"167\""
+          },
+          {
+            "trait_type": "Construction Era",
+            "value": "1900s"
+          },
+          {
+            "trait_type": "Type of Building",
+            "value": "City Hall"
+          },
+          {
+            "value": "Building"
+          }
+        ]
+      },
+      "id": "327",
+      "tokenURI": "ipfs://Qma1rgr6vWH4pT7Nh6eWPZDYbUL3BHYDJL4GX21jBKmMCp",
+      "address": "0xE15E0Df1296419F01d563D74e45F303cE35c8046",
+      "building_color": "#00a650"
     }
 ]
