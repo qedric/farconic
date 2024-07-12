@@ -46,7 +46,7 @@ export const CardImage = async (
                         <div>{ building.metadata.attributes.find(attr => attr.trait_type == 'City')?.value }</div>
                     </div>
                     <div tw="flex items-center">
-                        <img tw="w-[48vw]" src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}${process.env.NEXT_PUBLIC_IPFS_ROOT_BUILDING_JPEG}/${building.id}.jpg`} />
+                        <img tw="w-[48vw]" src={building.metadata.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`)} />
                     </div>
                     <div tw={`flex w-full flex-1 items-center justify-center px-8`}>
                         <h1 tw={ `m-0 text-center ${buildingNameFontSize}` }>{ buildingName }</h1>
