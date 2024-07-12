@@ -16,15 +16,17 @@ const handleRequest = frames(async (ctx) => {
 
     return {
         image: welcomeImage 
-            ? `${process.env.NEXT_PUBLIC_GATEWAY_URL}${welcomeImage}`
+            ? `${process.env.NEXT_PUBLIC_GATEWAY_URL}/${welcomeImage}`
             : (
-                <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
-                    <h1 tw="text-4xl">🎉 Raffle 🎉</h1>
-                    <p tw="text-3xl">{ welcomeText ? welcomeText : `Are you a winner?`}</p>
+                <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
+                    <div tw="flex flex-col absolute px-20 justify-center items-center">
+                        <h1 tw="text-[50px] mb-5 leading-6">🎉 Raffle 🎉</h1>
+                        <p tw="text-[30px] leading-6">{ welcomeText ? welcomeText : `Are you a winner?`}</p>
+                    </div>
                 </div>
             ),
         imageOptions: {
-            aspectRatio: welcomeImage ? "1:1" : "1.91:1"
+            aspectRatio: "1:1"
         },
         buttons: [
             <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/check" }}>

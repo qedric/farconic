@@ -9,16 +9,18 @@ import { claim } from './claim'
 import { CardImage } from '@/components/FrameCard'
 import abi from '@/data/mc_building_abi.json'
 
-const handleRequest = frames(async (ctx: any) => { 
+const handleRequest = frames(async (ctx: any) => {
 
     const txId = ctx.txId || ''
     console.log('txId:', txId)
 
-    if(!txId) {
-        return { 
+    if (!txId) {
+        return {
             image: (
-                <div tw="flex">
-                    <h1>Can&quot;t find a transaction</h1>
+                <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
+                    <div tw="flex flex-col absolute px-20 justify-center items-center">
+                        <h1 tw="text-[50px] mb-5 leading-6">Can&quot;t find a transaction</h1>
+                    </div>
                 </div>
             ),
             imageOptions: {
@@ -33,25 +35,28 @@ const handleRequest = frames(async (ctx: any) => {
     }
 
     // if we have a txId, get the tx status
-    const options = {method: 'GET', headers: {Authorization: `Bearer ${process.env.SYNDICATE_API_KEY}`}}
-    let requestStatus:any
+    const options = { method: 'GET', headers: { Authorization: `Bearer ${process.env.SYNDICATE_API_KEY}` } }
+    let requestStatus: any
 
     await fetch(`https://api.syndicate.io/wallet/project/${process.env.SYNDICATE_PROJECT_ID}/request/${txId}`, options)
-    .then(response => response.json())
-    .then(response => requestStatus = response)
-    .catch(err => console.error(err))
+        .then(response => response.json())
+        .then(response => requestStatus = response)
+        .catch(err => console.error(err))
 
     //console.log('tx status:', requestStatus)
 
     if (requestStatus.invalid) {
-        return { 
+        return {
             image: (
-                <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
-                    <h1>Sorry you can&quot;t claim at this time</h1>
+                <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
+                    <div tw="flex flex-col absolute px-20 justify-center items-center">
+                        <h1 tw="text-[50px] mb-5 leading-6">Sorry you can&quot;t claim at this time</h1>
+                        <p tw="text-[30px] leading-6"> Stay tuned to /farconic for more opportunities to enter raffles!</p>
+                    </div>
                 </div>
             ),
             imageOptions: {
-                aspectRatio: "1.91:1"
+                aspectRatio: "1:1"
             },
             buttons: [
                 <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/" }}>
@@ -61,12 +66,12 @@ const handleRequest = frames(async (ctx: any) => {
         }
     }
 
-    let txReceipt:any = null
-    let status:string
+    let txReceipt: any = null
+    let status: string
     try {
         txReceipt = requestStatus.transactionAttempts[0]?.hash
-        ? await getTransactionReceipt(requestStatus.transactionAttempts[0]?.hash)
-        : null
+            ? await getTransactionReceipt(requestStatus.transactionAttempts[0]?.hash)
+            : null
     } catch (err) {
         status = err as any
     }
@@ -87,42 +92,42 @@ const handleRequest = frames(async (ctx: any) => {
         let bulidingAddress = ''
 
         // Filter logs to find TokensClaimed events
-        logs.forEach((log:any) => {
+        logs.forEach((log: any) => {
             try {
-                const topics:any = decodeEventLog({abi: eventABI, data: log.data, topics: log.topics})
+                const topics: any = decodeEventLog({ abi: eventABI, data: log.data, topics: log.topics })
                 bulidingAddress = log.address
             } catch {
                 // not a safeTransferFrom event, do nothing
             }
         })
 
-        const building:NFT = getBuildingByAddress(bulidingAddress)
+        const building: NFT = getBuildingByAddress(bulidingAddress)
         console.log('bulidingAddress:', bulidingAddress)
 
         // mark the winner as having claimed their prize, in the database
         const result = await markWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
 
         console.log('building:', building)
-        const addThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
+        const addThe = (bulidingName: string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
         const successString = `You now own ${addThe(building.metadata.name)} card!`
 
         console.log('successString:', successString)
 
         return {
             image: (
-                <div tw="flex w-full h-full" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmRJx4BNegoXtzsZ64zqFwxqoXUFRZAmAQmG6ToLxU2SdV)`}}>
+                <div tw="flex w-full h-full" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmRJx4BNegoXtzsZ64zqFwxqoXUFRZAmAQmG6ToLxU2SdV)` }}>
                     <div tw="flex flex-col relative bottom-[40px] w-full h-full items-center justify-center">
                         <h1 tw="relative top-[18%] text-[60px]">CONGRATULATIONS!</h1>
-                        { await CardImage(building, undefined, undefined, '0.50') }
-                        { userData && 
+                        {await CardImage(building, undefined, undefined, '0.50')}
+                        {userData &&
                             <div tw="absolute top-[310px] w-full flex flex-col justify-center items-center">
                                 <img src={userData.profileImage} alt="" tw="w-[4.55vw] h-[4.55vw] rounded-full" />
-                                <div tw="flex lowercase text-[14px] text-white" style={{ transform: 'scale(0.6)' }}>@{ userData.username }</div>
+                                <div tw="flex lowercase text-[14px] text-white" style={{ transform: 'scale(0.6)' }}>@{userData.username}</div>
                             </div>
                         }
-                        <h1 tw="relative px-20 text-center bottom-[280px] flex text-[32px]">{ successString }</h1>
+                        <h1 tw="relative px-20 text-center bottom-[280px] flex text-[32px]">{successString}</h1>
                     </div>
-                </div> 
+                </div>
             ),
             imageOptions: {
                 aspectRatio: "1:1",
@@ -143,13 +148,15 @@ const handleRequest = frames(async (ctx: any) => {
 
     return status == 'pending' ? {
         image: (
-            <div tw="flex flex-col">
-                <h1>{`Transaction pending`}</h1>
-                <p>Wait a moment then hit refresh</p>
+            <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
+                <div tw="flex flex-col absolute px-20 justify-center items-center">
+                    <h1 tw="text-[50px] mb-5 leading-6">Transaction Pending</h1>
+                    <p tw="text-[30px] leading-6">Wait a moment then hit refresh</p>
+                </div>
             </div>
         ),
         imageOptions: {
-            aspectRatio: "1.91:1"
+            aspectRatio: "1:1"
         },
         buttons: [
             <Button action="post" target={{ query: { txId: txId, name: ctx.searchParams.name }, pathname: "/raffle/claimed" }}>
@@ -158,13 +165,15 @@ const handleRequest = frames(async (ctx: any) => {
         ]
     } : {
         image: (
-            <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
-                <h1>{`Transaction status: ${status}.`}</h1>
-                <p>Please allow some time for the transaction to appear on the blockchain, and try a refresh.</p>
+            <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
+                <div tw="flex flex-col absolute px-20 justify-center items-center">
+                    <h1 tw="text-[50px] mb-5 leading-6">{`Transaction status: ${status}.`}</h1>
+                    <p tw="text-[30px] leading-6">Please allow some time for the transaction to appear on the blockchain, and try a refresh.</p>
+                </div>
             </div>
         ),
         imageOptions: {
-            aspectRatio: "1.91:1"
+            aspectRatio: "1:1"
         },
         buttons: [
             <Button action="post" target={{ query: { txId: txId, name: ctx.searchParams.name }, pathname: "/raffle/claimed" }}>
@@ -176,10 +185,10 @@ const handleRequest = frames(async (ctx: any) => {
         ]
     }
 },
-{
-    // this uses the syndicate api to handle the transactions
-    middleware: [ claim ]
-})
+    {
+        // this uses the syndicate api to handle the transactions
+        middleware: [claim]
+    })
 
 export const GET = handleRequest
 export const POST = handleRequest

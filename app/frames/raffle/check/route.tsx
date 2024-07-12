@@ -25,13 +25,15 @@ const handleRequest = frames(async (ctx:any) => {
     if (claims.length >= limit) {
         return {
             image: (
-                <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
-                    <h1 tw="text-4xl">🎉 Raffle 🎉</h1>
-                    <p tw="text-3xl px-12 text-center">You have already claimed your prize! Stay tuned to /farconic for more opportunities to enter raffles!</p>
+                <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
+                    <div tw="flex flex-col absolute px-20 justify-center items-center">
+                        <h1 tw="text-[50px] mb-5 leading-6">You have already claimed your prize!</h1>
+                        <p tw="text-3xl px-12 text-center">Stay tuned to /farconic for more opportunities to enter raffles!</p>
+                    </div>
                 </div>
             ),
             imageOptions: {
-                aspectRatio: "1.91:1"
+                aspectRatio: "1:1"
             },
             buttons: [
                 <Button action="link" target={process.env.NEXT_PUBLIC_APP_LINK as string}>
@@ -50,18 +52,19 @@ const handleRequest = frames(async (ctx:any) => {
 
         return {
             image: (
-                <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
-                    <h1 tw="text-4xl">🎉 Raffle 🎉</h1>
-                    <p tw="text-3xl px-12 text-center">You&quot;ve Won! Press the &quot;Claim&quot; button below to get your prize.</p>
-                    <h2 tw="text-3xl mt-5">Your prize will be delivered to your farcaster verfied address:</h2>
-                    <p tw="text-3xl px-12 text-center">{ address }</p>
+                <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
+                    <div tw="flex flex-col absolute px-20 justify-center items-center">
+                        <h1 tw="text-[50px] mb-5 leading-6">You&quot;ve Won! Press the &quot;Claim&quot; button below to get your prize.</h1>
+                        <h2 tw="text-3xl mt-5">Your prize will be delivered to your farcaster verfied address:</h2>
+                        <p tw="text-[30px] leading-6">{ address }</p>
+                    </div>
                 </div>
             ),
             imageOptions: {
-                aspectRatio: "1.91:1"
+                aspectRatio: "1:1"
             },
             buttons: [
-                <Button action="post" target={{ query: { to: address, buildingAddress: getBuildingById(raffle.buildingId).address, name: raffle.name }, pathname: '/raffle/claimed' }}>
+                <Button action="post" target={{ query: { to: address, buildingAddress: getBuildingById(raffle.buildingId.toString()).address, name: raffle.name }, pathname: '/raffle/claimed' }}>
                     Claim 🎉
                 </Button>
             ]
@@ -69,13 +72,15 @@ const handleRequest = frames(async (ctx:any) => {
     } else {
         return {
             image: (
-                <div tw="w-full h-full flex flex-col items-center justify-center p-5 bg-[#EBE7DE]">
-                    <h1 tw="text-4xl">🎉 Raffle 🎉</h1>
-                    <p tw="text-3xl px-12 text-center">Better luck next time! Stay tuned to /farconic for more opportunities to enter raffles!</p>
+                <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
+                    <div tw="flex flex-col absolute px-20 justify-center items-center">
+                        <h1 tw="text-[50px] mb-5 leading-6">Better luck next time!</h1>
+                        <p tw="text-[30px] leading-6"> Stay tuned to /farconic for more opportunities to enter raffles!</p>
+                    </div>
                 </div>
             ),
             imageOptions: {
-                aspectRatio: "1.91:1"
+                aspectRatio: "1:1"
             },
             buttons: [
                 <Button action="link" target={process.env.NEXT_PUBLIC_APP_LINK as string}>
