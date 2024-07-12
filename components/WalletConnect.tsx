@@ -11,12 +11,12 @@ const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
 
 async function ConnectWalletClient() {
   let transport
-  if (window.ethereum) {
+  if (!window.ethereum) {
     transport = custom(window.ethereum)
   } else {
-    // try walletConnect
-    transport = custom(await EthereumProvider.init({
-      chains: [1],
+
+    const provider = await EthereumProvider.init({
+      chains: [baseSepolia.id, base.id],
       projectId: 'ab12d338ce41e49b370095950d6f9213',
       metadata: {
         name: 'farconic',
@@ -24,8 +24,12 @@ async function ConnectWalletClient() {
         url: 'https://farconic.xyz', // origin must match your domain & subdomain
         icons: ['/farconic_logo.png']
       },
-      showQrModal: true,
-    }))
+      showQrModal: true
+    })
+
+    // try walletConnect
+    transport = custom(provider)
+    await provider.connect()
   }
 
   if (!transport) {
