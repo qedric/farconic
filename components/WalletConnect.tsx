@@ -16,7 +16,7 @@ async function ConnectWalletClient() {
     transport = custom(window.ethereum)
   } else {
     const provider = await EthereumProvider.init({
-      chains: [baseSepolia.id, base.id],
+      optionalChains: [baseSepolia.id, base.id],
       projectId: 'ab12d338ce41e49b370095950d6f9213',
       metadata: {
         name: 'farconic',
