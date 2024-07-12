@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { createWalletClient, custom } from 'viem'
 import { baseSepolia, base } from 'viem/chains'
 import { useWallet } from '@/context/WalletContext'
+import { EthereumProvider } from '@walletconnect/ethereum-provider'
 
 const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
 
@@ -13,6 +14,21 @@ async function ConnectWalletClient() {
   if (window.ethereum) {
     transport = custom(window.ethereum)
   } else {
+    // try walletConnect
+    transport = custom(await EthereumProvider.init({
+      chains: [1],
+      projectId: 'ab12d338ce41e49b370095950d6f9213',
+      metadata: {
+        name: 'farconic',
+        description: 'Collect buildings and claim cities!',
+        url: 'https://farconic.xyz', // origin must match your domain & subdomain
+        icons: ['/farconic_logo.png']
+      },
+      showQrModal: true,
+    }))
+  }
+
+  if (!transport) {
     throw new Error('MetaMask or another web3 wallet is not installed.')
   }
 
