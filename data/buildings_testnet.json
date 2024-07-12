@@ -13808,6 +13808,42 @@
   },
   {
     "metadata": {
+      "name": "Shanghai Tower",
+      "description": "The Shanghai Tower, completed in 2015, is China's tallest building and the world's second tallest. Its twisting design reduces wind loads and boosts energy efficiency, symbolizing modern China's growth. Located in the Lujiazui financial district, it houses offices, retail spaces, and a luxury hotel, with panoramic city views from its observation deck.",
+      "image": "ipfs://QmaPm97eBUyajKqWyYUkWXogoLEiSqDvWL1WHN15QHyPuA/building%20card_5.gif",
+      "external_url": "https://farconic.xyz/shanghai-tower",
+      "background_color": "F7F3EE",
+      "attributes": [
+        {
+          "trait_type": "City",
+          "value": "Shanghai"
+        },
+        {
+          "trait_type": "Country",
+          "value": "China"
+        },
+        {
+          "trait_type": "Height (m)",
+          "value": "\"632\""
+        },
+        {
+          "trait_type": "Construction Era",
+          "value": "2010s"
+        },
+        {
+          "trait_type": "Type of Building",
+          "value": "Skyscraper"
+        },
+        {
+          "value": "Building"
+        }
+      ]
+    },
+    "id": "386",
+    "building_color": "#5667ac"
+  },
+  {
+    "metadata": {
       "name": "Oriental Pearl Tower",
       "description": "The Oriental Pearl Tower, completed in 1994 in Shanghai, is an iconic TV and radio tower known for its unique spheres and futuristic design.",
       "image": "ipfs://QmaPm97eBUyajKqWyYUkWXogoLEiSqDvWL1WHN15QHyPuA/building%20card_4.gif",
@@ -13835,7 +13871,7 @@
         }
       ]
     },
-    "id": "386",
+    "id": "387",
     "tokenURI": "ipfs://QmT5jgWuGch3bxU3zQtMwmv3cSq2s4EiFyLeD699FVpr4p",
     "address": "0xEd76b2BC20CF8864BBeC3160735dBe62D5740Ab5",
     "building_color": "#e50081"
@@ -13869,7 +13905,7 @@
         }
       ]
     },
-    "id": "387",
+    "id": "388",
     "tokenURI": "ipfs://QmSESWtK9FZcZkFUenEMqVNYr8jY8hJVJn7GPUNAJh24yb",
     "address": "0xBecC888Ec0cD9Cb3D1C029D0B650d54055F637c1",
     "building_color": "#e0256c"
@@ -13903,7 +13939,7 @@
         }
       ]
     },
-    "id": "388",
+    "id": "389",
     "tokenURI": "ipfs://QmPsGcyUnited StatesNHomjLLztwhtJnhBXakk4hPHy4cexrdCN4M8",
     "address": "0x9635A559b19fE6d0a40A6985eaa253e67C4B46Ce",
     "building_color": "#f7b264"
@@ -13937,7 +13973,7 @@
         }
       ]
     },
-    "id": "389",
+    "id": "390",
     "tokenURI": "ipfs://QmRtneX4DkgaRvDYX2t2Rxcb9Fd3mLQwXVWTSxB3MQ49mP",
     "address": "0xB0669298a94BBEBDCE33e60637a173b64b8D4f89",
     "building_color": "#09a8a3"
@@ -13971,7 +14007,7 @@
         }
       ]
     },
-    "id": "390",
+    "id": "391",
     "tokenURI": "ipfs://QmcDPdwuHLbZPHZ8bKUB12gqEWutdS2TBqDHM1sE6AvhVt",
     "address": "0x3Eb8e4e361726cF23f642712D6368a5028cEd155",
     "building_color": "#ebe048"
@@ -14005,7 +14041,7 @@
         }
       ]
     },
-    "id": "391",
+    "id": "392",
     "tokenURI": "ipfs://QmcbYybhtkFyaaudoaMgEf8XM4QDm5LSff7pqH5DsaFbqZ",
     "address": "0x88C9C43C3a2b02fA3cE40362211144d8462e21BB",
     "building_color": "#56bddc"
@@ -14039,7 +14075,7 @@
         }
       ]
     },
-    "id": "392",
+    "id": "393",
     "tokenURI": "ipfs://QmTfpRuqJhUb9wyW8kbyXJrqtPskebCbzs8QTzRgru5rmh",
     "address": "0x587D1Ce0BdB0529c56bBA72a638D71216E7F0942",
     "building_color": "#9d5096"
@@ -14073,7 +14109,7 @@
         }
       ]
     },
-    "id": "393",
+    "id": "394",
     "tokenURI": "ipfs://Qmdzar6rVeu64EmoaXUBuWdb3rDeiZorDS2KnfrjbgvZn4",
     "address": "0xc76cC527609085b498153384ecEfa84cCfdBFf42",
     "building_color": "#82bb50"
@@ -14107,7 +14143,7 @@
         }
       ]
     },
-    "id": "394",
+    "id": "395",
     "tokenURI": "ipfs://QmdDpBF8XHx47SyNF2KZXL9V2HwDrxLK1hkKDMPTkJJynb",
     "address": "0x535d2ea182C950D6D13476C48aD7b4e3cD4d0613",
     "building_color": "#ffc22b"
@@ -14141,7 +14177,7 @@
         }
       ]
     },
-    "id": "395",
+    "id": "396",
     "tokenURI": "ipfs://QmYP1vvkHC7vKUPb4SVMamiH9BfsW9MGPacH9bDvycMUuP",
     "address": "0x0D9f3952Fd9E4296eE6CF7076867584FA51E967D",
     "building_color": "#70c282"
@@ -14175,7 +14211,7 @@
         }
       ]
     },
-    "id": "396",
+    "id": "397",
     "tokenURI": "ipfs://QmQyHWFea7tfrh2P6X3p7zLn1ijjznSXvwaDiNp3Eyhk9d",
     "address": "0x10711ADb081290f97BEd4AC2B5AB8C8C14dffCD4",
     "building_color": "#f2db57"
@@ -14209,7 +14245,7 @@
         }
       ]
     },
-    "id": "397",
+    "id": "398",
     "tokenURI": "ipfs://QmR2NWAryp8i8bSmHRnb6zdyVM7kcrD3ZFJ3Cdorkf5yfp",
     "address": "0xBB73c5c19EecEE55eC4C25F455c0A8Cd1b07Ee38",
     "building_color": "#d35e93"
@@ -14243,7 +14279,7 @@
         }
       ]
     },
-    "id": "398",
+    "id": "399",
     "tokenURI": "ipfs://QmWdK41Ar4CKkmmoQqVcZR5tggiZK6ug9efTm2Uz73zqwH",
     "address": "0x4574cb49421CAEEB281157C3aB111164A54f84c0",
     "building_color": "#f27a61"
@@ -14277,7 +14313,7 @@
         }
       ]
     },
-    "id": "399",
+    "id": "400",
     "tokenURI": "ipfs://QmPT5cGWwfwHsC8FqpqiL3iNq5d9P8yVpjn1jbMK2NKWe9",
     "address": "0xF9b00D96f34DE9f2A9C71BFf56299E8f9A8e3069",
     "building_color": "#c5609c"
@@ -14311,7 +14347,7 @@
         }
       ]
     },
-    "id": "400",
+    "id": "401",
     "tokenURI": "ipfs://QmYk1QBPSL6ukcBK2kqmPKXN9nFWxVXrR6vd7M1KAstuPe",
     "address": "0x0b8e96108e630fc0246d25512C3C9A91f5411ea7",
     "building_color": "#f0644b"
@@ -14345,7 +14381,7 @@
         }
       ]
     },
-    "id": "401",
+    "id": "402",
     "tokenURI": "ipfs://QmWQM2hCZ9W2kakxQd3eTsriKU252gDqmte2Pc7vYpvCvd",
     "address": "0xf690079B0cf321b68a9cC947d5527eB7f9b26487",
     "building_color": "#90d4e7"
@@ -14379,7 +14415,7 @@
         }
       ]
     },
-    "id": "402",
+    "id": "403",
     "tokenURI": "ipfs://QmbohgEa3zMRCFbpYyEnhPwkVVvECyqWqmpZmQUFGHTpSs",
     "address": "0x6e61D14439b3c1156ffB8f938463D7Ca873AFB86",
     "building_color": "#8a76b3"
@@ -14413,7 +14449,7 @@
         }
       ]
     },
-    "id": "403",
+    "id": "404",
     "tokenURI": "ipfs://QmUUBKM6MaXHx1iQBAAMfBCwmFsrwazNu9Mqo3tAyEvepr",
     "address": "0xb6f2bd914E794B8D8281F2B2d937620f92d45F9E",
     "building_color": "#6a98ca"
@@ -14447,7 +14483,7 @@
         }
       ]
     },
-    "id": "404",
+    "id": "405",
     "tokenURI": "ipfs://QmQ7Ntp7SYs8HFB2gBoawP5z4vFTKNKgmPgwFRgkRU9fSr",
     "address": "0xbdE4ad16FDFce188283aDc94ef12Ed5aD2bbe999",
     "building_color": "#f8ba4d"
@@ -14485,7 +14521,7 @@
         }
       ]
     },
-    "id": "405",
+    "id": "406",
     "tokenURI": "ipfs://QmV2FK6yNHtLYnQyraiKzYXxjR2cjzmz6P9a9tbchQgh7z",
     "address": "0x8fDC63E8a6E543aE8d4174E909EBe1eF9E47cE6E",
     "building_color": "#2ba1d3"
@@ -14523,7 +14559,7 @@
         }
       ]
     },
-    "id": "406",
+    "id": "407",
     "tokenURI": "ipfs://QmQm2pbAAEb4fnph7Yeg4UZ8xUrZQL136ddktSBhD1iDK2",
     "address": "0x1c88EA0fFa653985121143588F8AbeC64c35F3De",
     "building_color": "#75ccbb"
@@ -14561,7 +14597,7 @@
         }
       ]
     },
-    "id": "407",
+    "id": "408",
     "tokenURI": "ipfs://Qmbc6kRFTkaAHuvSui3NyvucxNh2XdKnqmMxNy1NDbFck1",
     "address": "0x204c3A70DE49917FB1302aa029808837343bF04e",
     "building_color": "#63c7c7"
@@ -14599,7 +14635,7 @@
         }
       ]
     },
-    "id": "408",
+    "id": "409",
     "tokenURI": "ipfs://QmdeELfda8s69BwM5wG3c5SiMtmZeAY4D9cfWYccVHCeep",
     "building_color": "#ee4681"
   },
@@ -14636,7 +14672,7 @@
         }
       ]
     },
-    "id": "409",
+    "id": "410",
     "tokenURI": "ipfs://QmTneXoCJRroFHxSbj2Z69ES9xwgLHG29a6BMNuTHkda1x",
     "building_color": "#d19fc5"
   },
@@ -14673,7 +14709,7 @@
         }
       ]
     },
-    "id": "410",
+    "id": "411",
     "tokenURI": "ipfs://QmaFjshPJDXftmxMCVTQe6KT3SWn5D6wXfNUS1eTq5j7dd",
     "building_color": "#c27db4"
   },
@@ -14710,7 +14746,7 @@
         }
       ]
     },
-    "id": "411",
+    "id": "412",
     "tokenURI": "ipfs://QmfAx1dG7jrxMvGBzHM3YkbH7GjmuruqvZXEsvxLKRngbR",
     "building_color": "#f9bc09"
   },
@@ -14743,7 +14779,7 @@
         }
       ]
     },
-    "id": "412",
+    "id": "413",
     "tokenURI": "ipfs://Qmau9rMbFTGHJTyeEscx7Uy6bfFA8vghs7sjoDRSkWhPgC",
     "building_color": "#ea5626"
   },
@@ -14776,7 +14812,7 @@
         }
       ]
     },
-    "id": "413",
+    "id": "414",
     "tokenURI": "ipfs://QmaTqYy2sTdNAA4rZo2ZBzCgrw1CgVQo6QUihQzNvdYvUP",
     "building_color": "#86c8e0"
   },
@@ -14809,7 +14845,7 @@
         }
       ]
     },
-    "id": "414",
+    "id": "415",
     "tokenURI": "ipfs://QmUHs6sqBPp9JiGzSwvP2oxQhuNkv9H73P1EzTk6FZwxpC",
     "building_color": "#f69f38"
   },
@@ -14842,7 +14878,7 @@
         }
       ]
     },
-    "id": "415",
+    "id": "416",
     "tokenURI": "ipfs://QmSD6gX3PisHAwpZvMVDejQkao5hMbUncRC2BpEyV733V8",
     "building_color": "#13a59a"
   },
@@ -14875,7 +14911,7 @@
         }
       ]
     },
-    "id": "416",
+    "id": "417",
     "tokenURI": "ipfs://QmbxtTb3Zq3jtbnk3eWqzobQrGn4hVDki5snMYYyjU64cZ",
     "building_color": "#f9d414"
   },
@@ -14908,7 +14944,7 @@
         }
       ]
     },
-    "id": "417",
+    "id": "418",
     "tokenURI": "ipfs://QmdntnvQuMX51WukoAXW2oNLQQjzF83w2YGhvRoBYtciMi",
     "building_color": "#e62774"
   },
@@ -14941,7 +14977,7 @@
         }
       ]
     },
-    "id": "418",
+    "id": "419",
     "tokenURI": "ipfs://QmSdj4y3rbMPQ9SmHfEaamhz53mMx2DZykqEXCCA13FLin",
     "building_color": "#4d8fbf"
   },
@@ -14974,7 +15010,7 @@
         }
       ]
     },
-    "id": "419",
+    "id": "420",
     "tokenURI": "ipfs://QmQdCSS65x4NWEHywRsJgPgaS7esWnJW7qcofrRye6pA4n",
     "building_color": "#f3df4c"
   },
@@ -15007,7 +15043,7 @@
         }
       ]
     },
-    "id": "420",
+    "id": "421",
     "tokenURI": "ipfs://QmcYSezPyDKR9d11PckjmayGeksTZz9vg654gxZXPHsDd6",
     "building_color": "#7ec694"
   },
@@ -15040,7 +15076,7 @@
         }
       ]
     },
-    "id": "421",
+    "id": "422",
     "tokenURI": "ipfs://QmXq7N8m4i3NbKPtUuc6P1mhVUsWWtVNMxJRAyfDkmK8FR",
     "building_color": "#4bbfe4"
   },
@@ -15073,7 +15109,7 @@
         }
       ]
     },
-    "id": "422",
+    "id": "423",
     "tokenURI": "ipfs://QmXyiDn4UCHHJCJw3TnU6EYDmHTyCJ9UNJ1aJ5q1wxzazS",
     "building_color": "#ec62af"
   },
@@ -15106,7 +15142,7 @@
         }
       ]
     },
-    "id": "423",
+    "id": "424",
     "tokenURI": "ipfs://QmanQyMXNsxMW39PkGLj34BV794zLM1bK3JTCoSpBn1EVB",
     "building_color": "#ed80b9"
   },
@@ -15139,7 +15175,7 @@
         }
       ]
     },
-    "id": "424",
+    "id": "425",
     "tokenURI": "ipfs://QmcdyvDXqeGoctpMU6g13yHP4jC2z3LkmGJ5Af3VH3EiGV",
     "building_color": "#b8e3ec"
   },
@@ -15172,7 +15208,7 @@
         }
       ]
     },
-    "id": "425",
+    "id": "426",
     "tokenURI": "ipfs://QmPfPgYGytWqchEepE5zqb6NnrSJ5uv6NtGqgQCVfZrNf1",
     "building_color": "#f7b15c"
   },
@@ -15205,7 +15241,7 @@
         }
       ]
     },
-    "id": "426",
+    "id": "427",
     "tokenURI": "ipfs://QmYnYLHrih2fhf4qSjztkopKLhs2aXHBcVdcag3ehZ6fh3",
     "building_color": "#63c7bf"
   },
@@ -15238,7 +15274,7 @@
         }
       ]
     },
-    "id": "427",
+    "id": "428",
     "tokenURI": "ipfs://QmRVDqaX3JC5q5MGoJap6nLBuTq9toNn845s2cMrzZ24MX",
     "building_color": "#f86128"
   },
@@ -15271,7 +15307,7 @@
         }
       ]
     },
-    "id": "428",
+    "id": "429",
     "tokenURI": "ipfs://QmYVXLvpJiv2G8jJ9CkzbQ5JAb62bkVuPb1Hv5gBmeNGHw",
     "building_color": "#ea4c40"
   },
@@ -15304,7 +15340,7 @@
         }
       ]
     },
-    "id": "429",
+    "id": "430",
     "tokenURI": "ipfs://QmYjZLDeX3j7GTwnT7QCK2Gx9PpTXr9qsrP7xJhFGMt5j3",
     "building_color": "#6375b3"
   },
@@ -15337,7 +15373,7 @@
         }
       ]
     },
-    "id": "430",
+    "id": "431",
     "tokenURI": "ipfs://QmXRh8HsvuaT1bSYAGKV8JGz6a7ui7ApBidxMyejwkXmK4",
     "building_color": "#019f91"
   },
@@ -15370,7 +15406,7 @@
         }
       ]
     },
-    "id": "431",
+    "id": "432",
     "tokenURI": "ipfs://QmQgdXnwHcYBbtrHvBkdjEnRHFMJ4vrZDBZJpXyTFCdXGi",
     "building_color": "#fbb756"
   },
@@ -15403,7 +15439,7 @@
         }
       ]
     },
-    "id": "432",
+    "id": "433",
     "tokenURI": "ipfs://QmXyvpuXMuKxm45U1yb1ZnjXq3Hav2NmDYpPsjejmsmHrh",
     "building_color": "#ddde5f"
   },
@@ -15436,7 +15472,7 @@
         }
       ]
     },
-    "id": "433",
+    "id": "434",
     "tokenURI": "ipfs://QmPgNUnZm9gmCbW4Bxg3mnLKHSV3FkpaPxXS4tD97TAdc1",
     "building_color": "#61aed8"
   },
@@ -15469,7 +15505,7 @@
         }
       ]
     },
-    "id": "434",
+    "id": "435",
     "tokenURI": "ipfs://QmREABSArWQG7Swtp9fhK1v8weKAh6W1NsghcuKmVzCMPs",
     "building_color": "#f9d414"
   },
@@ -15502,7 +15538,7 @@
         }
       ]
     },
-    "id": "435",
+    "id": "436",
     "tokenURI": "ipfs://QmceqjPSzEYDGBS9QeF9NGNhiTaFHedhQGz2pQra8hSNxF",
     "building_color": "#e7387b"
   },
@@ -15535,7 +15571,7 @@
         }
       ]
     },
-    "id": "436",
+    "id": "437",
     "tokenURI": "ipfs://Qmcb9veeWH7fv7TghZaNUtUYBv7NnGNdLavttBDMU24yzs",
     "building_color": "#f4a73b"
   },
@@ -15568,7 +15604,7 @@
         }
       ]
     },
-    "id": "437",
+    "id": "438",
     "tokenURI": "ipfs://QmbXaAGQrTa2gyjDULFrncVHTDFx7k7TYi1FC24jPFkVSK",
     "address": "0xaeC13Da55293CE54cE6d1156B1cbDff799608218",
     "building_color": "#00a6e0"
@@ -15602,7 +15638,7 @@
         }
       ]
     },
-    "id": "438",
+    "id": "439",
     "tokenURI": "ipfs://QmZtpB39VtbnYN57gyNGiZQ3wrD1Wcxq9CP1U4iTJkXfuG",
     "address": "0x25faF7e875e23aA43f0346d3822659c068d7b4Fa",
     "building_color": "#d1d421"
@@ -15636,7 +15672,7 @@
         }
       ]
     },
-    "id": "439",
+    "id": "440",
     "tokenURI": "ipfs://QmTpFNRZ4qHJ2FMVuQwccvYVn5F6Ta9AsJ7guixCEAPD3u",
     "address": "0x33EEaC324E398C9D13a535f2774d12bb48EE7288",
     "building_color": "#f37950"
@@ -15674,7 +15710,7 @@
         }
       ]
     },
-    "id": "440",
+    "id": "441",
     "tokenURI": "ipfs://QmZqjg5SyCsY4X8LxzJCsBYcQ86sTxwRMPGnN9XpNwRFbk",
     "address": "0x8282BEb138c88b22A03c927Bd30484B22f2937cF",
     "building_color": "#f9d414"
@@ -15708,7 +15744,7 @@
         }
       ]
     },
-    "id": "441",
+    "id": "442",
     "tokenURI": "ipfs://QmSA1zvBxxt4dTSbvtut61pyJzgqceJwaaWf21dUhZAPZo",
     "address": "0xBa9408397A83877BDa9c91105178063Df9160c0a",
     "building_color": "#e30c83"
@@ -15742,7 +15778,7 @@
         }
       ]
     },
-    "id": "442",
+    "id": "443",
     "tokenURI": "ipfs://QmQ6BeaoZKyWTaKdx7vWq4JTF9XtMcsBgPm5nHefrbYzsn",
     "address": "0xe8836762Daa728e4FE98BFdc6c606A7b47AA4300",
     "building_color": "#8d2586"
@@ -15776,7 +15812,7 @@
         }
       ]
     },
-    "id": "443",
+    "id": "444",
     "tokenURI": "ipfs://Qmas8MtmBMK3MJXqdPFJcrCdFQhZkqB6K2QxC4zq9PWW74",
     "address": "0x49D52054900aa5589864872340479A8Dd2DB2286",
     "building_color": "#2ba4d3"
@@ -15810,7 +15846,7 @@
         }
       ]
     },
-    "id": "444",
+    "id": "445",
     "tokenURI": "ipfs://QmZfeEuHym84ixNUs7K98apvTkidFBLajtbvP7Lo6cjF3s",
     "address": "0xE508Ad21a1f13E7E41272F28a1fc5D1D3B8b1EDe",
     "building_color": "#00a3a2"
@@ -15844,7 +15880,7 @@
         }
       ]
     },
-    "id": "445",
+    "id": "446",
     "tokenURI": "ipfs://QmUFhnPnNVbFgjPe28Yv92NwYHT7bAT4313yPDNYmesHYT",
     "address": "0xE22ce01531BBE7d01B76b0A55F4cf38038Ec3539",
     "building_color": "#f9e701"
@@ -15878,7 +15914,7 @@
         }
       ]
     },
-    "id": "446",
+    "id": "447",
     "tokenURI": "ipfs://QmXjSUkQuLqGPmv6JDJU6rfpyfUsKopfCPpRGV1emziHTa",
     "address": "0x2e972c2629DD9A8D558fdC78100cFfDc43c7c24b",
     "building_color": "#e7105e"
@@ -15912,7 +15948,7 @@
         }
       ]
     },
-    "id": "447",
+    "id": "448",
     "tokenURI": "ipfs://QmSPkpj67xBCvqJYgtPMjCnPRrtbG6P8i6Z1uCx8gZpq1W",
     "address": "0xf53946FA55D6D87354E47637A23487174A3B8A38",
     "building_color": "#f29919"
@@ -15950,7 +15986,7 @@
         }
       ]
     },
-    "id": "448",
+    "id": "449",
     "tokenURI": "ipfs://QmSdvohg1smmK4S377mL6hW4jCNcBMMvArcgPSDVSRc8tw",
     "address": "0x01547Eb7593cD5e7Ed3Bc24d982917d5442DCe14",
     "building_color": "#ec6a2e"
@@ -15988,7 +16024,7 @@
         }
       ]
     },
-    "id": "449",
+    "id": "450",
     "tokenURI": "ipfs://QmYoV8HkCj6w95Z5DqexE985wyEMmhxPituvqUszqG1iNM",
     "address": "0xdA112159Ba58Bd2E694f1949fB3fcB4c2BA9e8fE",
     "building_color": "#f05189"
@@ -16026,7 +16062,7 @@
         }
       ]
     },
-    "id": "450",
+    "id": "451",
     "tokenURI": "ipfs://QmNbbtmCJhskyfhD4YPHeoKAWDpjqKhcyq1uohvXS7icbD",
     "address": "0xB3317D18EB9f768bc3795d5a68306848D7BEd31B",
     "building_color": "#de4b91"
@@ -16064,7 +16100,7 @@
         }
       ]
     },
-    "id": "451",
+    "id": "452",
     "tokenURI": "ipfs://QmcJ17zin4cbiwsqJ8cPXEWxMRuRCoP9Lruaz5xJoF1Pvm",
     "address": "0x6B24b2Fd0A5854a01bBA14cb6bf50428f7325d1a",
     "building_color": "#e7df3c"
@@ -16102,7 +16138,7 @@
         }
       ]
     },
-    "id": "452",
+    "id": "453",
     "tokenURI": "ipfs://QmNdsG2KeenoxnuFJWPTkSnrzV9SxfqsbYep5XZ6wuUqu7",
     "address": "0x89682E3cD362b05DeAcec71d10DED865Ba3a4440",
     "building_color": "#3bbce3"
