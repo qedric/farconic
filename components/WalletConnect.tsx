@@ -1,11 +1,12 @@
 // components/WalletConnect.tsx
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { createWalletClient, custom } from 'viem'
 import { baseSepolia, base } from 'viem/chains'
 import { useWallet } from '@/context/WalletContext'
 import { EthereumProvider } from '@walletconnect/ethereum-provider'
+import Spinner from '@/components/Spinner'
 
 const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
 
@@ -44,15 +45,20 @@ async function ConnectWalletClient() {
 }
 
 const WalletConnect = () => {
+
   const { address, setAddress } = useWallet()
+  const [isLoading, setIsLoading] = useState(false) // State for loading spinner
 
   const connectWallet = async () => {
+    setIsLoading(true)
     try {
       const client = await ConnectWalletClient()
       const [walletAddress] = await client.requestAddresses()
       setAddress(walletAddress)
+      setIsLoading(false)
     } catch (error) {
       console.error('Failed to connect wallet:', error)
+      setIsLoading(false)
     }
   }
 
@@ -70,8 +76,8 @@ const WalletConnect = () => {
           {`Connected to: ${address.substring(0, 5)}...${address.substring(address.length - 4)}`}
         </p>
       ) : (
-        <button onClick={connectWallet} className="text-2xl btn">
-          Connect Wallet
+        <button onClick={connectWallet} className="flex items-center justify-between text-2xl btn transition-all" disabled={ isLoading }>
+          { isLoading && <div className="mr-4 h-6"><Spinner isLoading={true} /></div> } Connect Wallet
         </button>
       )}
     </div>
