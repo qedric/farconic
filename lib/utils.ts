@@ -24,7 +24,11 @@ const favBuildingNames_testnet: string[] = [
 ]
 
 const favBuildingNames_mainnet: string[] = [
-    "Statue of Liberty"
+    "Statue of Liberty",
+    "Stedelijk Museum",
+    "Obelisco de Buenos Aires",
+    "CN Tower",
+    "Philadelphia City Hall"
 ]
 
 const favBuildingNames = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? favBuildingNames_mainnet : favBuildingNames_testnet
