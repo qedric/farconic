@@ -1,16 +1,16 @@
 import { types } from "frames.js/next"
 import { getBuildingById } from '@/lib/utils'
-import { encodeFunctionData, Address, Hex } from 'viem'
-import { sendTransactions } from '@/app/api/safe'
-import abi from '@/data/mc_building_abi.json'
+import { baseSepolia, base } from "viem/chains"
 
-export const claim: types.FramesMiddleware<any, { txId: string }> = async (
+const chainId = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base.id : baseSepolia.id
+
+export const claim: types.FramesMiddleware<any, { txIds: string[] }> = async (
     ctx: any,
     next
 ) => {
 
     if (ctx.searchParams.txId) {
-        return next({ txId: ctx.searchParams.txId })
+        return next({ txIds: ctx.searchParams.txIds })
     }
 
     const custodyAddress = process.env.SAFE_TARGET
@@ -23,41 +23,55 @@ export const claim: types.FramesMiddleware<any, { txId: string }> = async (
         throw new Error("No User Address")
     }
 
-    const buildingIds = ctx.searchParams.buildingIds
+    const buildingIds:string = ctx.searchParams.buildingIds
     if (!buildingIds) {
         throw new Error("No Building Ids")
     }
 
-    let txId: string | undefined
-
-    const transactions: {
-        to: Address;
-        value: bigint;
-        data: Hex;
-    }[] = []
-
-    for (const buildingId of JSON.parse(buildingIds)) {
-
-        const building = getBuildingById(buildingId)
-
-        if (!building) {
-            throw new Error("Building not found")
+    const fSig = `safeTransferFrom(address from, address to, uint256 id, uint256 value, bytes data)`
+    
+    const fetchAllTransactions = async (buildingIds:string, custodyAddress:string, toAddress:string, chainId:number, fSig:string) => {
+        const txIds:string[] = []
+        const fetchPromises = []
+    
+        for (const buildingId of JSON.parse(buildingIds)) {
+            const building = getBuildingById(buildingId)
+    
+            if (!building) {
+                throw new Error("Building not found")
+            }
+    
+            try {
+                const args = `{"from": "${custodyAddress}", "to": "${toAddress}", "id": "0", "value": "1", "data": "0x00"}`
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${process.env.SYNDICATE_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: `{"projectId":"${process.env.SYNDICATE_PROJECT_ID}","contractAddress":"${building.address}","chainId":${chainId},"functionSignature":"${fSig}","args":${args}}`
+                }
+    
+                const fetchPromise = fetch('https://api.syndicate.io/transact/sendTransaction', options)
+                    .then(response => response.json())
+                    .then(responseData => {
+                        txIds.push(responseData.transactionId ? responseData.transactionId : '')
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    })
+    
+                fetchPromises.push(fetchPromise)
+            } catch (err) {
+                console.error(err)
+            }
         }
-
-        const args = [`${process.env.SAFE_TARGET}`, toAddress, BigInt(0), BigInt(1), '0x0'] 
-
-        transactions.push({
-            to: building.address,
-            data: encodeFunctionData({
-                abi,
-                functionName: 'safeTransferFrom',
-                args
-            }),
-            value: BigInt(0)
-        })
+    
+        await Promise.all(fetchPromises)
+        return txIds
     }
 
-    txId = await sendTransactions(transactions)
+    const txIds = await fetchAllTransactions(buildingIds, custodyAddress, toAddress, chainId, fSig)
 
-    return next({ txId: txId || '' })
+    return next({ txIds })
 }

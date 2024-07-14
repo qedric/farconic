@@ -174,6 +174,27 @@ export const getPackageFromDb = async (name: string): Promise<Package | null> =>
     }
 }
 
+export const markPackageWinnerAsClaimed = async (name: string, fid: number, txIds: string[]): Promise<number> => {
+
+    try {
+        await client.connect()
+        const collection = client.db('farconic').collection('raffles')
+        const recordToUpdate = await collection.findOne({ name })
+
+        console.log('recordToUpdate:', recordToUpdate)
+
+        const claims: string[][] = recordToUpdate?.claimed?.find((entry: any) => entry.fid === fid).claims || []
+        claims.push(txIds)
+        const result = await collection.updateOne({ name }, { $set: { claimed: [{ fid, claims }] } })
+        console.log(result.modifiedCount)
+        return result.modifiedCount
+    } catch (e) {
+        console.error(e)
+        return -1
+    }
+
+}
+
 export const getRaffleClaims = async (name: string, fid: number): Promise<string[]> => {
     try {
         const recordToUpdate = await getRaffleFromDb(name)
@@ -187,7 +208,7 @@ export const getRaffleClaims = async (name: string, fid: number): Promise<string
     }
 }
 
-export const markWinnerAsClaimed = async (name: string, fid: number, txId: string): Promise<number> => {
+export const markRaffleWinnerAsClaimed = async (name: string, fid: number, txId: string): Promise<number> => {
 
     try {
         await client.connect()

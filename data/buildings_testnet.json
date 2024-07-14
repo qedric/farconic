@@ -11375,7 +11375,7 @@
       "name": "July Column",
       "description": "The July Column, erected in 1840 in Paris, stands at Place de la Bastille and commemorates the events of the July Revolution of 1830.",
       "image": "ipfs://QmVp9vb18eLqbw3NUuMmtraV2gWBXZuK3C5WaR5QfTuJFy/building%20card_2.gif",
-      "external_url": "https://farconic.xyz",
+      "external_url": "https://farconic.xyz/july-column",
       "background_color": "F7F3EE",
       "attributes": [
         {
@@ -11395,13 +11395,17 @@
           "value": "1840s"
         },
         {
+          "trait_type": "Type of Building",
+          "value": "Monument"
+        },
+        {
           "value": "Building"
         }
       ]
     },
     "id": "320",
-    "tokenURI": "ipfs://QmPgcCdfLCfcH7QQsH8BZj4EH8BGeZGdi1xpTvVPTTtruW",
-    "address": "0xa80ECca1fEb64e6231A07Ac13428f9C87df761b4",
+    "tokenURI": "ipfs://Qmbz8iNHZiiEQuaPCj62vMBr3B6NXpqVJ1Yju4vtUxGFPF",
+    "address": "0xbc0E424c95ae96621C2c70A8ed34D637a6a7E6D9",
     "building_color": "#a5d067"
   },
   {
