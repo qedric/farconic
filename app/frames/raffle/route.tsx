@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-key */
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
-import { getRaffleFromDb } from '@/lib/db'
+import { getRaffleFromDb } from '@/app/api/mongodb'
 
 const handleRequest = frames(async (ctx) => {
 
-    const { raffle } = await getRaffleFromDb(ctx.searchParams.name)
+    const raffle = await getRaffleFromDb(ctx.searchParams.name)
 
     if (!raffle) {
         throw new Error(`${ctx.searchParams.name} not found`)

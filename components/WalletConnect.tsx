@@ -6,6 +6,7 @@ import { createWalletClient, custom } from 'viem'
 import { baseSepolia, base } from 'viem/chains'
 import { useWallet } from '@/context/WalletContext'
 import { EthereumProvider } from '@walletconnect/ethereum-provider'
+import { getAdminsFromDb } from '@/app/api/mongodb'
 import Spinner from '@/components/Spinner'
 
 const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
@@ -46,7 +47,7 @@ async function ConnectWalletClient() {
 
 const WalletConnect = () => {
 
-  const { address, setAddress } = useWallet()
+  const { address, setAddress, isAdmin, setIsAdmin } = useWallet()
   const [isLoading, setIsLoading] = useState(false) // State for loading spinner
 
   const connectWallet = async () => {
@@ -65,6 +66,10 @@ const WalletConnect = () => {
   useEffect(() => {
     if (address) {
       console.log('Connected address:', address)
+      // check if the user is an admin:
+      getAdminsFromDb().then(admins => {
+        setIsAdmin(admins.includes(address))
+      })
     }
   }, [address])
 

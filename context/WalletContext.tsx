@@ -6,15 +6,18 @@ import { createContext, useContext, useState, ReactNode } from 'react'
 interface WalletContextProps {
   address: string | null
   setAddress: (address: string | null) => void
+  isAdmin: boolean
+  setIsAdmin: (isAdmin: boolean) => void
 }
 
 const WalletContext = createContext<WalletContextProps | undefined>(undefined)
 
 export const WalletProvider = ({ children }: { children: ReactNode }) => {
   const [address, setAddress] = useState<string | null>(null)
+  const [isAdmin, setIsAdmin] = useState<boolean>(false)
 
   return (
-    <WalletContext.Provider value={{ address, setAddress }}>
+    <WalletContext.Provider value={{ address, setAddress, isAdmin, setIsAdmin }}>
       {children}
     </WalletContext.Provider>
   )

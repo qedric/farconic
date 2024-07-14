@@ -4,7 +4,7 @@ import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { decodeEventLog, Abi } from 'viem'
 import { getTransactionReceipt, getBuildingByAddress, NFT } from '@/lib/utils'
-import { markWinnerAsClaimed } from '@/lib/db'
+import { markWinnerAsClaimed } from '@/app/api/mongodb'
 import { claim } from './claim'
 import { CardImage } from '@/components/FrameCard'
 import abi from '@/data/mc_building_abi.json'
@@ -19,7 +19,7 @@ const handleRequest = frames(async (ctx: any) => {
             image: (
                 <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
                     <div tw="flex flex-col absolute px-20 justify-center items-center">
-                        <h1 tw="text-[50px] mb-5 leading-6">Can&quot;t find a transaction</h1>
+                        <h1 tw="text-[50px] mb-5 leading-6">Can&apos;t find a transaction</h1>
                     </div>
                 </div>
             ),

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
-import { getRaffleFromDb } from '@/lib/db'
+import { getRaffleFromDb } from '@/app/api/mongodb'
 import { getBuildingById } from '@/lib/utils'
 
 const handleRequest = frames(async (ctx:any) => {
@@ -10,7 +10,7 @@ const handleRequest = frames(async (ctx:any) => {
         throw new Error("Invalid Frame")
     }
 
-    const { raffle } = await getRaffleFromDb(ctx.searchParams.name)
+    const raffle = await getRaffleFromDb(ctx.searchParams.name)
 
     if (!raffle) {
         throw new Error("Raffle not found")

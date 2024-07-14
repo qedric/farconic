@@ -8,7 +8,7 @@ import { baseSepolia, base } from "viem/chains"
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ErrorFrame } from "@/components/FrameError"
 import { CardImage } from '@/components/FrameCard'
-import { addTradeToUser } from '@/lib/db'
+import { addTradeToUser } from '@/app/api/mongodb'
 import abi from '@/data/mcv2bond_abi.json'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
