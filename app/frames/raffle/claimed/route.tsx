@@ -4,7 +4,7 @@ import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { decodeEventLog, Abi } from 'viem'
 import { getTransactionReceipt, getBuildingByAddress, NFT } from '@/lib/utils'
-import { markWinnerAsClaimed } from '@/app/api/mongodb'
+import { markRaffleWinnerAsClaimed } from '@/app/api/mongodb'
 import { claim } from './claim'
 import { CardImage } from '@/components/FrameCard'
 import abi from '@/data/mc_building_abi.json'
@@ -105,7 +105,7 @@ const handleRequest = frames(async (ctx: any) => {
         console.log('bulidingAddress:', bulidingAddress)
 
         // mark the winner as having claimed their prize, in the database
-        const result = await markWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
+        const result = await markRaffleWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
 
         console.log('building:', building)
         const addThe = (bulidingName: string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
