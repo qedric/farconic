@@ -23,7 +23,7 @@ const handleRequest = frames(async (ctx) => {
     const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`
     
     return {
-        image: await CardImage( building, userData?.profileImage, userData?.username, undefined),
+        image: await CardImage( building, userData?.profileImage, userData?.username),
         imageOptions: {
             aspectRatio: "1:1"
         },

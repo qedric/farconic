@@ -3,20 +3,33 @@ import { ethers } from 'ethers'
 import { getDetail, NFT } from '@/lib/utils'
 import { getOwnersOfToken } from '@/app/api/alchemy'
 
-export const CardImage = async ( 
+export const CardImage = async (
     building:NFT,
     userImg:string | undefined = undefined,
     userName:string | undefined = undefined,
-    scale:string | undefined = undefined
+    scale:string | undefined = undefined,
+    noStats:boolean = false
 ) => {
 
-    const [holders, detail] = await Promise.all([
-        getOwnersOfToken((building as NFT).address),
-        getDetail((building as NFT).address)
-    ])
+    const getStats = async () => {
+        const [tokenHolders, mc_detail] = await Promise.all([
+            getOwnersOfToken((building as NFT).address),
+            getDetail((building as NFT).address)
+        ])
+        return [tokenHolders, mc_detail]
+    }
 
-    const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(10000))
-    const currentPriceValue = `${Math.round(parseFloat(ethers.formatEther(priceForNextMintWithRoyalty))*1e6) / 1e6} ETH`
+    let currentPriceValue = `XXX ETH`
+    let holders:any
+    let detail:any
+
+    if (!noStats) {
+        [holders, detail] = await getStats()
+        if (detail && holders) {
+            const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(10000))
+            currentPriceValue = `${Math.round(parseFloat(ethers.formatEther(priceForNextMintWithRoyalty))*1e6) / 1e6} ETH`
+        }
+    }
 
     const buildingName = building.metadata.name
     let buildingNameFontSize:string = buildingName.length > 28 
@@ -38,8 +51,8 @@ export const CardImage = async (
     }
 
     return (
-        <div tw="flex w-full h-full items-center justify-center" style={{ transform: scaleTransform, backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5)`}}>
-            <div tw="flex flex-wrap relative w-[53vw] text-white p-0 m-0">
+        <div tw="flex w-full h-full items-center justify-center" style={{ backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5)`}}>
+            <div tw="flex flex-wrap relative w-[53vw] text-white p-0 m-0" style={{ transform: scaleTransform }}>
                 <div tw={ `flex flex-col w-full ${ containerStyle } h-[64.5vw]` }>
                     <div tw="flex flex-1 text-[24px] w-[48vw] mb-2 items-end justify-between">
                         <div>{ building.metadata.attributes.find(attr => attr.trait_type == 'Country')?.value }</div>
@@ -54,11 +67,11 @@ export const CardImage = async (
                 </div>
                 <div tw="mt-4 w-full flex justify-between">
                     <InfoDisplay label="Current Price:" value={ currentPriceValue } />
-                    <InfoDisplay label="Total Minted:" value={ detail.info.currentSupply.toString() } />
+                    <InfoDisplay label="Total Minted:" value={ detail ? detail?.info.currentSupply.toString() : 'XXX' } />
                 </div>
                 <div tw="mt-2 w-full flex justify-between">
-                    <InfoDisplay label="Liquidity:" value={ `${Math.round(parseFloat(ethers.formatEther(detail.info.reserveBalance))*1e6) / 1e6} ETH` } />
-                    <InfoDisplay label="Holders:" value={ holders?.length.toString() || '0' } />
+                    <InfoDisplay label="Liquidity:" value={ detail ? `${Math.round(parseFloat(ethers.formatEther(detail.info.reserveBalance))*1e6) / 1e6} ETH` : 'XXX ETH' } />
+                    <InfoDisplay label="Holders:" value={ holders ? holders.length.toString() : 'XXX' } />
                 </div>
             </div>
             { userImg && 

@@ -174,17 +174,18 @@ export const getPackageFromDb = async (name: string): Promise<Package | null> =>
     }
 }
 
-export const markPackageWinnerAsClaimed = async (name: string, fid: number, txIds: string[]): Promise<number> => {
+export const markPackageWinnerAsClaimed = async (name: string, fid: number, buildingIds: string[]): Promise<number> => {
 
     try {
         await client.connect()
-        const collection = client.db('farconic').collection('raffles')
+        const collection = client.db('farconic').collection('packages')
         const recordToUpdate = await collection.findOne({ name })
 
+        console.log('name', name)
         console.log('recordToUpdate:', recordToUpdate)
 
         const claims: string[][] = recordToUpdate?.claimed?.find((entry: any) => entry.fid === fid).claims || []
-        claims.push(txIds)
+        claims.push(buildingIds)
         const result = await collection.updateOne({ name }, { $set: { claimed: [{ fid, claims }] } })
         console.log(result.modifiedCount)
         return result.modifiedCount

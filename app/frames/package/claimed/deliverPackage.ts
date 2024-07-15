@@ -4,16 +4,16 @@ import { baseSepolia, base } from "viem/chains"
 
 const chainId = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base.id : baseSepolia.id
 
-export const claim: types.FramesMiddleware<any, { txIds: string[] }> = async (
+export const claim: types.FramesMiddleware<any, { name:string, txIds:string }> = async (
     ctx: any,
     next
 ) => {
 
-    if (ctx.searchParams.txId) {
-        return next({ txIds: ctx.searchParams.txIds })
+    if (ctx.searchParams.txIds) {
+        return next({ name: ctx.searchParams.name, txIds: ctx.searchParams.txIds })
     }
 
-    const custodyAddress = process.env.SAFE_TARGET
+    const custodyAddress = process.env.RAFFLE_PRIZE_CUSTODY_ADDRESS
     if (!custodyAddress) {
         throw new Error("No Custody Address")
     }
@@ -73,5 +73,5 @@ export const claim: types.FramesMiddleware<any, { txIds: string[] }> = async (
 
     const txIds = await fetchAllTransactions(buildingIds, custodyAddress, toAddress, chainId, fSig)
 
-    return next({ txIds })
+    return next({ name: ctx.searchParams.name, txIds: JSON.stringify(txIds) })
 }

@@ -61,7 +61,7 @@ const handleRequest = frames(async (ctx:any) => {
             aspectRatio: "1:1"
         },
         buttons: [
-            <Button action="post" target={{ query: { to: address, buildingIds: JSON.stringify(buildingPackage.buildingIds) }, pathname: '/package/claimed' }}>
+            <Button action="post" target={{ query: { to: address, buildingIds: JSON.stringify(buildingPackage.buildingIds), name: ctx.searchParams.name }, pathname: '/package/claimed' }}>
                 Claim 🎉
             </Button>
         ]
