@@ -276,5 +276,47 @@
       "tokenURI": "ipfs://QmXc9Lo51MYMeCcwmuY3Wpp2WUPTXu1M8uDpWGFbsyA6xx",
       "address": "0xDB4B6BDe319E68461D3257F3aFD7F81E6c8402E7",
       "building_color": "#b159a3"
+    },
+    {
+      "metadata": {
+        "name": "Columbia Center",
+        "description": "Columbia Center, completed in 1985 in Seattle, is the tallest building in the state, known for its black façade and tapered structure.",
+        "image": "ipfs://Qmemq6q3ET9eEtJbRuNpNwahb5STivriUiZ1WbuwD941sN/building%20card_.gif",
+        "external_url": "https://farconic.xyz/columbia-center",
+        "background_color": "F7F3EE",
+        "attributes": [
+          {
+            "trait_type": "City",
+            "value": "Seattle"
+          },
+          {
+            "trait_type": "State",
+            "value": "Washington"
+          },
+          {
+            "trait_type": "Country",
+            "value": "United States"
+          },
+          {
+            "trait_type": "Height (m)",
+            "value": "\"295\""
+          },
+          {
+            "trait_type": "Construction Era",
+            "value": "1980s"
+          },
+          {
+            "trait_type": "Type of Building",
+            "value": "Skyscraper"
+          },
+          {
+            "value": "Building"
+          }
+        ]
+      },
+      "id": "374",
+      "tokenURI": "ipfs://QmYwZYLeJ37LMj19bcnLZyCCyH4cPKJeiC17gyPrcxeKLm",
+      "address": "0xEde28dcbdF87d388be46271a2a2C4017013b3bB8",
+      "building_color": "#8f7bae"
     }
 ]
