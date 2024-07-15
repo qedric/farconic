@@ -37,6 +37,8 @@ type Raffle = {
     winnerFids: number[]
     welcomeText?: string
     welcomeImage?: string
+    wonImage?: string
+    lostImage?: string
     claimed?: {
         fid: number
         claims: string[]
