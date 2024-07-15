@@ -52,7 +52,7 @@ const handleRequest = frames(async (ctx:any) => {
 
         return {
             image: raffle.wonImage
-                ? raffle.wonImage
+                ? `${process.env.NEXT_PUBLIC_GATEWAY_URL}/${raffle.wonImage}`
                 : (
                     <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
                         <div tw="flex flex-col absolute px-20 justify-center items-center">
@@ -75,7 +75,7 @@ const handleRequest = frames(async (ctx:any) => {
     } else {
         return {
             image: raffle.lostImage
-            ? raffle.lostImage
+            ? `${process.env.NEXT_PUBLIC_GATEWAY_URL}/${raffle.lostImage}`
             : (
                 <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
                     <div tw="flex flex-col absolute px-20 justify-center items-center">
