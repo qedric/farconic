@@ -111,21 +111,23 @@ const handleRequest = frames(async (ctx: any) => {
         const addThe = (bulidingName: string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
         const successString = `You now own ${addThe(building.metadata.name)} card!`
 
-        console.log('successString:', successString)
+        const shareText = `I won ${addThe(building.metadata.name)} card in /farconic! 🎉`
+        const nameWithHyphens = building.metadata.name.replaceAll(/\s/g, '-').toLowerCase()
+        const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`
 
         return {
             image: (
                 <div tw="flex w-full h-full" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmRJx4BNegoXtzsZ64zqFwxqoXUFRZAmAQmG6ToLxU2SdV)` }}>
                     <div tw="flex flex-col relative bottom-[40px] w-full h-full items-center justify-center">
-                        <h1 tw="relative top-[18%] text-[60px]">CONGRATULATIONS!</h1>
-                        {await CardImage(building, undefined, undefined, '0.50')}
+                        <h1 tw="text-[60px]">CONGRATULATIONS!</h1>
+                        { await CardImage(building, undefined, undefined, '0.5', true) }
                         {userData &&
-                            <div tw="absolute top-[310px] w-full flex flex-col justify-center items-center">
+                            <div tw="absolute top-[330px] w-full flex flex-col justify-center items-center">
                                 <img src={userData.profileImage} alt="" tw="w-[4.55vw] h-[4.55vw] rounded-full" />
                                 <div tw="flex lowercase text-[14px] text-white" style={{ transform: 'scale(0.6)' }}>@{userData.username}</div>
                             </div>
                         }
-                        <h1 tw="relative px-20 text-center bottom-[280px] flex text-[32px]">{successString}</h1>
+                        <h1 tw="px-20 text-center flex text-[32px]">{successString}</h1>
                     </div>
                 </div>
             ),
@@ -136,11 +138,11 @@ const handleRequest = frames(async (ctx: any) => {
                 <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/" }}>
                     reset
                 </Button>,
-                <Button action="link" target={`${process.env.NEXT_PUBLIC_OPENSEA_LINK as string}${bulidingAddress}`}>
-                    view on opensea
+                <Button action="link" target={ targetUrl }>
+                    Share 🔁
                 </Button>,
                 <Button action="link" target='https://farconic.xyz'>
-                    learn more
+                    App 🌐
                 </Button>
             ]
         }
@@ -168,7 +170,7 @@ const handleRequest = frames(async (ctx: any) => {
             <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
                 <div tw="flex flex-col absolute px-20 justify-center items-center">
                     <h1 tw="text-[50px] mb-5 leading-6">{`Transaction status: ${status}.`}</h1>
-                    <p tw="text-[30px] leading-6">Please allow some time for the transaction to appear on the blockchain, and try a refresh.</p>
+                    <p tw="text-[30px] leading-6">Please wait a moment and try a refresh.</p>
                 </div>
             </div>
         ),

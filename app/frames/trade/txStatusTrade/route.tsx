@@ -104,10 +104,10 @@ const handleRequest = frames(async (ctx) => {
                 image: (
                     <div tw="flex w-full h-full" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmRJx4BNegoXtzsZ64zqFwxqoXUFRZAmAQmG6ToLxU2SdV)`}}>
                         <div tw="flex flex-col relative bottom-[40px] w-full h-full items-center justify-center">
-                            <h1 tw="relative top-[18%] text-[60px]">{ isSell ? 'SOLD!' : 'CONGRATULATIONS!' }</h1>
-                            { await CardImage(building as NFT, undefined, undefined, '0.50') }
+                            <h1 tw="text-[60px]">{ isSell ? 'SOLD!' : 'CONGRATULATIONS!' }</h1>
+                            { await CardImage(building as NFT, undefined, undefined, '0.5') }
                             { userData && 
-                                <div tw="absolute top-[310px] w-full flex flex-col justify-center items-center">
+                                <div tw="absolute top-[330px] w-full flex flex-col justify-center items-center">
                                     <img src={userData.profileImage} tw="w-[4.55vw] h-[4.55vw] rounded-full" />
                                     {/* <div tw="flex flex-col w-[5.25vw] h-[5.25vw] rounded-full">
                                         <div tw="flex justify-center items-center bg-green-200 w-full h-1/2 rounded-t-full text-center"><div>T</div></div>
@@ -116,7 +116,7 @@ const handleRequest = frames(async (ctx) => {
                                     <div tw="flex lowercase text-[14px] text-white" style={{ transform: 'scale(0.6)' }}>@{ userData.username }</div>
                                 </div>
                             }
-                            <h1 tw="relative px-20 text-center bottom-[280px] flex text-[32px]">{ successString }</h1>
+                            <h1 tw="px-20 text-center flex text-[32px]">{ successString }</h1>
                         </div>
                     </div> 
                 ),

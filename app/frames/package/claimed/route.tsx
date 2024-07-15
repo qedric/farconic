@@ -125,10 +125,8 @@ const handleRequest = frames(async (ctx: any) => {
                 <div tw="flex w-full h-full" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmRJx4BNegoXtzsZ64zqFwxqoXUFRZAmAQmG6ToLxU2SdV)` }}>
                     <div tw="flex flex-col relative bottom-[50px] w-full h-full items-center justify-center">
                         <h1 tw="text-[60px]">CONGRATULATIONS</h1>
-                        <p tw="text-[32px]">{`You now own ${numberWord(buildings.length)} new buildings cards!`}</p>
-                        <div tw="flex w-[600px] h-[600px] mx-auto justify-center">                            
-                            { await CardImage(buildings[page-1], undefined, undefined, '0.5', true) }                            
-                        </div>
+                        <p tw="text-[32px]">{`You now own ${numberWord(buildings.length)} new buildings cards!`}</p>                    
+                        { await CardImage(buildings[page-1], undefined, undefined, '0.5', true) }
                         <h1 tw="px-20 text-center flex text-[32px]">{successString}</h1>
                     </div>
                 </div>

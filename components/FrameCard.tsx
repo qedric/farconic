@@ -36,6 +36,7 @@ export const CardImage = async (
         ? 'text-2xl'
         : 'text-4xl'
 
+    const scaleFactor = scale ? Number(scale) : 1
     const scaleTransform = scale ? `scale(${scale})` : 'scale(1)'
     const containerStyle:string = `flex items-center bg-[${building.building_color}] rounded-[16px] uppercase`
 
@@ -50,8 +51,11 @@ export const CardImage = async (
         )
     }
 
+    const containerSize = `w-[${1200*scaleFactor}px] h-[${1200*scaleFactor}px]`
+
     return (
-        <div tw="flex w-full h-full items-center justify-center" style={{ backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5)`}}>
+        <div tw={`relative flex ${containerSize} items-center justify-center`}>
+            <img tw="absolute w-full h-full" width="1200" height="1200" src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5`} />
             <div tw="flex flex-wrap relative w-[53vw] text-white p-0 m-0" style={{ transform: scaleTransform }}>
                 <div tw={ `flex flex-col w-full ${ containerStyle } h-[64.5vw]` }>
                     <div tw="flex flex-1 text-[24px] w-[48vw] mb-2 items-end justify-between">
