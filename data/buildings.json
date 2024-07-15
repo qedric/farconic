@@ -234,5 +234,47 @@
       "tokenURI": "ipfs://Qmbz8iNHZiiEQuaPCj62vMBr3B6NXpqVJ1Yju4vtUxGFPF",
       "address": "0x894c7291Ef04d988dCeD4E221c66aFf95696b63C",
       "building_color": "#a5d067"
+    },
+    {
+      "metadata": {
+        "name": "Cloud Gate",
+        "description": "Cloud Gate, unveiled in 2006 in Chicago's Millennium Park, is a public sculpture by Anish Kapoor, known locally as \"The Bean\" for its shape.",
+        "image": "ipfs://QmfXqx57zcdygbpXYXPULPoUPJL4PP7HKcc2FCBLYHFEF1/building%20card_10.gif",
+        "external_url": "https://farconic.xyz/cloud-gate",
+        "background_color": "F7F3EE",
+        "attributes": [
+            {
+                "trait_type": "City",
+                "value": "Chicago"
+            },
+            {
+                "trait_type": "State",
+                "value": "Illinois"
+            },
+            {
+                "trait_type": "Country",
+                "value": "United States"
+            },
+            {
+                "trait_type": "Height (m)",
+                "value": "\"10\""
+            },
+            {
+                "trait_type": "Construction Era",
+                "value": "2000s"
+            },
+            {
+                "trait_type": "Type of Building",
+                "value": "Sculpture"
+            },
+            {
+                "value": "Building"
+            }
+        ]
+    },
+      "id": "92",
+      "tokenURI": "ipfs://QmXc9Lo51MYMeCcwmuY3Wpp2WUPTXu1M8uDpWGFbsyA6xx",
+      "address": "0xDB4B6BDe319E68461D3257F3aFD7F81E6c8402E7",
+      "building_color": "#b159a3"
     }
 ]
