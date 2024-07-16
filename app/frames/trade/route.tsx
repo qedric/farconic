@@ -2,9 +2,7 @@
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
-import { NFT, estimatePriceMiddleware } from '@/lib/utils'
-import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
-import { ethers } from 'ethers'
+import { NFT, formatWeiToETH, abbreviateAddress, estimatePriceMiddleware, getIsApproved } from '@/lib/utils'
 import { ErrorFrame } from "@/components/FrameError"
 import { baseSepolia, base } from "viem/chains"
 import { getDetail, getTokenBalancesForAddresses } from '@/lib/utils'
@@ -56,11 +54,8 @@ const handleRequest = frames(async (ctx:any) => {
             } else {
                 // check that the seller has approved the contract to spend the NFT
                 await Promise.all(buildingBalances.map(async (balance) => {
-                    const isApproved = await mintclub.network(chainId).nft(building.address).getIsApprovedForAll({
-                        owner: (balance.address as `0x${string}`),
-                        spender: getMintClubContractAddress('ZAP', chainId)
-                    })
-                    if (isApproved) {
+                    const approved = await getIsApproved((building.address as `0x${string}`), (balance.address as `0x${string}`))
+                    if (approved) {
                         approvedAddresses.push({address: balance.address, balance: balance.balance});
                     }
                 }))
@@ -83,7 +78,7 @@ const handleRequest = frames(async (ctx:any) => {
         ])
     
         const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(10000))
-        const currentBuyValue = `${Math.round(parseFloat(ethers.formatEther(priceForNextMintWithRoyalty))*1e6) / 1e6} ETH`
+        const currentBuyValue = formatWeiToETH(priceForNextMintWithRoyalty)
 
         const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
 
@@ -176,7 +171,7 @@ const handleRequest = frames(async (ctx:any) => {
                                     <InfoDisplay label="Total Minted:" value={ detail.info.currentSupply.toString() } />
                                 </div>
                                 <div tw="mt-1 w-full flex justify-between">
-                                    <InfoDisplay label="Liquidity:" value={ `${Math.round(parseFloat(ethers.formatEther(detail.info.reserveBalance))*1e4) / 1e4} ETH` } />
+                                    <InfoDisplay label="Liquidity:" value={ formatWeiToETH(detail.info.reserveBalance) } />
                                     <InfoDisplay label="Holders:" value={ holders?.length.toString() || '0' } />
                                 </div>
                             </div>
@@ -198,9 +193,9 @@ const handleRequest = frames(async (ctx:any) => {
                         )}
                         { ctx.isSell && isApproved && totalBalance > BigInt(0) && (
                             <div tw="flex flex-col px-20 justify-center items-center flex-grow">
-                                <h1 tw="text-[50px] mb-6 leading-6">{ `Quantity: ${qty} | Total Value: ${ (parseFloat(ethers.formatUnits(estimation, 18)).toFixed(6)) } ETH` }</h1>
+                                <h1 tw="text-[50px] mb-6 leading-6">{ `Quantity: ${qty} | Total Value: ${ formatWeiToETH(estimation) }` }</h1>
                                 <p tw="text-[30px] leading-6 text-center">
-                                    {`${approvedAddresses.map(a => `Address: ${a.address.substring(0, 5)}...${a.address.substring(a.address.length - 4)} | Balance: ${a.balance}`).join(', ')}\n`}
+                                    {`${approvedAddresses.map(a => `Address: ${abbreviateAddress(a.address)} | Balance: ${a.balance}`).join(', ')}\n`}
                                 </p>
                             </div>
                         )}
@@ -208,13 +203,13 @@ const handleRequest = frames(async (ctx:any) => {
                             <div tw="flex flex-col px-20 justify-center items-center flex-grow">
                                 <h1 tw="text-[40px] mb-4 leading-8 text-center">{ `Your approval is required to sell your cards` }</h1>
                                 <p tw="text-[30px] leading-6 text-center">
-                                    {`${buildingBalances.map(a => `Address: ${a.address.substring(0, 5)}...${a.address.substring(a.address.length - 4)} | Balance: ${a.balance}`).join(', ')}\n`}
+                                    {`${buildingBalances.map(a => `Address: ${abbreviateAddress(a.address)} | Balance: ${a.balance}`).join(', ')}\n`}
                                 </p>
                             </div>
                         )}
                         { !ctx.isSell && (
                             <div tw="flex flex-col px-20 justify-center items-center flex-grow">
-                                <h1 tw="text-[50px] mb-5 leading-6">{ `Quantity: ${qty} | Price: ${ (parseFloat(ethers.formatUnits(estimation, 18)).toFixed(6)) } ETH` }</h1>
+                                <h1 tw="text-[50px] mb-5 leading-6">{ `Quantity: ${qty} | Price: ${ formatWeiToETH(estimation) }` }</h1>
                             </div>
                         )} 
                     </div>

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key, @next/next/no-img-element, jsx-a11y/alt-text */
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
-import { getTransactionReceipt, getTokenBalanceByAddress } from '@/lib/utils'
+import { getTransactionReceipt, getTokenBalanceByAddress, abbreviateAddress } from '@/lib/utils'
 import { ErrorFrame } from "@/components/FrameError"
 import { decodeEventLog } from 'viem'
 import abi from '@/data/mc_building_abi.json'
@@ -89,7 +89,7 @@ const handleRequest = frames(async (ctx) => {
                     <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
                         <div tw="flex flex-col absolute px-20 justify-center items-center">
                             <h1 tw="text-[50px] mb-5 leading-6">Transaction Submitted</h1>
-                            <h1 tw="text-[50px] mb-5 leading-6">{ `Your Balance: ${ balance[0].balance }\n (${approvedAddress.substring(0, 5)}...${approvedAddress.substring(approvedAddress.length - 4)})` }</h1>                      
+                            <h1 tw="text-[50px] mb-5 leading-6">{ `Your Balance: ${ balance[0].balance }\n (${abbreviateAddress(approvedAddress)})` }</h1>                      
                         </div>
                     </div>
                 ),

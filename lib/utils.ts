@@ -2,10 +2,13 @@ import { mintclub } from 'mint.club-v2-sdk'
 import mc_building_abi from '@/data/mc_building_abi.json'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
+import { baseSepolia, base } from "viem/chains"
 import { ethers } from 'ethers'
 import { FramesMiddleware } from "frames.js/types"
+import { getMintClubContractAddress } from 'mint.club-v2-sdk'
 
 const chainString = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? 'base' : 'basesepolia'
+const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
 const buildings = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 
 const favBuildingNames_testnet: string[] = [
@@ -28,7 +31,9 @@ const favBuildingNames_mainnet: string[] = [
     "Stedelijk Museum",
     "Obelisco de Buenos Aires",
     "CN Tower",
-    "Philadelphia City Hall"
+    "Philadelphia City Hall",
+    "July Column",
+    "Cloud Gate"
 ]
 
 const favBuildingNames = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? favBuildingNames_mainnet : favBuildingNames_testnet
@@ -126,6 +131,10 @@ export const getOpenseaData = async (address: string) => {
     }
 }
 
+export const formatWeiToETH = (wei: bigint) => `${Math.round(parseFloat(ethers.formatEther(wei))*1e6) / 1e6} ETH`
+
+export const abbreviateAddress = (address: string) => `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
+
 export const getDetail = async (address: string) => await mintclub.network(chainString).token(address).getDetail()
 
 export const searchJsonArray = (query: string): NFT[] => {
@@ -196,6 +205,27 @@ export const getTokenBalancesForAddresses = async (tokenAddress: `0x${string}`, 
 
     return { balances, totalBalance }
 }
+
+export const getIsApproved = async (target:`0x${string}`, address:`0x${string}`):Promise<boolean> => mintclub.network(chainString).nft(target).getIsApprovedForAll({
+    owner: (address),
+    spender: getMintClubContractAddress('ZAP', chain.id)
+})
+
+export const approveForSelling = async (target:`0x${string}`, spender:`0x${string}`) => await mintclub
+    .network(chainString)
+    .nft(target)
+    .approve({
+        approved: true,
+        spender
+})
+
+export const mintBuilding = async (target:`0x${string}`, qty:bigint) => await mintclub.network(chainString).nft(target).buy({
+    amount: qty
+})
+
+export const burnBuilding = async (target:`0x${string}`, qty:bigint) => await mintclub.network(chainString).nft(target).sell({
+    amount: qty
+})
 
 export const getRandomBuildingAmongFavourites = (excludeName?: string): NFT => {
     // Remove the excluded name from the favorite building names array

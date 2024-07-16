@@ -56,7 +56,7 @@ const handleRequest = frames(async (ctx: any) => {
         .then(response => getTxReceipt(response))
         .catch(err => console.error(err))
 
-    console.log('txReceipt:', txReceipt)
+    //console.log('txReceipt:', txReceipt)
 
     if (txReceipt === 'pending') {
         return {

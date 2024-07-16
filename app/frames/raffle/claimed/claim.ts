@@ -45,6 +45,10 @@ export const claim: types.FramesMiddleware<any, { name:string, txId: string }> =
         const response = await fetch('https://api.syndicate.io/transact/sendTransaction', options)
         const responseData = await response.json()
 
+        console.log('buildingAddress:', buildingAddress)
+        console.log('args:', args)
+        console.log('responseData:', responseData)
+        
         txId = responseData.transactionId ? responseData.transactionId : ''
 
     } catch (err) {

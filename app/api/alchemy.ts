@@ -18,7 +18,7 @@ export const getOwnersOfToken = async (tokenAddress: `0x${string}`) => {
     const response = await alchemy.nft.getOwnersForNft(tokenAddress, '0')
 
     //Logging the response to the console
-    console.log('getOwnersOfToken response:', response)
+    //console.log('getOwnersOfToken response:', response)
     return response.owners
 }
 

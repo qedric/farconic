@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
 import CardSVG from "@/components/CardSVG"
@@ -119,9 +120,9 @@ const GalleryContent = () => {
                                     holders="XXX"
                                 />
                             </div>
-                            <div className="mt-2 flex justify-center">
-                                <button className="text-xs btn">TRADE</button>
-                            </div>
+                            <Link className="flex mx-auto w-fit" href={`/${nft.metadata.name.replace(/\s/g, '-').toLowerCase()}`}>
+                                <p className="text-xs btn">TRADE</p>
+                            </Link>
                         </div>
                     ))
                 }
@@ -133,7 +134,7 @@ const GalleryContent = () => {
 export default function Gallery() {
     return (
         <WalletProvider>
-            <WalletConnect />
+            <WalletConnect targetId="WalletConnect" />
             <GalleryContent />
         </WalletProvider>
     )
