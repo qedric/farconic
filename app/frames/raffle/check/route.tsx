@@ -56,9 +56,9 @@ const handleRequest = frames(async (ctx:any) => {
                 : (
                     <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
                         <div tw="flex flex-col absolute px-20 justify-center items-center">
-                            <h1 tw="text-[50px] mb-5 leading-6">You&quot;ve Won!</h1>
-                            <h2 tw="text-4xl my-5">Press the &quot;Claim&quot; button below to get your prize.</h2>
-                            <p tw="text-3xl mt-5">Your prize will be delivered to your farcaster verfied address:</p>
+                            <h1 tw="text-[50px] mb-5 leading-6">You&apos;ve Won!</h1>
+                            <h2 tw="text-4xl my-5">Press the &quot;Claim&quot; button below to get your prize!</h2>
+                            <p tw="text-3xl mt-5">Your prize will be delivered to your Farcaster verfied address:</p>
                             <p tw="text-3xl">{ address }</p>
                         </div>
                     </div>
