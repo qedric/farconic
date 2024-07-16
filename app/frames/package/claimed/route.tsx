@@ -179,7 +179,7 @@ const handleRequest = frames(async (ctx: any) => {
         image: (
             <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
                 <div tw="flex flex-col absolute px-20 justify-center items-center">
-                    <h1 tw="text-[50px] mb-5 leading-6">Sorry you can&quot;t claim at this time</h1>
+                    <h1 tw="text-[50px] mb-5 leading-6">Sorry you can&apos;t claim at this time</h1>
                     <p tw="text-[30px] leading-6"> Stay tuned to /farconic for more opportunities!</p>
                 </div>
             </div>

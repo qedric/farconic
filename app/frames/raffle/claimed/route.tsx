@@ -34,24 +34,37 @@ const handleRequest = frames(async (ctx: any) => {
         }
     }
 
+    const getTxReceipt = async (response: any) => {
+        if (response.invalid) return 'invalid'
+
+        if (response.transactionAttempts.length === 0) return 'pending'
+
+        try {
+            return response.transactionAttempts[0]?.hash
+                ? await getTransactionReceipt(response.transactionAttempts[0]?.hash)
+                : 'unkown error'
+        } catch (err) {
+            console.error(err)
+            return response
+        }
+    }
+
     // if we have a txId, get the tx status
     const options = { method: 'GET', headers: { Authorization: `Bearer ${process.env.SYNDICATE_API_KEY}` } }
-    let requestStatus: any
-
-    await fetch(`https://api.syndicate.io/wallet/project/${process.env.SYNDICATE_PROJECT_ID}/request/${txId}`, options)
+    const txReceipt = await fetch(`https://api.syndicate.io/wallet/project/${process.env.SYNDICATE_PROJECT_ID}/request/${txId}`, options)
         .then(response => response.json())
-        .then(response => requestStatus = response)
+        .then(response => getTxReceipt(response))
         .catch(err => console.error(err))
 
-    //console.log('tx status:', requestStatus)
+    console.log('txReceipt:', txReceipt)
 
-    if (requestStatus.invalid) {
+    if (txReceipt === 'pending') {
         return {
             image: (
                 <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
                     <div tw="flex flex-col absolute px-20 justify-center items-center">
-                        <h1 tw="text-[50px] mb-5 leading-6">Sorry you can&quot;t claim at this time</h1>
-                        <p tw="text-[30px] leading-6"> Stay tuned to /farconic for more opportunities to enter raffles!</p>
+                        <h1 tw="text-[50px] mb-5 leading-6">Transaction Pending</h1>
+                        <p tw="text-[30px] leading-6">Wait a moment then hit refresh</p>
                     </div>
                 </div>
             ),
@@ -59,28 +72,14 @@ const handleRequest = frames(async (ctx: any) => {
                 aspectRatio: "1:1"
             },
             buttons: [
-                <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/" }}>
-                    reset
+                <Button action="post" target={{ query: { txId: txId, name: ctx.searchParams.name }, pathname: "/raffle/claimed" }}>
+                    refresh
                 </Button>
             ]
         }
     }
 
-    let txReceipt: any = null
-    let status: string
-    try {
-        txReceipt = requestStatus.transactionAttempts[0]?.hash
-            ? await getTransactionReceipt(requestStatus.transactionAttempts[0]?.hash)
-            : null
-    } catch (err) {
-        status = err as any
-    }
-
-    status = txReceipt?.status || 'unknown'
-
-    //console.log('***\n***\ntx receipt:', txReceipt)
-
-    if (status == 'success') {
+    if (txReceipt?.status == 'success') {
 
         console.log('success')
 
@@ -148,12 +147,12 @@ const handleRequest = frames(async (ctx: any) => {
         }
     }
 
-    return status == 'pending' ? {
+    return {
         image: (
             <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
                 <div tw="flex flex-col absolute px-20 justify-center items-center">
-                    <h1 tw="text-[50px] mb-5 leading-6">Transaction Pending</h1>
-                    <p tw="text-[30px] leading-6">Wait a moment then hit refresh</p>
+                    <h1 tw="text-[50px] mb-5 leading-6">Sorry you can&apos;t claim at this time</h1>
+                    <p tw="text-[30px] leading-6"> Stay tuned to /farconic for more opportunities to enter raffles!</p>
                 </div>
             </div>
         ),
@@ -161,36 +160,16 @@ const handleRequest = frames(async (ctx: any) => {
             aspectRatio: "1:1"
         },
         buttons: [
-            <Button action="post" target={{ query: { txId: txId, name: ctx.searchParams.name }, pathname: "/raffle/claimed" }}>
-                refresh
-            </Button>
-        ]
-    } : {
-        image: (
-            <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)` }}>
-                <div tw="flex flex-col absolute px-20 justify-center items-center">
-                    <h1 tw="text-[50px] mb-5 leading-6">{`Transaction status: ${status}.`}</h1>
-                    <p tw="text-[30px] leading-6">Please wait a moment and try a refresh.</p>
-                </div>
-            </div>
-        ),
-        imageOptions: {
-            aspectRatio: "1:1"
-        },
-        buttons: [
-            <Button action="post" target={{ query: { txId: txId, name: ctx.searchParams.name }, pathname: "/raffle/claimed" }}>
-                refresh
-            </Button>,
             <Button action="post" target={{ query: { name: ctx.searchParams.name }, pathname: "/raffle/" }}>
                 reset
             </Button>
         ]
     }
 },
-    {
-        // this uses the syndicate api to handle the transactions
-        middleware: [claim]
-    })
+{
+    // this uses the syndicate api to handle the transactions
+    middleware: [claim]
+})
 
 export const GET = handleRequest
 export const POST = handleRequest

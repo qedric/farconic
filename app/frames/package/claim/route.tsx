@@ -52,7 +52,7 @@ const handleRequest = frames(async (ctx:any) => {
             <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
                 <div tw="flex flex-col absolute px-20 justify-center items-center">
                     <h2 tw="text-4xl my-5">Press the &quot;Claim&quot; button below to claim your package</h2>
-                    <p tw="text-3xl mt-5">Your package will be delivered to your farcaster verfied address:</p>
+                    <p tw="text-3xl mt-5">Your package will be delivered to your Farcaster verfied address:</p>
                     <p tw="text-3xl">{ address }</p>
                 </div>
             </div>
