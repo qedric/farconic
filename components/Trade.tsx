@@ -102,11 +102,11 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
 
     return (
         <>
-            <div className={`w-full flex justify-start flex-col border rounded-md transition-all ${estimation ? 'max-h-[1000px]' : 'max-h-[300]'}`} style={{ borderColor: building.building.building_color, color: building.building.building_color }}>
+            <div className={`w-full flex justify-between lg:justify-start flex-col border lg:rounded-md transition-all ${estimation ? 'max-h-[1000px]' : 'max-h-[300]'}`} style={{ borderColor: building.building.building_color, color: building.building.building_color }}>
                 <div className="flex w-full overflow-hidden">
                     <div className="w-1/2 border-b" dir="ltr" style={{ borderColor: building.building.building_color }}>
                         <button
-                            className={`w-full font-semibold tracking-widest rounded-tl-sm py-2 px-8 ${mode === 'buy' ? `text-white` : 'bg-transparent text-gray-400'}`}
+                            className={`w-full font-semibold tracking-widest lg:rounded-tl-sm py-4 lg:py-2 px-8 ${mode === 'buy' ? `text-white` : 'bg-transparent text-gray-400'}`}
                             style={{ backgroundColor: mode === 'buy' ? building.building.building_color : 'transparent' }}
                             onClick={() => setMode('buy')}
                         >
@@ -115,7 +115,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
                     </div>
                     <div className="w-1/2 border-b" dir="rtl" style={{ borderColor: building.building.building_color }}>
                         <button
-                            className={`w-full font-semibold tracking-widest rounded-tl-sm py-2 px-8 ${mode === 'sell' ? 'bg-black text-white' : 'bg-transparent text-gray-400'}`}
+                            className={`w-full font-semibold tracking-widest lg:rounded-tl-sm py-4 lg:py-2 px-8 ${mode === 'sell' ? 'bg-black text-white' : 'bg-transparent text-gray-400'}`}
                             style={{ backgroundColor: mode === 'sell' ? building.building.building_color : 'transparent' }}
                             onClick={() => setMode('sell')}
                         >
@@ -127,7 +127,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
                     <h4>Quantity:</h4>
                     <input
                         type="number"
-                        className="w-40 font-semibold tracking-widest py-2 px-8 rounded-lg border"
+                        className="w-40 font-semibold tracking-widest my-4 lg:my-0 py-4 lg:py-2 px-8 lg:rounded-lg border"
                         placeholder="1"
                         style={{ borderColor: building.building.building_color }}
                         ref={qtyRef}
@@ -140,7 +140,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
                 )}
                 <div className="flex flex-col">
                     <button
-                        className={`w-full font-semibold tracking-widest py-2 px-8 bg-black text-white rounded-b-sm`}
+                        className={`w-full font-semibold tracking-widest py-4 lg:py-2 px-8 bg-black text-white lg:rounded-b-sm`}
                         style={{ backgroundColor: building.building.building_color }}
                         onClick={loadEstimate}
                         disabled={loading}
@@ -151,10 +151,10 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
             </div>
 
             {estimation &&
-                <div className="animate-fade w-full flex flex-col mt-4" style={{ color: building.building.building_color }}>
+                <div className="animate-fade w-full flex flex-col mt-6 lg:mt-4" style={{ color: building.building.building_color }}>
                     <p className='text-center text-sm'>{ address && abbreviateAddress(address) }</p>
                     <button
-                        className={`w-full font-semibold tracking-widest py-2 px-8 bg-black text-white rounded-md`}
+                        className={`w-full font-semibold tracking-widest py-4 lg:py-2 px-8 bg-black text-white lg:rounded-md`}
                         style={{ backgroundColor: building.building.building_color }}
                         onClick={ address && client ? mode==='buy' || (mode==='sell' && approved) ? trade : approve : connectWallet }
                         disabled={loading || executingTrade || executingApproval || (address && client && mode==='sell' && !enoughBalance())}

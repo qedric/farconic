@@ -56,11 +56,11 @@ const PageContent = async ({
 
   return (
     <div>
-      <div className="flex justify-center items-center mx-auto">
+      <div className="flex justify-center items-center mx-auto mt-5 lg:mt-0">
         <h2 className="text-2xl font-bold" style={{ color: building.building_color }}>{building.metadata.name}</h2>
       </div>
-      <div className="flex justify-center items-center">
-        <div className="flex flex-col justify-center items-center w-2/5 ml-auto max-w-xl">
+      <div className="flex flex-col lg:flex-row justify-center items-center">
+        <div className="flex flex-col justify-center items-center w-full lg:w-2/5 lg:ml-auto max-w-xl">
           <CardSVG
             colour={building.building_color}
             imageUrl={building.metadata.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`)}
@@ -75,7 +75,7 @@ const PageContent = async ({
           {/* <button className="btn">Share</button> */}
         </div>
 
-        <div className="flex flex-col my-6 justify-start items-center w-2/5 mr-auto max-w-xl">
+        <div className="flex flex-col my-6 justify-start items-center w-full lg:w-2/5 lg:mr-auto max-w-xl">
           <Trade building={building} />
         </div>
       </div>
