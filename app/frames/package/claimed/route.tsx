@@ -115,7 +115,7 @@ const handleRequest = frames(async (ctx: any) => {
 
         const shareText = `Check out ${addThe(buildings[page-1].metadata.name)} card in /farconic! 👀`
         const nameWithHyphens = buildings[page-1].metadata.name.replaceAll(/\s/g, '-').toLowerCase()
-        const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`
+        const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_APP_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`
 
         //console.log('successString:', successString)
 

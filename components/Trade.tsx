@@ -52,7 +52,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
 
     const getBalance = async(walletAddres:`0x${string}`) => setBalance(await getTokenBalanceByAddress(building.building.address, walletAddres) as any)
 
-    const enoughBalance = (): boolean => (balance || 0) >= BigInt(qtyRef.current?.value || '1')
+    const enoughBalance = ():boolean => (balance || 0) >= BigInt(qtyRef.current?.value || '1')
 
     const connectWallet = async () => {
         console.log('Connecting wallet...', address)
@@ -74,8 +74,9 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
     const approve = async () => {
         setExecutingApproval(true)
         try {
-            const txReceipt:any = await approveForSelling(building.building.address)
-            console.log('Approval tx:', txReceipt)
+            const hash:any = await approveForSelling(client, (address as `0x${string}`), building.building.address)
+            const receipt = await getTransactionReceipt(hash)
+            console.log('Approval tx:', receipt)
             await setApproval()
             setExecutingApproval(false)
         } catch (error) {
@@ -85,13 +86,6 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
     }
 
     const trade = async () => {
-
-        // if it's a sell, make sure the address has balance
-        if (mode === 'sell' && (!balance || balance < BigInt(qtyRef.current?.value || 1))) {
-            console.error('Insufficient balance')
-            return
-        }
-
         setExecutingTrade(true)
         try {
             const hash:any = await tradeBuilding(client, (address as `0x${string}`), building.building.address, BigInt(qtyRef.current?.value || 1), mode !== 'buy')
@@ -163,7 +157,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
                         className={`w-full font-semibold tracking-widest py-2 px-8 bg-black text-white rounded-md`}
                         style={{ backgroundColor: building.building.building_color }}
                         onClick={ address && client ? mode==='buy' || (mode==='sell' && approved) ? trade : approve : connectWallet }
-                        disabled={loading || (address && client && !enoughBalance())}
+                        disabled={loading || executingTrade || executingApproval || (address && client && mode==='sell' && !enoughBalance())}
                     >
                         {
                             address && client

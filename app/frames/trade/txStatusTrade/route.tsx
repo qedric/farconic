@@ -96,7 +96,7 @@ const handleRequest = frames(async (ctx) => {
 
             const nameWithHyphens = building.metadata.name.replaceAll(/\s/g, '-').toLowerCase()
 
-            const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`
+            const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_APP_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`
 
             return {
                 image: (

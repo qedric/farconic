@@ -96,16 +96,6 @@ export const fetchImageUrlFromIPFS = async (ipfs_link: string) => {
     return json.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`)
 }
 
-export const fetchImageUrlFromTokenId = async (id: number, abi: any) => {
-    const ipfs_link: string = await publicClient.readContract({
-        address: `0x${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string}`,
-        abi: (abi.filter((item: any) => item.name === "uri") as any),
-        functionName: 'uri',
-        args: [id]
-    }) as string
-    return fetchImageUrlFromIPFS(ipfs_link)
-}
-
 export const formatWeiToETH = (wei: bigint) => `${Math.round(parseFloat(ethers.formatEther(wei))*1e6) / 1e6} ETH`
 
 export const abbreviateAddress = (address: string) => `${address.substring(0, 5)}...${address.substring(address.length - 4)}`

@@ -7,6 +7,7 @@ import { base, baseSepolia } from 'viem/chains'
 import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ethers } from 'ethers'
 import zap_abi from '@/data/zap_abi.json'
+import building_abi from '@/data/mc_building_abi.json'
 dotenv.config()
 
 const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
@@ -80,13 +81,20 @@ export const getIsApproved = async (target: `0x${string}`, address: `0x${string}
   spender: getMintClubContractAddress('ZAP', chain.id)
 })
 
-export const approveForSelling = async (target: `0x${string}`) => await mintclub
-  .network(chainString)
-  .nft(target)
-  .approve({
-    approved: true,
-    spender: getMintClubContractAddress('ZAP', chain.id)
+export const approveForSelling = async (client:any, address:`0x${string}`, buidingAddress:`0x${string}`) => {
+
+  const { request } = await publicClient.simulateContract({
+    account: address,
+    address: buidingAddress,
+    abi: building_abi,
+    functionName: 'setApprovalForAll',
+    args: [process.env.NEXT_PUBLIC_ZAP_CONTRACT, true],
+    value: BigInt(0)
   })
+
+  return (await client.writeContract(request))
+
+}
 
 export const getDetail = async (address: string) => await mintclub.network(chainString).token(address).getDetail()
 

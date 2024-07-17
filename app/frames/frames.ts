@@ -25,7 +25,8 @@ export const frames = createFrames<State>({
           }),
     }),
     imagesWorkerMiddleware({
-      imagesRoute: "/images"
+      imagesRoute: "/images",
+      secret: process.env.IMAGES_MIDDLEWARE_SECRET as string
     }),
   ],
 })
