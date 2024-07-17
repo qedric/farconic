@@ -2,7 +2,7 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
-import { getTransactionReceipt, NFT } from '@/lib/utils'
+import { getTransactionReceipt, NFT, addThe, removeThe } from '@/lib/utils'
 import { decodeEventLog } from 'viem'
 import { baseSepolia, base } from "viem/chains"
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
@@ -88,8 +88,6 @@ const handleRequest = frames(async (ctx) => {
                 ? await addTradeToUser(ctx.message.requesterFid, building.id, amount, quantityTraded, isSell)
                 : 0
                 
-            const addThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
-            const removeThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName.substring(4) : bulidingName
             const successString = `${isSell ? "You've parted with" : "You've acquired"} ${ quantityTraded > BigInt(1) ? `${quantityTraded} ${removeThe(building.metadata.name)} cards!` : `${addThe(building.metadata.name)} card!`}`
 
             const shareText = isSell 

@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 import { ethers } from 'ethers'
-import { getDetail, NFT } from '@/lib/utils'
+import { type NFT } from '@/lib/utils'
+import { getDetail } from '@/app/api/mintclub'
 import { getOwnersOfToken } from '@/app/api/alchemy'
 
 export const CardImage = async (

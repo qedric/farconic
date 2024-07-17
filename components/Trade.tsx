@@ -1,22 +1,46 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import { NFT, estimatePrice, formatWeiToETH, abbreviateAddress, getIsApproved, approveForSelling, mintBuilding, burnBuilding } from '@/lib/utils'
-import { useWallet, connectWalletClient } from '@/context/WalletContext'
-import { mintBuildings } from '@/app/api/mintclub'
+import { type TransactionReceipt } from 'viem'
+import { 
+    type NFT,
+    formatWeiToETH,
+    abbreviateAddress,
+    getTransactionReceipt,
+    getTokenBalanceByAddress,
+    removeThe
+} from '@/lib/utils'
+import { connectWalletClient, tradeBuilding, getIsApproved, approveForSelling, estimatePrice } from '@/app/api/mintclub'
 
 const Trade: React.FC<{ building: NFT }> = (building) => {
 
     const [client, setClient] = useState<any>(null)
-    const { address, setAddress } = useWallet()
+    const [receipt, setReceipt] = useState<TransactionReceipt>()
+    const [address, setAddress] = useState<string | null>(null)
+    const [balance, setBalance] = useState<number | null>(null)
     const [mode, setMode] = useState('buy') // State to manage buy or sell mode
-    const qtyRef = useRef<HTMLInputElement>(null) // Ref to the
-    const [estimation, setEstimation] = useState<{ priceEstimate: bigint, qty: bigint } | null>(null) // State to store the estimation
-    const [loading, setLoading] = useState(false) // State to manage loading state
-    const [approved, setApproved] = useState(false) // State to manage approval state
+    const qtyRef = useRef<HTMLInputElement>(null)
+    const [estimation, setEstimation] = useState<{ priceEstimate: bigint, qty: bigint } | null>(null) // price estimation
+    const [loading, setLoading] = useState(false)
+    const [executingTrade, setExecutingTrade] = useState(false)
+    const [executingApproval, setExecutingApproval] = useState(false)
+    const [approved, setApproved] = useState(false)
 
     useEffect(() => {
         if (estimation) loadEstimate() // only load if it's a refresh
+        if (!balance && address) getBalance(address as `0x${string}`)
     }, [mode])
+
+    useEffect(() => { // check if address is approved for selling when address changes
+        if (address) {
+           setApproval()
+        }
+    }, [address])
+
+    const setApproval = async () => {
+        const isApproved = await getIsApproved(building.building.address, (address as `0x${string}`))
+        console.log('Is approved:', isApproved)
+        setApproved(isApproved)
+    }
 
     const loadEstimate = async () => {
         setLoading(true)
@@ -26,16 +50,21 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
         setLoading(false)
     }
 
+    const getBalance = async(walletAddres:`0x${string}`) => setBalance(await getTokenBalanceByAddress(building.building.address, walletAddres) as any)
+
+    const enoughBalance = (): boolean => (balance || 0) >= BigInt(qtyRef.current?.value || '1')
+
     const connectWallet = async () => {
         console.log('Connecting wallet...', address)
         setLoading(true)
         try {
-            const client = await connectWalletClient()
-            const [walletAddress] = await client.requestAddresses()
-            setClient(client)
+            const walletClient = await connectWalletClient()
+            const [walletAddress] = await walletClient.requestAddresses()
+            setClient(walletClient)
             setAddress(walletAddress)
+            const bal = getBalance(walletAddress)
+            console.log('bal:', bal)
             setLoading(false)
-            setApproved(await getIsApproved(building.building.address, (walletAddress as `0x${string}`)))
         } catch (error) {
             console.error('Failed to connect wallet:', error)
             setLoading(false)
@@ -43,36 +72,43 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
     }
 
     const approve = async () => {
-        setLoading(true)
+        setExecutingApproval(true)
         try {
-            const txReceipt:any = await approveForSelling(building.building.address, (address as `0x${string}`))
+            const txReceipt:any = await approveForSelling(building.building.address)
             console.log('Approval tx:', txReceipt)
-            setApproved(await getIsApproved(building.building.address, (address as `0x${string}`)))
-            setLoading(false)
+            await setApproval()
+            setExecutingApproval(false)
         } catch (error) {
             console.error('Failed to approve token', error)
-            setLoading(false)
+            setExecutingApproval(false)
         }
     }
 
     const trade = async () => {
-        setLoading(true)
+
+        // if it's a sell, make sure the address has balance
+        if (mode === 'sell' && (!balance || balance < BigInt(qtyRef.current?.value || 1))) {
+            console.error('Insufficient balance')
+            return
+        }
+
+        setExecutingTrade(true)
         try {
-            console.log('client:', client)
-            const txReceipt:any = mode === 'buy'
-                ? await mintBuildings(client, (address as `0x${string}`), building.building.address, BigInt(qtyRef.current?.value || 1))
-                : await burnBuilding(building.building.address, BigInt(qtyRef.current?.value || 1))
-            console.log('Approval tx:', txReceipt)
-            setLoading(false)
+            const hash:any = await tradeBuilding(client, (address as `0x${string}`), building.building.address, BigInt(qtyRef.current?.value || 1), mode !== 'buy')
+            const receipt = await getTransactionReceipt(hash)
+            console.log('trade tx:', receipt)
+            setReceipt(receipt)
+            getBalance(address as `0x${string}`)
+            setExecutingTrade(false)
         } catch (error) {
             console.error('Transaction failed:', error)
-            setLoading(false)
+            setExecutingTrade(false)
         }
     }
 
     return (
         <>
-            <div className={`w-full flex justify-start flex-col border rounded-md my-4 transition-all ${estimation ? 'max-h-[1000px]' : 'max-h-[300]'}`} style={{ borderColor: building.building.building_color, color: building.building.building_color }}>
+            <div className={`w-full flex justify-start flex-col border rounded-md transition-all ${estimation ? 'max-h-[1000px]' : 'max-h-[300]'}`} style={{ borderColor: building.building.building_color, color: building.building.building_color }}>
                 <div className="flex w-full overflow-hidden">
                     <div className="w-1/2 border-b" dir="ltr" style={{ borderColor: building.building.building_color }}>
                         <button
@@ -121,24 +157,31 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
             </div>
 
             {estimation &&
-                <div className="animate-fade w-full flex flex-col mb-4" style={{ color: building.building.building_color }}>
+                <div className="animate-fade w-full flex flex-col mt-4" style={{ color: building.building.building_color }}>
                     <p className='text-center text-sm'>{ address && abbreviateAddress(address) }</p>
                     <button
                         className={`w-full font-semibold tracking-widest py-2 px-8 bg-black text-white rounded-md`}
                         style={{ backgroundColor: building.building.building_color }}
-                        onClick={ address ? mode==='buy' || (mode==='sell' && approved) ? trade : approve : connectWallet }
-                        disabled={loading}
+                        onClick={ address && client ? mode==='buy' || (mode==='sell' && approved) ? trade : approve : connectWallet }
+                        disabled={loading || (address && client && !enoughBalance())}
                     >
                         {
-                            address
+                            address && client
                                 ? mode === 'buy'
-                                    ? <span className={loading ? `animate-pulse text-gray-400` : 'animate-fade'}>CONFIRM BUY</span>
-                                    : approved
-                                        ? <span className={loading ? `animate-pulse text-gray-400` : 'animate-fade'}>CONFIRM SELL</span>
-                                        : <span className={loading ? `animate-pulse text-gray-400` : 'animate-fade'}>APPROVE SELL</span>
+                                    ? <span className={loading || executingTrade ? `text-gray-400 ${executingTrade ? 'animate-pulse' : ''}` : 'animate-fade'}>{`${ executingTrade ? 'BUYING...' : 'CONFIRM BUY'}`}</span>
+                                    : enoughBalance()
+                                        ? approved
+                                            ? <span className={loading || executingTrade ? `text-gray-400 ${executingTrade ? 'animate-pulse' : ''}` : 'animate-fade'}>{`${ executingTrade ? 'SELLING...' : 'CONFIRM SELL'}`}</span>
+                                            : <span className={loading || executingApproval ? `text-gray-400 ${executingApproval ? 'animate-pulse' : ''}` : 'animate-fade'}>{`${ executingApproval ? 'APPROVING...' : 'APPROVE SELL'}`}</span>
+                                        : <span className='text-gray-400'>INSUFFICIENT BALANCE</span>
                                 : <span className={loading ? `animate-pulse text-gray-400` : 'animate-fade'}>{`Connect wallet to ${ mode === 'sell' ? 'sell' : 'buy'}`}</span>
                         }
                     </button>
+                    {receipt && receipt.status === 'success' && (
+                        <div className={`text-center font-semibold my-2 ${executingTrade ? `text-gray-400` : 'animate-fade'}`}>
+                            { `Success!${balance && ` You now own ${balance} ${removeThe(building.building.metadata.name)} card${balance != 1 && 's'}`}` }
+                        </div>
+                    )}
                 </div>
             }
         </>

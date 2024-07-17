@@ -5,7 +5,8 @@ import { baseSepolia, base } from "viem/chains"
 import zap_abi from '@/data/zap_abi.json'
 import building_abi from '@/data/mc_building_abi.json'
 import { getMintClubContractAddress } from 'mint.club-v2-sdk'
-import { estimatePrice, getTokenBalanceByAddress } from '@/lib/utils'
+import { getTokenBalanceByAddress } from '@/lib/utils'
+import { estimatePrice } from '@/app/api/mintclub'
 import { transaction } from "frames.js/core"
 
 const chainId = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base.id : baseSepolia.id

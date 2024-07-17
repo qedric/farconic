@@ -2,10 +2,15 @@
 import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
-import { NFT, formatWeiToETH, abbreviateAddress, estimatePriceMiddleware, getIsApproved } from '@/lib/utils'
+import { 
+    type NFT,
+    formatWeiToETH,
+    abbreviateAddress,
+    getTokenBalancesForAddresses
+} from '@/lib/utils'
+import { getDetail, getIsApproved, estimatePriceMiddleware } from '@/app/api/mintclub'
 import { ErrorFrame } from "@/components/FrameError"
 import { baseSepolia, base } from "viem/chains"
-import { getDetail, getTokenBalancesForAddresses } from '@/lib/utils'
 import { getOwnersOfToken } from '@/app/api/alchemy'
 
 const chainId = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base.id : baseSepolia.id

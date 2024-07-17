@@ -1,10 +1,10 @@
 import { fetchMetadata } from "frames.js/next"
-import { NFT, getBuildingByName, getDetail, formatWeiToETH } from "@/lib/utils"
+import { type NFT, getBuildingByName, formatWeiToETH } from "@/lib/utils"
+import { getDetail } from "@/app/api/mintclub"
 import CardSVG from "@/components/CardSVG"
 import { getOwnersOfToken } from '@/app/api/alchemy'
 import ReactDOM from 'react-dom'
 import Trade from '@/components/Trade'
-import { WalletProvider } from "@/context/WalletContext"
 
 // Update to accept context or query parameters
 export async function generateMetadata(props: any) {
@@ -55,31 +55,32 @@ const PageContent = async ({
   const currentPriceValue = formatWeiToETH(priceForNextMintWithRoyalty)
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col justify-center items-center w-2/5 ml-auto max-w-xl">
-        <CardSVG
-          colour={building.building_color}
-          imageUrl={building.metadata.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`)}
-          country={building.metadata.attributes.find(attr => attr.trait_type == 'Country')?.value || ''}
-          city={building.metadata.attributes.find(attr => attr.trait_type == 'City')?.value || ''}
-          name={building.metadata.name}
-          price={currentPriceValue}
-          minted={detail.info.currentSupply.toString()}
-          liquidity={ formatWeiToETH(detail.info.reserveBalance) }
-          holders={holders?.length.toString() || '0'}
-        />
-        <button className="btn">Share</button>
+    <div>
+      <div className="flex justify-center items-center mx-auto">
+        <h2 className="text-2xl font-bold" style={{ color: building.building_color }}>{building.metadata.name}</h2>
       </div>
-
-      <div className="flex flex-col my-6 justify-start items-center w-2/5 mr-auto max-w-xl">
-        <div className="flex justify-center items-center mx-auto">
-          <h2 className="text-2xl font-bold">{building.metadata.name}</h2>
+      <div className="flex justify-center items-center">
+        <div className="flex flex-col justify-center items-center w-2/5 ml-auto max-w-xl">
+          <CardSVG
+            colour={building.building_color}
+            imageUrl={building.metadata.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`)}
+            country={building.metadata.attributes.find(attr => attr.trait_type == 'Country')?.value || ''}
+            city={building.metadata.attributes.find(attr => attr.trait_type == 'City')?.value || ''}
+            name={building.metadata.name}
+            price={currentPriceValue}
+            minted={detail.info.currentSupply.toString()}
+            liquidity={formatWeiToETH(detail.info.reserveBalance)}
+            holders={holders?.length.toString() || '0'}
+          />
+          {/* <button className="btn">Share</button> */}
         </div>
-        <WalletProvider>
+
+        <div className="flex flex-col my-6 justify-start items-center w-2/5 mr-auto max-w-xl">
           <Trade building={building} />
-        </WalletProvider>
+        </div>
       </div>
     </div>
+
   )
 }
 
@@ -88,7 +89,7 @@ export default function Page({
 }: {
   params: { building: string }
 }) {
-  return (   
+  return (
     <PageContent params={params} />
   )
 }

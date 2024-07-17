@@ -2,7 +2,7 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
-import { getTransactionReceipt, getBuildingByAddress, NFT } from '@/lib/utils'
+import { getTransactionReceipt, getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
 import { markPackageWinnerAsClaimed } from '@/app/api/mongodb'
 import { claim } from './deliverPackage'
 import { CardImage } from '@/components/FrameCard'
@@ -109,7 +109,6 @@ const handleRequest = frames(async (ctx: any) => {
 
         let page: number = ctx.searchParams?.page ? parseInt(ctx.searchParams.page) : 1
 
-        const addThe = (bulidingName: string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
         const numeral = (num: number) => num == 1 ? 'I' : num == 2 ? 'II' : 'III'
         const numberWord = (num: number) => num == 1 ? 'one' : num == 2 ? 'two' : 'three'
         const successString = `${numeral(page)}: ${addThe(buildings[page-1].metadata.name)}`

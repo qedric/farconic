@@ -3,7 +3,7 @@ import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { decodeEventLog, Abi } from 'viem'
-import { getTransactionReceipt, getBuildingByAddress, NFT } from '@/lib/utils'
+import { getTransactionReceipt, getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
 import { markRaffleWinnerAsClaimed } from '@/app/api/mongodb'
 import { claim } from './claim'
 import { CardImage } from '@/components/FrameCard'
@@ -81,7 +81,8 @@ const handleRequest = frames(async (ctx: any) => {
 
     if (txReceipt?.status == 'success') {
 
-        console.log('success')
+        // mark the winner as having claimed their prize, in the database
+        const result = await markRaffleWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
 
         const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
 
@@ -101,15 +102,8 @@ const handleRequest = frames(async (ctx: any) => {
         })
 
         const building: NFT = getBuildingByAddress(bulidingAddress)
-        console.log('bulidingAddress:', bulidingAddress)
-
-        // mark the winner as having claimed their prize, in the database
-        const result = await markRaffleWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
-
-        console.log('building:', building)
-        const addThe = (bulidingName: string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
+        
         const successString = `You now own ${addThe(building.metadata.name)} card!`
-
         const shareText = `I won ${addThe(building.metadata.name)} card in /farconic! 🎉`
         const nameWithHyphens = building.metadata.name.replaceAll(/\s/g, '-').toLowerCase()
         const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`

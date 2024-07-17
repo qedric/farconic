@@ -1,15 +1,18 @@
-import { mintclub } from 'mint.club-v2-sdk'
 import mc_building_abi from '@/data/mc_building_abi.json'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
+import { createPublicClient, http } from 'viem'
 import { baseSepolia, base } from "viem/chains"
 import { ethers } from 'ethers'
-import { FramesMiddleware } from "frames.js/types"
-import { getMintClubContractAddress } from 'mint.club-v2-sdk'
 
 const chainString = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? 'base' : 'basesepolia'
 const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
 const buildings = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
+
+const publicClient = createPublicClient({
+    chain: chain,
+    transport: http()
+})
 
 const favBuildingNames_testnet: string[] = [
     "Eiffel Tower",
@@ -37,8 +40,6 @@ const favBuildingNames_mainnet: string[] = [
 ]
 
 const favBuildingNames = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? favBuildingNames_mainnet : favBuildingNames_testnet
-
-const publicClient = mintclub.network(chainString).getPublicClient()
 
 const levenshteinDistance = (a: string, b: string): number => {
     const dp: number[][] = []
@@ -135,8 +136,6 @@ export const formatWeiToETH = (wei: bigint) => `${Math.round(parseFloat(ethers.f
 
 export const abbreviateAddress = (address: string) => `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
 
-export const getDetail = async (address: string) => await mintclub.network(chainString).token(address).getDetail()
-
 export const searchJsonArray = (query: string): NFT[] => {
     const lowerCaseQuery = query.toLowerCase()
     const matchingElements: NFT[] = []
@@ -206,27 +205,6 @@ export const getTokenBalancesForAddresses = async (tokenAddress: `0x${string}`, 
     return { balances, totalBalance }
 }
 
-export const getIsApproved = async (target:`0x${string}`, address:`0x${string}`):Promise<boolean> => mintclub.network(chainString).nft(target).getIsApprovedForAll({
-    owner: (address),
-    spender: getMintClubContractAddress('ZAP', chain.id)
-})
-
-export const approveForSelling = async (target:`0x${string}`, spender:`0x${string}`) => await mintclub
-    .network(chainString)
-    .nft(target)
-    .approve({
-        approved: true,
-        spender
-})
-
-export const mintBuilding = async (target:`0x${string}`, qty:bigint) => await mintclub.network(chainString).nft(target).buy({
-    amount: qty
-})
-
-export const burnBuilding = async (target:`0x${string}`, qty:bigint) => await mintclub.network(chainString).nft(target).sell({
-    amount: qty
-})
-
 export const getRandomBuildingAmongFavourites = (excludeName?: string): NFT => {
     // Remove the excluded name from the favorite building names array
     const filteredBuildingNames = excludeName ? favBuildingNames.filter(name => name !== excludeName) : favBuildingNames
@@ -244,91 +222,5 @@ export const getBuildingById = (id: string) => buildings.find((b) => b.id === id
 
 export const getBuildingByAddress = (address: string) => buildings.find((b) => b.address?.toLowerCase() === address.toLowerCase()) as NFT
 
-export const estimatePrice = async (buildingAddress: `0x${string}`, qty: bigint, isSell: boolean) => {
-
-    const details = await mintclub.network(chainString).token(buildingAddress).getDetail()
-    if (qty > details.info.maxSupply - details.info.currentSupply) {
-        qty = details.info.maxSupply - details.info.currentSupply
-    }
-
-    if (isSell && qty > details.info.currentSupply) {
-        qty = details.info.currentSupply
-    }
-
-    const [priceEstimate, royalty] = isSell
-        ? await mintclub
-            .network(chainString)
-            .token(buildingAddress)
-            .getSellEstimation(qty)
-        : await mintclub
-            .network(chainString)
-            .token(buildingAddress)
-            .getBuyEstimation(qty)
-    console.log(`Estimate for ${qty} of ${buildingAddress}: ${ethers.formatUnits(priceEstimate, 18)} ETH`)
-    console.log('Royalties paid:', ethers.formatUnits(royalty.toString(), 18).toString())
-
-    return { priceEstimate, qty }
-}
-
-export const estimatePriceMiddleware: FramesMiddleware<any, { priceEstimate: bigint, qty: bigint, isSell: boolean, details: object }> = async (
-    ctx: any,
-    next
-) => {
-    if (!ctx.message) {
-        throw new Error("No message")
-    }
-
-    if (!ctx.searchParams.building) {
-        throw new Error("No building in searchParams")
-    }
-
-    const building: NFT = JSON.parse(ctx.searchParams.building)
-    const details = await mintclub.network(chainString).token(building.address).getDetail()
-
-    let qty: bigint = BigInt(1)
-    if (ctx.message.inputText) {
-        try {
-            const inputQty = BigInt(ctx.message.inputText)
-            if (inputQty <= details.info.maxSupply - details.info.currentSupply) {
-                qty = inputQty
-            } else {
-                qty = details.info.maxSupply - details.info.currentSupply
-            }
-        } catch (error) {
-            // qty stays as 1, carry on
-        }
-    } else if (ctx.searchParams.qty) {
-        try {
-            const inputQty = BigInt(ctx.searchParams.qty)
-            if (inputQty <= details.info.maxSupply - details.info.currentSupply) {
-                qty = inputQty
-            } else {
-                qty = details.info.maxSupply - details.info.currentSupply
-            }
-        } catch (error) {
-            // qty stays as 1, carry on
-        }
-    }
-
-    const isSell: boolean = ctx.searchParams.isSell === 'true'
-    if (isSell && qty > details.info.currentSupply) {
-        qty = details.info.currentSupply
-    }
-
-    //console.log('estimating price for', qty, building.metadata.name, building.address)
-
-    const [estimation, royalty] = isSell
-        ? await mintclub
-            .network(chainString)
-            .token(building.address)
-            .getSellEstimation(qty)
-        : await mintclub
-            .network(chainString)
-            .token(building.address)
-            .getBuyEstimation(qty)
-    console.log(`Estimate for ${qty} ${building.metadata.name}: ${ethers.formatUnits(estimation, 18)} ETH`)
-    console.log('Royalties paid:', ethers.formatUnits(royalty.toString(), 18).toString())
-
-    return next({ priceEstimate: estimation, qty, isSell, details })
-
-}
+export const removeThe = (name:string) => name.toLowerCase().startsWith('the') ? name.substring(4) : name
+export const addThe = (name:string) => name.toLowerCase().startsWith('the') ? name : `the ${name}`

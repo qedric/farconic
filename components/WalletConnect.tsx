@@ -2,9 +2,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
-import { useWallet, connectWalletClient } from '@/context/WalletContext'
+import { useWallet } from '@/context/WalletContext'
 import { getAdminsFromDb } from '@/app/api/mongodb'
 import Spinner from '@/components/Spinner'
+import { connectWalletClient } from '@/app/api/mintclub'
 
 const WalletConnect: React.FC<{ targetId: string }> = ({ targetId }) => {
 

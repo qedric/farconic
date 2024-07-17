@@ -3,7 +3,7 @@ import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
 import { CardImage } from '@/components/FrameCard'
-import { getRandomBuildingAmongFavourites, getBuildingByName, NFT } from '@/lib/utils'
+import { getRandomBuildingAmongFavourites, getBuildingByName, type NFT, addThe } from '@/lib/utils'
 
 export const maxDuration = 20
 
@@ -17,7 +17,6 @@ const handleRequest = frames(async (ctx) => {
     
     const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
 
-    const addThe = (bulidingName:string) => bulidingName.toLowerCase().startsWith('the') ? bulidingName : `the ${bulidingName}`
     const shareText = `Check out ${addThe(building.metadata.name)} card in /farconic! 👀`
     const nameWithHyphens = building.metadata.name.replaceAll(/\s/g, '-').toLowerCase()
     const targetUrl = `https://warpcast.com/~/compose?embeds%5B%5D=${process.env.NEXT_PUBLIC_FRAME_SHARE_LINK}/${encodeURIComponent(nameWithHyphens)}&text=${encodeURIComponent(shareText)}`

@@ -31,7 +31,7 @@ const AdminContent = () => {
 export default function Admin() {
     return (
         <WalletProvider>
-            <WalletConnect />
+            <WalletConnect targetId='WalletConnect' />
             <AdminContent />
         </WalletProvider>
     )
