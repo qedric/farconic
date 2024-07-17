@@ -106,32 +106,6 @@ export const fetchImageUrlFromTokenId = async (id: number, abi: any) => {
     return fetchImageUrlFromIPFS(ipfs_link)
 }
 
-export const getOpenseaData = async (address: string) => {
-
-    const url = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET'
-        ? `https://api.opensea.io/api/v2/chain/base/contract/${address}/nfts/${0}`
-        : `https://testnets-api.opensea.io/api/v2/chain/base_sepolia/contract/${address}/nfts/${0}`
-
-    try {
-        const options = {
-            method: 'GET',
-            headers: { 'accept': 'application/json', 'x-api-key': process.env.OPENSEA_API_KEY }
-        }
-
-        let response: any
-        await fetch(url, (options as any))
-            .then(r => r.json())
-            .then(json => response = json)
-            .catch(err => console.error(err))
-
-        return response.nft
-
-    } catch (error) {
-        console.error('Error fetching token supply:', error)
-        return 'Error'
-    }
-}
-
 export const formatWeiToETH = (wei: bigint) => `${Math.round(parseFloat(ethers.formatEther(wei))*1e6) / 1e6} ETH`
 
 export const abbreviateAddress = (address: string) => `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
