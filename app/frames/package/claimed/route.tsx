@@ -2,8 +2,9 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
-import { getTransactionReceipt, getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
+import { getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
 import { markPackageWinnerAsClaimed } from '@/app/api/mongodb'
+import { getTxReceiptFromSyndicateId } from '@/app/api/syndicate'
 import { claim } from './deliverPackage'
 import { CardImage } from '@/components/FrameCard'
 
@@ -31,41 +32,10 @@ const handleRequest = frames(async (ctx: any) => {
         }
     }
 
-    const getTxReceipt = async (response: any) => {
-        if (response.invalid) return 'invalid'
-
-        if (response.transactionAttempts.length === 0) return 'pending'
-
-        try {
-            return response.transactionAttempts[0]?.hash
-                ? await getTransactionReceipt(response.transactionAttempts[0]?.hash)
-                : 'unkown error'
-        } catch (err) {
-            console.error(err)
-            return response
-        }
-    }
-
     // if we have txIds, get their tx status
-    const options = { method: 'GET', headers: { Authorization: `Bearer ${process.env.SYNDICATE_API_KEY}` } }
-
-    // wait a moment before fetching the tx receipts to give the transactions time to be processed by syndicate
-    //await new Promise((resolve) => setTimeout(resolve, 500))
-
-    const fetchPromises = txIds.map(async (txId) => {
-        try {
-            const response = await fetch(`https://api.syndicate.io/wallet/project/${process.env.SYNDICATE_PROJECT_ID}/request/${txId}`, options)
-            const jsonResponse = await response.json()
-            return getTxReceipt(jsonResponse)
-        } catch (err) {
-            console.error(err)
-            return null
-        }
-    })
-
+    const fetchPromises = txIds.map(async (txId) => getTxReceiptFromSyndicateId(txId))
     const txReceipts = await Promise.all(fetchPromises)
-
-    console.log('txReceipts:', txReceipts)
+    //console.log('txReceipts:', txReceipts)
 
     if (txReceipts.some((receipt) => receipt == 'pending')) {
         return {

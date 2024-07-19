@@ -3,8 +3,9 @@ import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { decodeEventLog, Abi } from 'viem'
-import { getTransactionReceipt, getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
+import { getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
 import { markRaffleWinnerAsClaimed } from '@/app/api/mongodb'
+import { getTxReceiptFromSyndicateId } from '@/app/api/syndicate'
 import { claim } from './claim'
 import { CardImage } from '@/components/FrameCard'
 import abi from '@/data/mc_building_abi.json'
@@ -12,7 +13,6 @@ import abi from '@/data/mc_building_abi.json'
 const handleRequest = frames(async (ctx: any) => {
 
     const txId = ctx.txId || ''
-    console.log('txId:', txId)
 
     if (!txId) {
         return {
@@ -34,28 +34,7 @@ const handleRequest = frames(async (ctx: any) => {
         }
     }
 
-    const getTxReceipt = async (response: any) => {
-        if (response.invalid) return 'invalid'
-
-        if (response.transactionAttempts.length === 0) return 'pending'
-
-        try {
-            return response.transactionAttempts[0]?.hash
-                ? await getTransactionReceipt(response.transactionAttempts[0]?.hash)
-                : 'unkown error'
-        } catch (err) {
-            console.error(err)
-            return response
-        }
-    }
-
-    // if we have a txId, get the tx status
-    const options = { method: 'GET', headers: { Authorization: `Bearer ${process.env.SYNDICATE_API_KEY}` } }
-    const txReceipt = await fetch(`https://api.syndicate.io/wallet/project/${process.env.SYNDICATE_PROJECT_ID}/request/${txId}`, options)
-        .then(response => response.json())
-        .then(response => getTxReceipt(response))
-        .catch(err => console.error(err))
-
+    const txReceipt = await getTxReceiptFromSyndicateId(txId)
     //console.log('txReceipt:', txReceipt)
 
     if (txReceipt === 'pending') {
