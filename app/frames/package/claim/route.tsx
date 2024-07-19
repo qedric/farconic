@@ -2,6 +2,7 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getPackageFromDb } from '@/app/api/mongodb'
+import { getTxReceiptFromSyndicateId } from '@/app/api/syndicate'
 
 const handleRequest = frames(async (ctx:any) => {
 
@@ -23,23 +24,35 @@ const handleRequest = frames(async (ctx:any) => {
 
     console.log('claims:', claims, 'limit:', limit)
     if (claims.length >= limit) {
-        return {
-            image: (
-                <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
-                    <div tw="flex flex-col absolute px-20 justify-center items-center">
-                        <h1 tw="text-[50px] mb-5 leading-6">You have already claimed your package!</h1>
-                        <p tw="text-3xl px-12 text-center">Stay tuned to /farconic for more opportunities!</p>
+
+        // check the txIds to see if the claims were successful
+        let successfulClaims = 0
+        await Promise.all(claims.map(async claim => {
+            const txReceipt = await getTxReceiptFromSyndicateId(claim)
+            if (txReceipt?.status == 'success') {
+                successfulClaims++
+            }
+        }))
+
+        if (successfulClaims >= limit) {
+            return {
+                image: (
+                    <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
+                        <div tw="flex flex-col absolute px-20 justify-center items-center">
+                            <h1 tw="text-[50px] mb-5 leading-6">You have already claimed your package!</h1>
+                            <p tw="text-3xl px-12 text-center">Stay tuned to /farconic for more opportunities!</p>
+                        </div>
                     </div>
-                </div>
-            ),
-            imageOptions: {
-                aspectRatio: "1:1"
-            },
-            buttons: [
-                <Button action="link" target={process.env.NEXT_PUBLIC_APP_LINK as string}>
-                    App 🌐
-                </Button>
-            ]
+                ),
+                imageOptions: {
+                    aspectRatio: "1:1"
+                },
+                buttons: [
+                    <Button action="link" target={process.env.NEXT_PUBLIC_APP_LINK as string}>
+                        App 🌐
+                    </Button>
+                ]
+            }
         }
     }
 
