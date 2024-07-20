@@ -18,10 +18,10 @@ const handleRequest = frames(async (ctx:any) => {
     }
 
     // check if fid has already claimed
-    console.log('raffle:', raffle)
+    //console.log('raffle:', raffle)
     const claims = raffle.claimed?.find(entry => entry.fid === ctx.message.requesterFid)?.claims || []
     const limit = process.env.RAFFLE_CLAIM_LIMIT !== undefined ? Number(process.env.RAFFLE_CLAIM_LIMIT) : 1
-    //console.log('claims:', claims, 'limit:', limit)
+    console.log('claims:', claims, 'limit:', limit)
 
     if (claims.length >= limit) {
         
@@ -29,6 +29,7 @@ const handleRequest = frames(async (ctx:any) => {
         let successfulClaims = 0
         await Promise.all(claims.map(async claim => {
             const txReceipt = await getTxReceiptFromSyndicateId(claim)
+            console.log('txReceipt', txReceipt)
             if (txReceipt?.status == 'success') {
                 successfulClaims++
             }

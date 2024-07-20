@@ -1,5 +1,6 @@
 import { types } from "frames.js/next"
 import { baseSepolia, base } from "viem/chains"
+import { markRaffleWinnerAsClaimed } from '@/app/api/mongodb'
 
 const chainId = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base.id : baseSepolia.id
 
@@ -49,7 +50,11 @@ export const claim: types.FramesMiddleware<any, { name:string, txId: string }> =
         console.log('args:', args)
         console.log('responseData:', responseData)
         
-        txId = responseData.transactionId ? responseData.transactionId : ''
+        txId = responseData.transactionId ? responseData.transactionId : undefined
+
+        if (txId) {
+            const res = await markRaffleWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
+        }
 
     } catch (err) {
         console.error(err)

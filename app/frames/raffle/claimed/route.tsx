@@ -4,7 +4,6 @@ import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { decodeEventLog, Abi } from 'viem'
 import { getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
-import { markRaffleWinnerAsClaimed } from '@/app/api/mongodb'
 import { getTxReceiptFromSyndicateId } from '@/app/api/syndicate'
 import { claim } from './claim'
 import { CardImage } from '@/components/FrameCard'
@@ -59,9 +58,6 @@ const handleRequest = frames(async (ctx: any) => {
     }
 
     if (txReceipt?.status == 'success') {
-
-        // mark the winner as having claimed their prize, in the database
-        const result = await markRaffleWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
 
         const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
 
