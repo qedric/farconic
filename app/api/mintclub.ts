@@ -73,6 +73,8 @@ export const tradeBuilding = async (client:any, address:`0x${string}`, buidingAd
     value: isSell ? BigInt(0) : slippageOutcome
   })
 
+  console.log('Request:', request)
+
   return (await client.writeContract(request))
 }
 
