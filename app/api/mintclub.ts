@@ -12,6 +12,7 @@ dotenv.config()
 
 const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
 const chainString = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? 'base' : 'basesepolia'
+const zap_contract_address = getMintClubContractAddress('ZAP', chain.id)
 
 const SLIPPAGE_PERCENT = 1
 
@@ -71,7 +72,7 @@ export const tradeBuilding = async (client:any, address:`0x${string}`, buidingAd
 
   const { request } = await publicClient.simulateContract({
     account: address,
-    address: (process.env.NEXT_PUBLIC_ZAP_CONTRACT as `0x${string}`),
+    address: zap_contract_address,
     abi: zap_abi,
     functionName: isSell ? 'burnToEth' : 'mintWithEth',
     args,
@@ -85,7 +86,7 @@ export const tradeBuilding = async (client:any, address:`0x${string}`, buidingAd
 
 export const getIsApproved = async (target: `0x${string}`, address: `0x${string}`): Promise<boolean> => mintclub.network(chainString).nft(target).getIsApprovedForAll({
   owner: (address),
-  spender: getMintClubContractAddress('ZAP', chain.id)
+  spender: zap_contract_address
 })
 
 export const approveForSelling = async (client:any, address:`0x${string}`, buidingAddress:`0x${string}`) => {
@@ -95,7 +96,7 @@ export const approveForSelling = async (client:any, address:`0x${string}`, buidi
     address: buidingAddress,
     abi: building_abi,
     functionName: 'setApprovalForAll',
-    args: [process.env.NEXT_PUBLIC_ZAP_CONTRACT, true],
+    args: [zap_contract_address, true],
     value: BigInt(0)
   })
 
