@@ -319,4 +319,42 @@
       "address": "0xEde28dcbdF87d388be46271a2a2C4017013b3bB8",
       "building_color": "#8f7bae"
     }
+    {
+      "metadata": {
+      "name": "Bank of China Tower",
+      "description": "Bank of China Tower in Hong Kong, completed in 1990, is a striking skyscraper with a prism-like façade, designed by I.M. Pei.",
+      "image": "ipfs://Qma1YzWmBGY15dkQpHrDUTxx3GLGCGM6VfX3UXgETQsEPo/building%20card_3.gif",
+      "external_url": "https://farconic.xyz/bank-of-china-tower",
+      "background_color": "F7F3EE",
+      "attributes": [
+        {
+          "trait_type": "City",
+          "value": "Hong Kong"
+        },
+        {
+          "trait_type": "Country",
+          "value": "China"
+        },
+        {
+          "trait_type": "Height (m)",
+          "value": "\"330\""
+        },
+        {
+          "trait_type": "Construction Era",
+          "value": "1990s"
+        },
+        {
+          "trait_type": "Type of Building",
+          "value": "Skyscraper"
+        },
+        {
+          "value": "Building"
+        }
+      ]
+    },
+      "id": "165",
+      "tokenURI": "ipfs://QmcJWwQLv1apZ8j1sRuqXmnBi1SVEP7m3sQKdEBqXHqi1o",
+      "address": "0xE8c956EE316A2f11c7412A8dA96426fD611aA4a6",
+      "building_color": "#e94081"
+    }
 ]
