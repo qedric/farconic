@@ -64,12 +64,17 @@ export const tradeBuilding = async (client:any, address:`0x${string}`, buidingAd
     ? estimated.priceEstimate - (estimated.priceEstimate * BigInt(SLIPPAGE_PERCENT * 100)) / BigInt(10_000)
     : estimated.priceEstimate + (estimated.priceEstimate * BigInt(SLIPPAGE_PERCENT * 100)) / BigInt(10_000)
 
+  const args = isSell ? [buidingAddress, qty, slippageOutcome, address] : [buidingAddress, qty, address]
+
+  console.log('slippageOutcome', slippageOutcome)
+  console.log('args', args)
+
   const { request } = await publicClient.simulateContract({
     account: address,
     address: (process.env.NEXT_PUBLIC_ZAP_CONTRACT as `0x${string}`),
     abi: zap_abi,
     functionName: isSell ? 'burnToEth' : 'mintWithEth',
-    args: isSell ? [buidingAddress, qty, slippageOutcome, address] : [buidingAddress, qty, address],
+    args,
     value: isSell ? BigInt(0) : slippageOutcome
   })
 
