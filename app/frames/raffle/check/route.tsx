@@ -25,40 +25,26 @@ const handleRequest = frames(async (ctx:any) => {
     console.log('claims:', claims, 'limit:', limit)
 
     if (claims.length >= limit) {
-        
-        // check the txIds to see if the claims were successful
-        let successfulClaims = 0
-        await Promise.all(claims.map(async claim => {
-            const txReceipt = await getTxReceiptFromSyndicateId(claim)
-            console.log('txReceipt', txReceipt)
-            if (txReceipt?.status == 'success') {
-                successfulClaims++
-            }
-        }))
-
-        //console.log('successfulClaims:', successfulClaims)
-
-        if (successfulClaims >= limit) {
-            return {
-                image: (
-                    <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
-                        <div tw="flex flex-col absolute px-20 justify-center items-center">
-                            <h1 tw="text-[50px] mb-5 leading-6">You have already claimed your prize!</h1>
-                            <p tw="text-3xl px-12 text-center">Stay tuned to /farconic for more opportunities to enter raffles!</p>
-                        </div>
+        return {
+            image: (
+                <div tw="flex w-full h-full justify-center items-center" style={{ translate: '200%', backgroundSize: '100% 100%', backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmT4qQyVaCaYj5NPSK3RnLTcDp1J7cZpSj4RkVGG1fjAos)`}}>
+                    <div tw="flex flex-col absolute px-20 justify-center items-center">
+                        <h1 tw="text-[50px] mb-5 leading-6">You have already claimed your prize!</h1>
+                        <p tw="text-3xl px-12 text-center">Stay tuned to /farconic for more opportunities to enter raffles!</p>
                     </div>
-                ),
-                imageOptions: {
-                    aspectRatio: "1:1"
-                },
-                buttons: [
-                    <Button action="link" target={process.env.NEXT_PUBLIC_APP_LINK as string}>
-                        App 🌐
-                    </Button>
-                ]
-            }
+                </div>
+            ),
+            imageOptions: {
+                aspectRatio: "1:1"
+            },
+            buttons: [
+                <Button action="link" target={process.env.NEXT_PUBLIC_APP_LINK as string}>
+                    App 🌐
+                </Button>
+            ]
         }
     }
+    
 
     // check if winning fids contains our user's fid
     if (raffle.winnerFids.includes(ctx.message.requesterFid)) {
