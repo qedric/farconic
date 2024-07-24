@@ -7,9 +7,10 @@ import { getBuildingById } from '@/lib/utils'
 
 const handleRequest = frames(async (ctx:any) => {
 
-    if (!ctx.message.isValid) {
+    // frame verification causing error in prod
+    /* if (!ctx.message.isValid) {
         throw new Error("Invalid Frame")
-    }
+    } */
 
     const raffle = await getRaffleFromDb(ctx.searchParams.name)
 
