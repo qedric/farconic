@@ -67,8 +67,8 @@ export const tradeBuilding = async (client:any, address:`0x${string}`, buidingAd
 
   const args = isSell ? [buidingAddress, qty, slippageOutcome, address] : [buidingAddress, qty, address]
 
-  console.log('slippageOutcome', slippageOutcome)
-  console.log('args', args)
+  //console.log('slippageOutcome', slippageOutcome)
+  //console.log('args', args)
 
   const { request } = await publicClient.simulateContract({
     account: address,
@@ -78,8 +78,6 @@ export const tradeBuilding = async (client:any, address:`0x${string}`, buidingAd
     args,
     value: isSell ? BigInt(0) : slippageOutcome
   })
-
-  console.log('Request:', request)
 
   return (await client.writeContract(request))
 }
