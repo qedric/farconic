@@ -8,13 +8,12 @@ import { NFT } from "@/lib/utils"
 import { getOwnedTokens } from '@/app/api/alchemy'
 import { Refresh } from "@/components/Refresh"
 import ReactDOM from 'react-dom'
-import { useWallet, WalletProvider } from "@/context/WalletContext"
-import WalletConnect from "@/components/WalletConnect"
+import { connectWalletClient } from '@/app/api/mintclub'
 
 const buildings = process.env.NEXT_PUBLIC_CHAIN == 'MAINNET' ? mainnet_buildings : testnet_buildings
 
-const GalleryContent = () => {
-    const { address } = useWallet()  // Use the context values
+export default function Gallery() {
+    const [address, setAddress] = useState<string | null>(null)
     const [view, setView] = useState('All Buildings') // State to manage the selected view
     const [filteredBuildings, setFilteredBuildings] = useState<NFT[]>([])
     const [ownedTokens, setOwnedTokens] = useState<any[] | "Error" | null>(null) // State to store owned tokens
@@ -64,6 +63,19 @@ const GalleryContent = () => {
         }
     }, [view, address]) // Dependency array includes view and address
 
+    const connectWallet = async () => {
+        setIsLoading(true)
+        try {
+            const client = await connectWalletClient()
+            const [walletAddress] = await client.requestAddresses()
+            setAddress(walletAddress)
+            setIsLoading(false)
+        } catch (error) {
+            console.error('Failed to connect wallet:', error)
+            setIsLoading(false)
+        }
+    }
+
     const handleRefresh = async () => {
         if (view === 'My Buildings' && address) {
             await fetchOwnedTokensAndFilter(address)
@@ -77,29 +89,37 @@ const GalleryContent = () => {
 
     return (
         <section className="w-full">
-            {address && (
-                <div className="w-full flex justify-center flex-wrap lg:flex-row items-center mt-4 gap-x-2 lg:gap-x-8 gap-y-4">
-                    <button
-                        className={`btn basis-3/4 lg:basis-1/4 ${view === 'All Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}
-                        onClick={() => setView('All Buildings')}
-                    >
-                        All Buildings
-                    </button>
-                    <button
-                        className={`btn basis-1/2 lg:basis-1/4 ${view === 'My Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}
-                        onClick={() => setView('My Buildings')}
-                    >
-                        My Cards
-                    </button>
-                    <Refresh
-                        onRefresh={handleRefresh}
-                        onComplete={() => console.log('Refresh complete')}
-                        isLoading={isLoading}
-                        isDisabled={view !== 'My Buildings'}
-                        label="Refresh my Cards"
-                    />
-                </div>
-            )}
+            {
+                address 
+                    ? (
+                        <div className="w-full flex justify-center flex-wrap lg:flex-row items-center mt-4 gap-x-2 lg:gap-x-8 gap-y-4">
+                            <button
+                                className={`btn basis-3/4 lg:basis-1/4 ${view === 'All Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}
+                                onClick={() => setView('All Buildings')}
+                            >
+                                All Buildings
+                            </button>
+                            <button
+                                className={`btn basis-1/2 lg:basis-1/4 ${view === 'My Buildings' ? 'btn-active' : 'bg-transparent border border-black text-black'}`}
+                                onClick={() => setView('My Buildings')}
+                            >
+                                My Cards
+                            </button>
+                            <Refresh
+                                onRefresh={handleRefresh}
+                                onComplete={() => console.log('Refresh complete')}
+                                isLoading={isLoading}
+                                isDisabled={view !== 'My Buildings'}
+                                label="Refresh my Cards"
+                            />
+                        </div>
+                    )
+                    : (
+                        <div className="w-full flex justify-center mt-4">
+                            <button onClick={connectWallet} className="btn text-xs lg:text-2xl">Connect Wallet</button>
+                        </div>
+                    )
+            }
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 lg:gap-x-12 lg:gap-y-5 lg:pt-7 lg:mx-auto mb-5 lg:mb-20">
                 {
                     filteredBuildings.slice(0, 60).map((nft: NFT) => (
@@ -128,14 +148,5 @@ const GalleryContent = () => {
                 }
             </div>
         </section>
-    )
-}
-
-export default function Gallery() {
-    return (
-        <WalletProvider>
-            <WalletConnect targetId="WalletConnect" />
-            <GalleryContent />
-        </WalletProvider>
     )
 }

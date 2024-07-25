@@ -54,7 +54,7 @@ const WalletConnect: React.FC<{ targetId: string }> = ({ targetId }) => {
           {`Connected to: ${address.substring(0, 5)}...${address.substring(address.length - 4)}`}
         </p>
       ) : (
-        <button onClick={connectWallet} className="flex items-center justify-between text-lg lg:text-2xl font-semibold btn transition-all" disabled={ isLoading }>
+        <button onClick={connectWallet} className="flex items-center justify-between text-xs lg:text-2xl font-semibold btn transition-all" disabled={ isLoading }>
           { isLoading && <div className="mr-4 h-6"><Spinner isLoading={true} /></div> } Connect Wallet
         </button>
       )}

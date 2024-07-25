@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { Montserrat } from 'next/font/google'
-import "./globals.css"
+import "@/app/globals.css"
 import { MainNav } from "@/components/MainNav"
 
 const montserratFont = Montserrat({ subsets: ['latin'] })

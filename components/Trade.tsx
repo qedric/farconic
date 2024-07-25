@@ -172,8 +172,8 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
                         }
                     </button>
                     {receipt && receipt.status === 'success' && (
-                        <div className={`text-center font-semibold my-2 ${executingTrade ? `text-gray-400` : 'animate-fade'}`}>
-                            { `Success!${balance && ` You now own ${balance} ${removeThe(building.building.metadata.name)} card${balance != 1 && 's'}`}` }
+                        <div className={`mx-2 text-center font-semibold my-2 ${executingTrade ? `text-gray-400` : 'animate-fade'}`}>
+                            { `Success!${balance && ` You now own ${balance} ${removeThe(building.building.metadata.name)} card${balance != 1 ? 's' : ''}`}` }
                         </div>
                     )}
                 </div>
