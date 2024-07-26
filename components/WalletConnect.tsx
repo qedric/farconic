@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { useWallet } from '@/context/WalletContext'
-import { getAdminsFromDb } from '@/app/api/mongodb'
+import { isAdminUser } from '@/app/api/mongodb'
 import Spinner from '@/components/Spinner'
 import { connectWalletClient } from '@/app/api/mintclub'
 
@@ -25,9 +25,7 @@ const WalletConnect: React.FC<{ targetId: string }> = ({ targetId }) => {
     if (address) {
       console.log('Connected address:', address)
       // check if the user is an admin:
-      getAdminsFromDb().then(admins => {
-        setIsAdmin(admins.includes(address))
-      })
+      isAdminUser(address).then(result => setIsAdmin(result))
     }
   }, [address])
 

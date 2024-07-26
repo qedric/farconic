@@ -251,7 +251,7 @@ export const markRaffleWinnerAsClaimed = async (name: string, fid: number, txId:
 
 }
 
-export const getAdminsFromDb = async (): Promise<string[]> => {
+const getAdminsFromDb = async (): Promise<string[]> => {
     try {
         await client.connect()
         const collection = client.db('farconic').collection('admins')
@@ -262,4 +262,16 @@ export const getAdminsFromDb = async (): Promise<string[]> => {
         console.error(e)
         return []
     }
+}
+
+export const isAdminUser = async (address: string): Promise<boolean> => {
+    try {
+        const admins = await getAdminsFromDb()
+        if (admins.includes(address)) {
+            return true
+        }
+    } catch (e) {
+        return false
+    }
+    return false
 }
