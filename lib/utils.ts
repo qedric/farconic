@@ -96,7 +96,12 @@ export const fetchImageUrlFromIPFS = async (ipfs_link: string) => {
     return json.image.replace("ipfs://", `${process.env.NEXT_PUBLIC_GATEWAY_URL}`)
 }
 
-export const formatWeiToETH = (wei: bigint) => `${Math.round(parseFloat(ethers.formatEther(wei))*1e6) / 1e6} ETH`
+export const formatWeiToETH = (wei: bigint, showUnit: boolean = true) => {
+    if (Number.isNaN(Number(wei))) {
+        return showUnit ? '0 ETH' : '0'
+    }
+    return `${Math.round(parseFloat(ethers.formatEther(wei)) * 1e6) / 1e6}${showUnit ? ' ETH' : ''}`
+}
 
 export const abbreviateAddress = (address: string) => `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
 

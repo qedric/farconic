@@ -67,11 +67,24 @@ type Trade = {
     }
 }
 
-type User = {
+export type User = {
     fid: number
     trades: Array<Trade>
     streak?: number
     referrals?: number
+}
+
+export const getAllUsers = async (): Promise<string> => {
+    try {
+        await client.connect()
+        const collection = client.db('farconic').collection('users')
+        const records = await collection.find().toArray()
+        console.log('User records:', records)
+        return JSON.stringify(records)
+    } catch (e:any) {
+        console.error(e)
+        return e
+    }
 }
 
 export const addTradeToUser = async (fid: number, buildingId: string, amount: bigint, qty: number, isSell: boolean): Promise<number> => {

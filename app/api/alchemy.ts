@@ -11,6 +11,7 @@ const settings = {
     network: process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? Network.BASE_MAINNET : Network.BASE_SEPOLIA,
 }
 
+// returns list of accounts holding this token
 export const getOwnersOfToken = async (tokenAddress: `0x${string}`) => {
     const alchemy = new Alchemy(settings)
 
@@ -22,6 +23,7 @@ export const getOwnersOfToken = async (tokenAddress: `0x${string}`) => {
     return response.owners
 }
 
+// returns list of building tokens owned by the account
 export const getOwnedTokens = async (accountAddress: `0x${string}`) => {
     const batchSize = 45 // maximum number of results allowed by alchemy
     const batches: `0x${string}`[][] = []
