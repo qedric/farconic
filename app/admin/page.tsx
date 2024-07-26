@@ -5,7 +5,7 @@ import WalletConnect from "@/components/WalletConnect"
 import UsersComponent from '@/components/Users'
 import { getAllUsers, type User } from '@/app/api/mongodb'
 
-const AdminContent = async () => {
+const AdminContent = () => {
     const { address, isAdmin } = useWallet()
     const [users, setUsers] = useState<User[] | null>(null)
     const [error, setError] = useState<string | null>(null)
