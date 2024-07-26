@@ -1,13 +1,9 @@
 'use client'
 import { useEffect, useState } from 'react'
-import mainnet_buildings from '@/data/buildings.json'
-import testnet_buildings from '@/data/buildings_testnet.json'
 import { useWallet, WalletProvider } from "@/context/WalletContext"
 import WalletConnect from "@/components/WalletConnect"
 import { getAllUsers, type User } from '@/app/api/mongodb'
 import UsersComponent from '@/components/Users'
-
-const buildings = process.env.NEXT_PUBLIC_CHAIN == 'MAINNET' ? mainnet_buildings : testnet_buildings
 
 const AdminContent = () => {
 
