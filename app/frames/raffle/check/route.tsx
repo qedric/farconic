@@ -44,7 +44,6 @@ const handleRequest = frames(async (ctx:any) => {
             ]
         }
     }
-    
 
     // check if winning fids contains our user's fid
     if (raffle.winnerFids.includes(ctx.message.requesterFid)) {

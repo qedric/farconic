@@ -52,15 +52,11 @@ export const claim: types.FramesMiddleware<any, { name:string, txId: string }> =
         
         txId = responseData.transactionId ? responseData.transactionId : undefined
 
-        if (txId) {
-            const res = await markRaffleWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId)
-        }
-
     } catch (err) {
         console.error(err)
     }
 
-    console.log('raffleName:', ctx.searchParams.name)
+    const res = await markRaffleWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId || '')
 
     return next({ name: ctx.searchParams.name, txId: txId || '' })
 }
