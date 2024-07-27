@@ -7,7 +7,7 @@ const buildings = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? mainnet_building
 
 // Alchemy Config object
 const settings = {
-    apiKey: process.env.ALCHEMY_API_KEY, // Replace with your Alchemy API Key.
+    apiKey: process.env.ALCHEMY_API_KEY,
     network: process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? Network.BASE_MAINNET : Network.BASE_SEPOLIA,
 }
 
@@ -24,7 +24,18 @@ export const getOwnersOfToken = async (tokenAddress: `0x${string}`) => {
 }
 
 // returns list of building tokens owned by the account
-export const getOwnedTokens = async (accountAddress: `0x${string}`) => {
+export const getOwnedTokens = async (accountAddress?: `0x${string}`) => {
+
+    // for some reason account address is not being evaluated as undefined, so we need to check for length
+    if (!accountAddress || accountAddress.length < 42) {
+        console.log('No account address provided, using custody address')
+        accountAddress = process.env.RAFFLE_PRIZE_CUSTODY_ADDRESS as `0x${string}`
+        if (!accountAddress) {
+            console.error('RAFFLE_PRIZE_CUSTODY_ADDRESS is not defined in the environment variables.')
+            return 'Error'
+        }
+    }
+
     const batchSize = 45 // maximum number of results allowed by alchemy
     const batches: `0x${string}`[][] = []
 
