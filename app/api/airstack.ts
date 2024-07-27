@@ -1,3 +1,52 @@
+'use server'
+import { init, useQuery, fetchQuery } from "@airstack/airstack-react"
+init(`${process.env.AIRSTACK_API_KEY}`)
+
+
+ const queryUserNameFromFid = (fid: string) => {
+    return (
+      `query MyQuery {
+        Socials(
+          input: {filter: {dappName: {_eq: farcaster}, userId: {_eq: "${fid}"}}, blockchain: ethereum}
+        ) {
+          Social {
+            profileHandle
+          }
+        }
+      }`
+  )
+}
+
+export const queryProfileNamesFromFids = async (fids:string[])=> {
+
+  const query = `query GetProfileNamesByFIDs($fids: [String!]) {
+    Socials(
+      input: {filter: {userId: {_in: $fids}}, blockchain: ethereum, limit: 50}
+    ) {
+      Social {
+        userId,
+        profileName
+      }
+    }
+  }`
+
+  const { data, error } = await fetchQuery(query, {
+    "fids": fids
+  })
+
+  if (error) return error
+
+  return data
+
+}
+
+
+
+
+
+
+
+
 /* const TrackFrameCasts = {
     FarcasterCasts(
       input: {blockchain: ALL, filter: {frameUrl: {_eq: "https://farconic.xyz/cn-tower"}}}

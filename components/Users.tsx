@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { type User } from '@/app/api/mongodb'
 import { formatWeiToETH, getBuildingById } from '@/lib/utils'
+import { queryProfileNamesFromFids } from '@/app/api/airstack'
 
 // Define the type for the trade details
 type TradeDetails = {
@@ -17,6 +18,21 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  useEffect(() => {
+    // Get the usernames for each fid from airstack
+    const fids = sortedUsers.map(user => user.fid.toString())
+    queryProfileNamesFromFids(fids)
+      .then(users => {
+        users.Socials.Social.forEach((user: any) => {
+          const matchedUser = sortedUsers.find(sortedUser => sortedUser.fid.toString() === user.userId)
+          if (matchedUser) {
+            matchedUser.handle = user.profileName
+          }
+        })
+      })
+      .catch(err => console.error("Failed to load users."))
+  }, [])
+
   // Sorting function
   const sortData = (key: string) => {
     let direction = 'ascending'
@@ -25,8 +41,8 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
     }
 
     const sortedArray = [...sortedUsers].sort((a, b) => {
-      let aValue: number | bigint = 0
-      let bValue: number | bigint = 0
+      let aValue: string | number | bigint = 0
+      let bValue: string | number | bigint = 0
 
       if (key === 'buildingsTraded') {
         aValue = a.trades.length
@@ -34,6 +50,9 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
       } else if (key === 'fid') {
         aValue = a[key] as number
         bValue = b[key] as number
+      } else if (key === 'handle') {
+        aValue = a[key] as string
+        bValue = b[key] as string
       } else if (key === 'numberMinted') {
         aValue = a.trades.reduce((sum, trade) => sum + trade.minted.quantity, 0)
         bValue = b.trades.reduce((sum, trade) => sum + trade.minted.quantity, 0)
@@ -65,15 +84,13 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
   }
 
   // Helper to format trade details
-  const getTradeDetails = (user: User): TradeDetails[] => {
-    return user.trades.map(trade => ({
-      buildingId: trade.buildingId,
-      mintedQuantity: trade.minted.quantity,
-      mintedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.minted.totalAmount)) ? 0 : Number(trade.minted.totalAmount)), false),
-      burnedQuantity: trade.burned.quantity,
-      burnedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.burned.totalAmount)) ? 0 : Number(trade.burned.totalAmount)), false),
-    }))
-  }
+  const getTradeDetails = (user: User): TradeDetails[] => user.trades.map(trade => ({
+    buildingId: trade.buildingId,
+    mintedQuantity: trade.minted.quantity,
+    mintedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.minted.totalAmount)) ? 0 : Number(trade.minted.totalAmount)), false),
+    burnedQuantity: trade.burned.quantity,
+    burnedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.burned.totalAmount)) ? 0 : Number(trade.burned.totalAmount)), false),
+  }))
 
   // Handle row click to open modal
   const handleRowClick = (user: User) => {
@@ -98,9 +115,12 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
   return (
     <div className="w-full flex justify-center flex-wrap lg:flex-row items-center mt-4 gap-x-2 lg:gap-x-8 gap-y-4 my-12">
       <h1 className="w-full text-center mb-4">Users:</h1>
-      <div className="w-full grid grid-cols-6 gap-4 text-center font-bold">
+      <div className="w-full grid grid-cols-7 gap-4 text-center font-bold">
         <div onClick={() => sortData('fid')} className="w-fit mx-auto relative cursor-pointer">
           FID<span className="absolute -right-5">{getSortIndicator('fid')}</span>
+        </div>
+        <div onClick={() => sortData('handle')} className="w-fit mx-auto relative cursor-pointer">
+          handle<span className="absolute -right-5">{getSortIndicator('handle')}</span>
         </div>
         <div onClick={() => sortData('buildingsTraded')} className="w-fit mx-auto relative cursor-pointer">
           Buildings Traded<span className="absolute -right-5">{getSortIndicator('buildingsTraded')}</span>
@@ -125,12 +145,13 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
         const burnedAmount = BigInt(user.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned.totalAmount)) ? 0 : Number(trade.burned.totalAmount)), 0))
 
         return (
-          <div 
-            key={user.fid} 
-            className="w-full grid grid-cols-6 gap-4 text-center cursor-pointer hover:bg-gray-100"
+          <div
+            key={user.fid}
+            className="w-full grid grid-cols-7 gap-4 text-center cursor-pointer hover:bg-gray-100"
             onClick={() => handleRowClick(user)}
           >
             <div>{user.fid}</div>
+            <div>{user.handle}</div>
             <div>{user.trades.length}</div>
             <div>{numberMinted}</div>
             <div>{formatWeiToETH(mintedAmount, false)}</div>
@@ -144,8 +165,8 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
       {isModalOpen && selectedUser && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl relative">
-            <h2 className="text-xl font-bold mb-4">Trade Details for User {selectedUser.fid}</h2>
-            <button 
+            <h2 className="text-xl font-bold mb-4">Trade Details for {selectedUser.handle} - {selectedUser.fid}</h2>
+            <button
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
               onClick={handleCloseModal}
             >
