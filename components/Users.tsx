@@ -29,6 +29,7 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
             matchedUser.handle = user.profileName
           }
         })
+        sortData('fid')
       })
       .catch(err => console.error("Failed to load users."))
   }, [])
@@ -181,7 +182,7 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
             </div>
             {getTradeDetails(selectedUser).map((trade, index) => (
               <div key={index} className="grid grid-cols-5 gap-4 text-center py-1 even:bg-gray-200">
-                <div>{getBuildingById(trade.buildingId).metadata.name}</div>
+                <div>{getBuildingById(trade.buildingId)?.metadata.name}</div>
                 <div>{trade.mintedQuantity}</div>
                 <div>{trade.mintedAmount}</div>
                 <div>{trade.burnedQuantity}</div>
