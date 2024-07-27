@@ -36,7 +36,8 @@ const favBuildingNames_mainnet: string[] = [
     "CN Tower",
     "Philadelphia City Hall",
     "July Column",
-    "Cloud Gate"
+    "Columbia Center",
+    "Bank of China Tower"
 ]
 
 const favBuildingNames = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? favBuildingNames_mainnet : favBuildingNames_testnet
