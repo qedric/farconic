@@ -246,8 +246,8 @@ export const markRaffleWinnerAsClaimed = async (name: string, fid: number, txId:
         }
 
     } catch (e) {
-        console.error(e)
-        return -1
+        console.error('Error in markRaffleWinnerAsClaimed:', e)
+        throw e
     }
 
 }
