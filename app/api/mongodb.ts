@@ -234,7 +234,7 @@ export const markRaffleWinnerAsClaimed = async (name: string, fid: number, txId:
 
         console.log('recordToUpdate:', recordToUpdate)
 
-        const claims: string[] = recordToUpdate?.claimed?.find((entry: any) => entry.fid === fid).claims || []
+        const claims: string[] = recordToUpdate?.claimed?.find((entry: any) => entry.fid === fid)?.claims || []
 
         if (!claims.includes(txId)) {
             claims.push(txId)
