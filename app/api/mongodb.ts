@@ -239,7 +239,7 @@ export const markRaffleWinnerAsClaimed = async (name: string, fid: number, txId:
         if (!claims.includes(txId)) {
             claims.push(txId)
             const result = await collection.updateOne({ name }, { $set: { claimed: [{ fid, claims }] } })
-            console.log(result.modifiedCount)
+            console.log('records updated:', result.modifiedCount)
             return result.modifiedCount
         } else {
             return 0

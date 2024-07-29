@@ -57,7 +57,7 @@ export const claim: types.FramesMiddleware<any, { name:string, txId: string }> =
     }
 
     const res = await markRaffleWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, txId || '')
-    console.log(res)
+    console.log('markRaffleWinnerAsClaimed result', res)
 
     return next({ name: ctx.searchParams.name, txId: txId || '' })
 }
