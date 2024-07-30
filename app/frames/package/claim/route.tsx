@@ -2,7 +2,6 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getPackageFromDb } from '@/app/api/mongodb'
-import { getTxReceiptFromSyndicateId } from '@/app/api/syndicate'
 
 const handleRequest = frames(async (ctx:any) => {
 
@@ -10,16 +9,16 @@ const handleRequest = frames(async (ctx:any) => {
         throw new Error("Invalid Frame")
     }
 
-    const buildingPackage = await getPackageFromDb(ctx.searchParams.name)
+    const buildingsPackage = await getPackageFromDb(ctx.searchParams.name)
 
-    if (!buildingPackage) {
+    if (!buildingsPackage) {
         throw new Error("Can't find package")
     }
 
-    console.log('buildingPackage:', buildingPackage)
+    console.log('buildingPackage:', buildingsPackage)
 
     // check if fid has already claimed
-    const claims = buildingPackage.claimed?.find(entry => entry.fid === ctx.message.requesterFid)?.claims || []
+    const claims = buildingsPackage.claimed?.find(entry => entry.fid === ctx.message.requesterFid)?.claims || []
     const limit = process.env.PACKAGE_CLAIM_LIMIT !== undefined ? Number(process.env.PACKAGE_CLAIM_LIMIT) : 1
 
     console.log('claims:', claims, 'limit:', limit)
@@ -62,7 +61,7 @@ const handleRequest = frames(async (ctx:any) => {
             aspectRatio: "1:1"
         },
         buttons: [
-            <Button action="post" target={{ query: { to: address, buildingIds: JSON.stringify(buildingPackage.buildingIds), name: ctx.searchParams.name }, pathname: '/package/claimed' }}>
+            <Button action="post" target={{ query: { to: address, buildingIds: JSON.stringify(buildingsPackage.buildingIds), name: ctx.searchParams.name }, pathname: '/package/claimed' }}>
                 Claim 🎉
             </Button>
         ]

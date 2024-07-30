@@ -48,6 +48,7 @@ type Raffle = {
 type Package = {
     name: string
     buildingIds: string[]
+    welcomeText?: string
     welcomeImage?: string
     claimed?: {
         fid: number
