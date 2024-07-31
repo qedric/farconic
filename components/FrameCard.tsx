@@ -56,7 +56,7 @@ export const CardImage = async (
 
     return (
         <div tw={`relative flex ${containerSize} items-center justify-center`}>
-            <img tw="absolute w-full h-full" width="1200" height="1200" src={`${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmYHgaiorK3VJaab1qnHytF4csJ9ELPcmLZ6zK5wWfSeE5`} />
+            <img tw="absolute w-full h-full" width="1200" height="1200" src={`https://bafybeiet2i7irokjdesvk4xwjp4fcxqqs7dmzu6lsx7a4emfeqteoa7wci.ipfs.dweb.link/` } />
             <div tw="flex flex-wrap relative w-[53vw] text-white p-0 m-0" style={{ transform: scaleTransform }}>
                 <div tw={ `flex flex-col w-full ${ containerStyle } h-[64.5vw]` }>
                     <div tw="flex flex-1 text-[24px] w-[48vw] mb-2 items-end justify-between">
