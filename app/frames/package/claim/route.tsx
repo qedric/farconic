@@ -5,10 +5,6 @@ import { getPackageFromDb } from '@/app/api/mongodb'
 
 const handleRequest = frames(async (ctx:any) => {
 
-    if (!ctx.message.isValid) {
-        throw new Error("Invalid Frame")
-    }
-
     const buildingsPackage = await getPackageFromDb(ctx.searchParams.name)
 
     if (!buildingsPackage) {
