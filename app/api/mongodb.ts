@@ -1,5 +1,5 @@
 'use server'
-import { MongoClient, ServerApiVersion } from "mongodb"
+import { MongoClient, PushOperator, ServerApiVersion } from "mongodb"
 
 if (!process.env.MONGODB_URI) {
     throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
@@ -210,14 +210,34 @@ export const markPackageWinnerAsClaimed = async (name: string, fid: number, buil
         console.log('name', name)
         console.log('recordToUpdate:', recordToUpdate)
 
-        const claims: string[][] = recordToUpdate?.claimed?.find((entry: any) => entry.fid === fid).claims || []
-        claims.push(buildingIds)
-        const result = await collection.updateOne({ name }, { $set: { claimed: [{ fid, claims }] } })
-        console.log(result.modifiedCount)
+        if (!recordToUpdate) {
+            console.error('Package not found')
+            return 0
+        }
+
+        const existingClaimedEntry = recordToUpdate.claimed?.find((entry: any) => entry.fid === fid)
+
+        let result
+        if (existingClaimedEntry) {
+            result = await collection.updateOne(
+                { name, 'claimed.fid': fid },
+                { $addToSet: { 'claimed.$.claims': { $each: buildingIds } } }
+            )
+        } else {
+            result = await collection.updateOne(
+                { name },
+                { $push: ({ claimed: { fid, claims: buildingIds } } as PushOperator<Package>) }
+            )
+        }
+
+        console.log('records updated:', result.modifiedCount)
         return result.modifiedCount
+
     } catch (e) {
-        console.error(e)
-        return -1
+        console.error('Error in markPackageWinnerAsClaimed:', e)
+        throw e
+    } finally {
+        await client.close()
     }
 
 }
@@ -244,20 +264,34 @@ export const markRaffleWinnerAsClaimed = async (name: string, fid: number, txId:
 
         console.log('recordToUpdate:', recordToUpdate)
 
-        const claims: string[] = recordToUpdate?.claimed?.find((entry: any) => entry.fid === fid)?.claims || []
-
-        if (!claims.includes(txId)) {
-            claims.push(txId)
-            const result = await collection.updateOne({ name }, { $set: { claimed: [{ fid, claims }] } })
-            console.log('records updated:', result.modifiedCount)
-            return result.modifiedCount
-        } else {
+        if (!recordToUpdate) {
+            console.error('Raffle not found')
             return 0
         }
+
+        const existingClaimedEntry = recordToUpdate.claimed?.find((entry: any) => entry.fid === fid)
+        let result
+        if (existingClaimedEntry) {
+            result = await collection.updateOne(
+                { name, 'claimed.fid': fid },
+                { $addToSet: { 'claimed.$.claims': txId } }
+            )
+        } else {
+            result = await collection.updateOne(
+                { name },
+                { $push: ({ claimed: { fid, claims: [txId] } } as PushOperator<Raffle>) }
+            )
+        }
+
+        console.log('records updated:', result.modifiedCount)
+        return result.modifiedCount
+
 
     } catch (e) {
         console.error('Error in markRaffleWinnerAsClaimed:', e)
         throw e
+    } finally {
+        await client.close()
     }
 
 }
