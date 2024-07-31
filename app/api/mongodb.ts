@@ -48,8 +48,11 @@ type Raffle = {
 type Package = {
     name: string
     buildingIds: string[]
+    winnerFids: number[]
     welcomeText?: string
     welcomeImage?: string
+    wonImage?: string
+    lostImage?: string
     claimed?: {
         fid: number
         claims: string[]
@@ -161,6 +164,8 @@ export const getRaffleFromDb = async (name: string): Promise<Raffle | null> => {
                 winnerFids: record.winnerFids,
                 welcomeText: record.welcomeText,
                 welcomeImage: record.welcomeImage,
+                wonImage: record.wonImage,
+                lostImage: record.lostImage,
                 claimed: record.claimed || null
             }
             : null
@@ -180,7 +185,11 @@ export const getPackageFromDb = async (name: string): Promise<Package | null> =>
             ? {
                 name: record.name,
                 buildingIds: record.buildingIds,
+                winnerFids: record.winnerFids,
+                welcomeText: record.welcomeText,
                 welcomeImage: record.welcomeImage,
+                wonImage: record.wonImage,
+                lostImage: record.lostImage,
                 claimed: record.claimed || null
             }
             : null
