@@ -56,6 +56,13 @@ export default function AdminWallets() {
         }
     }, [])
 
+    const getBuildingUrl = (address: string) => {
+        const baseUrl = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET'
+            ? 'https://basescan.org/address/'
+            : 'https://sepolia.basescan.org/address/'
+        return `${baseUrl}${address}`
+    }
+
     return (
         <div className="w-full flex justify-center flex-wrap lg:flex-row items-center mt-4 gap-x-2 lg:gap-x-8 gap-y-4 my-12">
             <h1 className="w-full text-center mb-4">Admin Wallet Balance:</h1>
@@ -76,7 +83,17 @@ export default function AdminWallets() {
                                         key={index}
                                         className="w-full grid grid-cols-3 gap-4 text-center cursor-pointer hover:bg-gray-100"
                                     >
-                                        <div>{building.id}</div>
+                                        <div>
+                                            <a
+                                                key={index}
+                                                href={getBuildingUrl(building.address)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="w-full grid grid-cols-3 gap-4 text-center cursor-pointer hover:bg-gray-100"
+                                            >
+                                                {building.id}
+                                            </a>
+                                        </div>
                                         <div>{building.metadata.name}</div>
                                         <div>{building.balance}</div>
                                     </div>
