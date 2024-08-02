@@ -10,13 +10,10 @@ import {
 } from '@/lib/utils'
 import { getDetail, getIsApproved, estimatePriceMiddleware } from '@/app/api/mintclub'
 import { ErrorFrame } from "@/components/FrameError"
-import { baseSepolia, base } from "viem/chains"
 import { getOwnersOfToken } from '@/app/api/alchemy'
 
-const chainId = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base.id : baseSepolia.id
-
 const handleRequest = frames(async (ctx:any) => {
-    
+
     if (ctx.searchParams?.building) {
 
         let qty = ctx.qty 
