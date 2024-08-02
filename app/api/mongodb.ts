@@ -60,15 +60,20 @@ type Package = {
 }
 
 type Trade = {
+    timestamp: number
     buildingId: string
-    minted: {
-        quantity: number
-        totalAmount: bigint
-    }
-    burned: {
-        quantity: number
-        totalAmount: bigint
-    }
+    type: 'mint' | 'burn'
+    quantity: number
+    amount: bigint
+    castId: any
+    connectedAddress: `0x${string}` | undefined
+    transactionId: `0x${string}` | undefined
+    casterFollowsRequester: boolean,
+    requesterFollowsCaster: boolean,
+    likedCast: boolean,
+    recastedCast: boolean,
+    requesterVerifiedAddresses: `0x${string}`[],
+    requesterCustodyAddress: `0x${string}`
 }
 
 export type User = {
@@ -92,40 +97,35 @@ export const getAllUsers = async (): Promise<string> => {
     }
 }
 
-export const addTradeToUser = async (fid: number, buildingId: string, amount: bigint, qty: number, isSell: boolean): Promise<number> => {
+export const addTradeToUser = async (message:any, buildingId:string, amount:bigint, quantity:number, isSell:boolean): Promise<number> => {
     try {
         await client.connect()
         const collection = client.db('farconic').collection('users')
 
+        const fid = Number(message?.requesterFid)
+
         // Find the user by fid
         const userToUpdate = await collection.findOne({ fid }) as User | null
 
+        const trade:Trade = {
+            timestamp: Date.now(),
+            buildingId,
+            type: isSell ? 'burn' : 'mint',
+            quantity,
+            amount,
+            castId: message.castId,
+            connectedAddress: message.connectedAddress,
+            transactionId: message.transactionId,
+            casterFollowsRequester: message.casterFollowsRequester,
+            requesterFollowsCaster: message.requesterFollowsCaster,
+            likedCast: message.likedCast,
+            recastedCast: message.recastedCast,
+            requesterVerifiedAddresses: message.requesterVerifiedAddresses,
+            requesterCustodyAddress: message.requesterCustodyAddress
+        }
+
         if (userToUpdate) {
-            // Check if the trade exists
-            let trade: Trade | null = userToUpdate.trades?.find((trade) => trade.buildingId === buildingId) || null
-
-            console.log('trade before update:', trade)
-
-            if (trade) {
-                // Update the existing trade
-                if (isSell) {
-                    trade.burned.quantity += Number(qty)
-                    trade.burned.totalAmount = BigInt(trade.burned.totalAmount) + BigInt(amount)
-                } else {
-                    trade.minted.quantity += Number(qty)
-                    trade.minted.totalAmount = BigInt(trade.minted.totalAmount) + BigInt(amount)
-                }
-            } else {
-                // Add new trade
-                trade = isSell
-                    ? { buildingId, burned: { quantity: Number(qty), totalAmount: BigInt(amount) }, minted: { quantity: Number(0), totalAmount: BigInt(0) } }
-                    : { buildingId, minted: { quantity: Number(qty), totalAmount: BigInt(amount) }, burned: { quantity: Number(0), totalAmount: BigInt(0) } }
-                userToUpdate.trades.push(trade)
-            }
-
-            console.log('updated trade:', trade)
-
-
+            userToUpdate.trades.push(trade)
             // Update the user document
             const result = await collection.updateOne({ fid }, { $set: { trades: userToUpdate.trades } })
             console.log('Records updated:', result.modifiedCount)
@@ -134,11 +134,7 @@ export const addTradeToUser = async (fid: number, buildingId: string, amount: bi
             // User does not exist, create a new user with the trade
             const newUser: User = {
                 fid,
-                trades: [
-                    isSell
-                        ? { buildingId, burned: { quantity: Number(qty), totalAmount: BigInt(amount) }, minted: { quantity: Number(0), totalAmount: BigInt(0) } }
-                        : { buildingId, minted: { quantity: Number(qty), totalAmount: BigInt(amount) }, burned: { quantity: Number(0), totalAmount: BigInt(0) } }
-                ],
+                trades: [trade],
             }
             const result = await collection.insertOne(newUser)
             console.log('New user created:', result)

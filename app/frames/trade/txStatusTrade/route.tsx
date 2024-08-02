@@ -84,8 +84,8 @@ const handleRequest = frames(async (ctx) => {
             }
 
             // update the database with the details of the transaction
-            const recordsUpdated = ctx.message?.requesterFid 
-                ? await addTradeToUser(ctx.message.requesterFid, building.id, amount, quantityTraded, isSell)
+            const recordsUpdated = ctx.message?.requesterFid
+                ? await addTradeToUser(ctx.message, building.id, amount, quantityTraded, isSell)
                 : 0
                 
             const successString = `${isSell ? "You've parted with" : "You've acquired"} ${ quantityTraded > BigInt(1) ? `${quantityTraded} ${removeThe(building.metadata.name)} cards!` : `${addThe(building.metadata.name)} card!`}`
