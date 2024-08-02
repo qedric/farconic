@@ -55,17 +55,17 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
         aValue = a[key] as string
         bValue = b[key] as string
       } else if (key === 'numberMinted') {
-        aValue = a.trades.reduce((sum, trade) => sum + trade.minted.quantity, 0)
-        bValue = b.trades.reduce((sum, trade) => sum + trade.minted.quantity, 0)
+        aValue = a.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
+        bValue = b.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
       } else if (key === 'mintedAmount') {
-        aValue = BigInt(a.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted.totalAmount)) ? 0 : Number(trade.minted.totalAmount)), 0))
-        bValue = BigInt(b.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted.totalAmount)) ? 0 : Number(trade.minted.totalAmount)), 0))
+        aValue = BigInt(a.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted?.totalAmount)) ? 0 : Number(trade.minted?.totalAmount)), 0))
+        bValue = BigInt(b.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted?.totalAmount)) ? 0 : Number(trade.minted?.totalAmount)), 0))
       } else if (key === 'numberBurned') {
-        aValue = a.trades.reduce((sum, trade) => sum + trade.burned.quantity, 0)
-        bValue = b.trades.reduce((sum, trade) => sum + trade.burned.quantity, 0)
+        aValue = a.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
+        bValue = b.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
       } else if (key === 'burnedAmount') {
-        aValue = BigInt(a.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned.totalAmount)) ? 0 : Number(trade.burned.totalAmount)), 0))
-        bValue = BigInt(b.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned.totalAmount)) ? 0 : Number(trade.burned.totalAmount)), 0))
+        aValue = BigInt(a.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned?.totalAmount)) ? 0 : Number(trade.burned?.totalAmount)), 0))
+        bValue = BigInt(b.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned?.totalAmount)) ? 0 : Number(trade.burned?.totalAmount)), 0))
       }
 
       if (!aValue) aValue = 0
@@ -87,10 +87,10 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
   // Helper to format trade details
   const getTradeDetails = (user: User): TradeDetails[] => user.trades.map(trade => ({
     buildingId: trade.buildingId,
-    mintedQuantity: trade.minted.quantity,
-    mintedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.minted.totalAmount)) ? 0 : Number(trade.minted.totalAmount)), false),
-    burnedQuantity: trade.burned.quantity,
-    burnedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.burned.totalAmount)) ? 0 : Number(trade.burned.totalAmount)), false),
+    mintedQuantity: (trade.minted?.quantity || 0),
+    mintedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.minted?.totalAmount)) ? 0 : Number(trade.minted?.totalAmount)), false),
+    burnedQuantity: (trade.burned?.quantity || 0),
+    burnedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.burned?.totalAmount)) ? 0 : Number(trade.burned?.totalAmount)), false),
   }))
 
   // Handle row click to open modal
@@ -140,10 +140,10 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
         </div>
       </div>
       {sortedUsers.map(user => {
-        const numberMinted = user.trades.reduce((sum, trade) => sum + trade.minted.quantity, 0)
-        const mintedAmount = BigInt(user.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted.totalAmount)) ? 0 : Number(trade.minted.totalAmount)), 0))
-        const numberBurned = user.trades.reduce((sum, trade) => sum + trade.burned.quantity, 0)
-        const burnedAmount = BigInt(user.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned.totalAmount)) ? 0 : Number(trade.burned.totalAmount)), 0))
+        const numberMinted = user.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
+        const mintedAmount = BigInt(user.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted?.totalAmount)) ? 0 : Number(trade.minted?.totalAmount)), 0))
+        const numberBurned = user.trades.reduce((sum, trade) => sum + (trade.burned?.quantity || 0), 0)
+        const burnedAmount = BigInt(user.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned?.totalAmount)) ? 0 : Number(trade.burned?.totalAmount)), 0))
 
         return (
           <div

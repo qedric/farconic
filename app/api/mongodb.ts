@@ -74,6 +74,14 @@ type Trade = {
     recastedCast: boolean,
     requesterVerifiedAddresses: `0x${string}`[],
     requesterCustodyAddress: `0x${string}`
+    minted?: { // deprecated
+        quantity: number
+        totalAmount: bigint
+    }
+    burned?: { // deprecated
+        quantity: number
+        totalAmount: bigint
+    }
 }
 
 export type User = {
