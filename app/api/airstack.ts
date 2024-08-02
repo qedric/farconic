@@ -40,11 +40,35 @@ export const queryProfileNamesFromFids = async (fids:string[])=> {
 
 }
 
+export const queryFrameShares = async (frameUrl:string)=> {
 
+  const query = `query FindSharedFarcasterFrame {
+    FarcasterCasts(
+      input: {blockchain: ALL, filter: {frameUrl: {_eq: "https://farconic.xyz/cn-tower"}}}
+    ) {
+      Cast {
+        castedAtTimestamp
+        url
+        text
+        numberOfReplies
+        numberOfRecasts
+        numberOfLikes
+        castedBy {
+          profileName
+          followerCount
+        }
+      }
+    }
+  }`
 
+  const { data, error } = await fetchQuery(query, {
+    "frameUrl": frameUrl
+  })
 
+  if (error) return error
 
-
+  return data
+}
 
 
 /* const TrackFrameCasts = {
