@@ -68,12 +68,12 @@ type Trade = {
     castId: any
     connectedAddress: `0x${string}` | undefined
     transactionId: `0x${string}` | undefined
-    casterFollowsRequester: boolean,
-    requesterFollowsCaster: boolean,
-    likedCast: boolean,
-    recastedCast: boolean,
-    requesterVerifiedAddresses: `0x${string}`[],
-    requesterCustodyAddress: `0x${string}`
+    casterFollowsRequester?: boolean,
+    requesterFollowsCaster?: boolean,
+    likedCast?: boolean,
+    recastedCast?: boolean,
+    requesterVerifiedAddresses?: `0x${string}`[],
+    requesterCustodyAddress?: `0x${string}`
     minted?: { // deprecated
         quantity: number
         totalAmount: bigint
