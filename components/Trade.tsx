@@ -2,16 +2,19 @@
 import { useEffect, useState, useRef } from 'react'
 import { type TransactionReceipt } from 'viem'
 import { 
-    type NFT,
+    type Building,
     formatWeiToETH,
     abbreviateAddress,
     getTransactionReceipt,
     getTokenBalanceByAddress,
     removeThe
 } from '@/lib/utils'
-import { connectWalletClient, tradeBuilding, getIsApproved, approveForSelling, estimatePrice } from '@/app/api/mintclub'
+import { connectWalletClient, tradeBuilding, getIsApproved, approveForSelling, estimatePrice, getTradeDetails } from '@/app/api/mintclub'
+import { addTradeToDb } from '@/app/api/mongodb'
 
-const Trade: React.FC<{ building: NFT }> = (building) => {
+const Trade: React.FC<{building:Building}> = (buildingProp) => {
+
+    const building = buildingProp.building
 
     const [client, setClient] = useState<any>(null)
     const [receipt, setReceipt] = useState<TransactionReceipt>()
@@ -37,20 +40,20 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
     }, [address])
 
     const setApproval = async () => {
-        const isApproved = await getIsApproved(building.building.address, (address as `0x${string}`))
+        const isApproved = await getIsApproved(building.address, (address as `0x${string}`))
         console.log('Is approved:', isApproved)
         setApproved(isApproved)
     }
 
     const loadEstimate = async () => {
         setLoading(true)
-        const estimate = await estimatePrice(building.building.address, BigInt(qtyRef.current?.value || 1), mode === 'sell')
+        const estimate = await estimatePrice(building.address, BigInt(qtyRef.current?.value || 1), mode === 'sell')
         console.log(estimate)
         setEstimation(estimate)
         setLoading(false)
     }
 
-    const getBalance = async(walletAddres:`0x${string}`) => setBalance(await getTokenBalanceByAddress(building.building.address, walletAddres) as any)
+    const getBalance = async(walletAddres:`0x${string}`) => setBalance(await getTokenBalanceByAddress(building.address, walletAddres) as any)
 
     const enoughBalance = ():boolean => (balance || 0) >= BigInt(qtyRef.current?.value || '1')
 
@@ -74,7 +77,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
     const approve = async () => {
         setExecutingApproval(true)
         try {
-            const hash:any = await approveForSelling(client, (address as `0x${string}`), building.building.address)
+            const hash:any = await approveForSelling(client, (address as `0x${string}`), building.address)
             const receipt = await getTransactionReceipt(hash)
             console.log('Approval tx:', receipt)
             await setApproval()
@@ -88,10 +91,15 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
     const trade = async () => {
         setExecutingTrade(true)
         try {
-            const hash:any = await tradeBuilding(client, (address as `0x${string}`), building.building.address, BigInt(qtyRef.current?.value || 1), mode !== 'buy')
-            const receipt = await getTransactionReceipt(hash)
-            console.log('trade tx:', receipt)
+            const hash:any = await tradeBuilding(client, (address as `0x${string}`), building.address, BigInt(qtyRef.current?.value || 1), mode !== 'buy')
+
+            const { receipt, quantityTraded, amount, addressUsed, isSell } = await getTradeDetails(hash)
+
             setReceipt(receipt)
+
+            // log trade in the db
+            addTradeToDb(addressUsed, null, building.id, amount, quantityTraded, isSell)
+
             getBalance(address as `0x${string}`)
             setExecutingTrade(false)
         } catch (error) {
@@ -102,21 +110,21 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
 
     return (
         <>
-            <div className={`w-full flex justify-between lg:justify-start flex-col border lg:rounded-md transition-all ${estimation ? 'max-h-[1000px]' : 'max-h-[300]'}`} style={{ borderColor: building.building.building_color, color: building.building.building_color }}>
+            <div className={`w-full flex justify-between lg:justify-start flex-col border lg:rounded-md transition-all ${estimation ? 'max-h-[1000px]' : 'max-h-[300]'}`} style={{ borderColor: building.building_color, color: building.building_color }}>
                 <div className="flex w-full overflow-hidden">
-                    <div className="w-1/2 border-b" dir="ltr" style={{ borderColor: building.building.building_color }}>
+                    <div className="w-1/2 border-b" dir="ltr" style={{ borderColor: building.building_color }}>
                         <button
                             className={`w-full font-semibold tracking-widest lg:rounded-tl-sm py-4 lg:py-2 px-8 ${mode === 'buy' ? `text-white` : 'bg-transparent text-gray-400'}`}
-                            style={{ backgroundColor: mode === 'buy' ? building.building.building_color : 'transparent' }}
+                            style={{ backgroundColor: mode === 'buy' ? building.building_color : 'transparent' }}
                             onClick={() => setMode('buy')}
                         >
                             Buy
                         </button>
                     </div>
-                    <div className="w-1/2 border-b" dir="rtl" style={{ borderColor: building.building.building_color }}>
+                    <div className="w-1/2 border-b" dir="rtl" style={{ borderColor: building.building_color }}>
                         <button
                             className={`w-full font-semibold tracking-widest lg:rounded-tl-sm py-4 lg:py-2 px-8 ${mode === 'sell' ? 'bg-black text-white' : 'bg-transparent text-gray-400'}`}
-                            style={{ backgroundColor: mode === 'sell' ? building.building.building_color : 'transparent' }}
+                            style={{ backgroundColor: mode === 'sell' ? building.building_color : 'transparent' }}
                             onClick={() => setMode('sell')}
                         >
                             Sell
@@ -129,7 +137,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
                         type="number"
                         className="w-40 font-semibold tracking-widest my-4 lg:my-0 py-4 lg:py-2 px-8 lg:rounded-lg border"
                         placeholder="1"
-                        style={{ borderColor: building.building.building_color }}
+                        style={{ borderColor: building.building_color }}
                         ref={qtyRef}
                     />
                 </div>
@@ -141,7 +149,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
                 <div className="flex flex-col">
                     <button
                         className={`w-full font-semibold tracking-widest py-4 lg:py-2 px-8 bg-black text-white lg:rounded-b-sm`}
-                        style={{ backgroundColor: building.building.building_color }}
+                        style={{ backgroundColor: building.building_color }}
                         onClick={loadEstimate}
                         disabled={loading}
                     >
@@ -151,11 +159,11 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
             </div>
 
             {estimation &&
-                <div className="animate-fade w-full flex flex-col mt-6 lg:mt-4" style={{ color: building.building.building_color }}>
+                <div className="animate-fade w-full flex flex-col mt-6 lg:mt-4" style={{ color: building.building_color }}>
                     <p className='text-center text-sm'>{ address && abbreviateAddress(address) }</p>
                     <button
                         className={`w-full font-semibold tracking-widest py-4 lg:py-2 px-8 bg-black text-white lg:rounded-md`}
-                        style={{ backgroundColor: building.building.building_color }}
+                        style={{ backgroundColor: building.building_color }}
                         onClick={ address && client ? mode==='buy' || (mode==='sell' && approved) ? trade : approve : connectWallet }
                         disabled={loading || executingTrade || executingApproval || (address && client && mode==='sell' && !enoughBalance())}
                     >
@@ -173,7 +181,7 @@ const Trade: React.FC<{ building: NFT }> = (building) => {
                     </button>
                     {receipt && receipt.status === 'success' && (
                         <div className={`mx-2 text-center font-semibold my-2 ${executingTrade ? `text-gray-400` : 'animate-fade'}`}>
-                            { `Success!${balance && ` You now own ${balance} ${removeThe(building.building.metadata.name)} card${balance != 1 ? 's' : ''}`}` }
+                            { `Success!${balance && ` You now own ${balance} ${removeThe(building.metadata.name)} card${balance != 1 ? 's' : ''}`}` }
                         </div>
                     )}
                 </div>

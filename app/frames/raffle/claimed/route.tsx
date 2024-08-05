@@ -3,7 +3,7 @@ import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
 import { decodeEventLog, Abi } from 'viem'
-import { getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
+import { getBuildingByAddress, type Building, addThe } from '@/lib/utils'
 import { getTxReceiptFromSyndicateId } from '@/app/api/syndicate'
 import { claim } from './claim'
 import { CardImage } from '@/components/FrameCard'
@@ -76,7 +76,7 @@ const handleRequest = frames(async (ctx: any) => {
             }
         })
 
-        const building: NFT = getBuildingByAddress(bulidingAddress)
+        const building: Building = getBuildingByAddress(bulidingAddress)
         
         const successString = `You now own ${addThe(building.metadata.name)} card!`
         const shareText = `I won ${addThe(building.metadata.name)} card in /farconic! 🎉`

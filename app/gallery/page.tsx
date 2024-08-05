@@ -4,7 +4,7 @@ import Link from 'next/link'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
 import CardSVG from "@/components/CardSVG"
-import { NFT } from "@/lib/utils"
+import { Building } from "@/lib/utils"
 import { getOwnedTokens } from '@/app/api/alchemy'
 import { Refresh } from "@/components/Refresh"
 import ReactDOM from 'react-dom'
@@ -15,7 +15,7 @@ const buildings = process.env.NEXT_PUBLIC_CHAIN == 'MAINNET' ? mainnet_buildings
 export default function Gallery() {
     const [address, setAddress] = useState<string | null>(null)
     const [view, setView] = useState('All Buildings') // State to manage the selected view
-    const [filteredBuildings, setFilteredBuildings] = useState<NFT[]>([])
+    const [filteredBuildings, setFilteredBuildings] = useState<Building[]>([])
     const [ownedTokens, setOwnedTokens] = useState<any[] | "Error" | null>(null) // State to store owned tokens
     const [isLoading, setIsLoading] = useState(false) // State for loading spinner
 
@@ -48,7 +48,7 @@ export default function Gallery() {
             return ownedContractAddresses.has(building.address?.toLowerCase())
         })
 
-        setFilteredBuildings(filtered as NFT[])
+        setFilteredBuildings(filtered as Building[])
     }
 
     useEffect(() => {
@@ -59,7 +59,7 @@ export default function Gallery() {
                 filterBuildings(ownedTokens)
             }
         } else {
-            setFilteredBuildings(buildings as NFT[])
+            setFilteredBuildings(buildings as Building[])
         }
     }, [view, address]) // Dependency array includes view and address
 
@@ -122,7 +122,7 @@ export default function Gallery() {
             }
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-4 lg:gap-x-12 lg:gap-y-5 lg:pt-7 lg:mx-auto mb-5 lg:mb-20">
                 {
-                    filteredBuildings.slice(0, 60).map((nft: NFT) => (
+                    filteredBuildings.slice(0, 60).map((nft: Building) => (
                         <div className="" key={nft.metadata.name}>
                             <div className="flex items-end justify-center h-20">
                                 <h2 className={`m-0 text-center text-base leading-0`}>{nft.metadata.name}</h2>

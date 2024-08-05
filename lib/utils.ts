@@ -78,7 +78,7 @@ export interface Attribute {
     value: string
 }
 
-export interface NFT {
+export interface Building {
     metadata: Metadata
     id: string
     tokenURI: string
@@ -106,16 +106,16 @@ export const formatWeiToETH = (wei: bigint, showUnit: boolean = true) => {
 
 export const abbreviateAddress = (address: string) => `${address.substring(0, 5)}...${address.substring(address.length - 4)}`
 
-export const searchJsonArray = (query: string): NFT[] => {
+export const searchJsonArray = (query: string): Building[] => {
     const lowerCaseQuery = query.toLowerCase()
-    const matchingElements: NFT[] = []
+    const matchingElements: Building[] = []
 
     // skip search & return a random element from the buildings array
     if (query == 'random') {
-        return (new Array(buildings[Math.floor(Math.random() * buildings.length)]) as NFT[])
+        return (new Array(buildings[Math.floor(Math.random() * buildings.length)]) as Building[])
     }
 
-    for (const element of buildings as NFT[]) {
+    for (const element of buildings as Building[]) {
         const metadataValues = Object.values(element.metadata)
             .filter(value => typeof value === 'string')
             .map(value => (value as string).toLowerCase())
@@ -175,22 +175,22 @@ export const getTokenBalancesForAddresses = async (tokenAddress: `0x${string}`, 
     return { balances, totalBalance }
 }
 
-export const getRandomBuildingAmongFavourites = (excludeName?: string): NFT => {
+export const getRandomBuildingAmongFavourites = (excludeName?: string): Building => {
     // Remove the excluded name from the favorite building names array
     const filteredBuildingNames = excludeName ? favBuildingNames.filter(name => name !== excludeName) : favBuildingNames
 
     // get a random name from the filteredBuildingNames array and find the matching building
     const buildingName = filteredBuildingNames[Math.floor(Math.random() * filteredBuildingNames.length)]
-    return buildings.find((b) => b.metadata.name === buildingName) as NFT
+    return buildings.find((b) => b.metadata.name === buildingName) as Building
 }
 
-export const getFavouriteBuildings = () => buildings.filter((b) => favBuildingNames.includes(b.metadata.name)) as NFT[]
+export const getFavouriteBuildings = () => buildings.filter((b) => favBuildingNames.includes(b.metadata.name)) as Building[]
 
-export const getBuildingByName = (name: string) => buildings.find((b) => b.metadata.name.toLowerCase() === name.toLowerCase()) as NFT
+export const getBuildingByName = (name: string) => buildings.find((b) => b.metadata.name.toLowerCase() === name.toLowerCase()) as Building
 
-export const getBuildingById = (id: string) => buildings.find((b) => b.id === id) as NFT
+export const getBuildingById = (id: string) => buildings.find((b) => b.id === id) as Building
 
-export const getBuildingByAddress = (address: string) => buildings.find((b) => b.address?.toLowerCase() === address.toLowerCase()) as NFT
+export const getBuildingByAddress = (address: string) => buildings.find((b) => b.address?.toLowerCase() === address.toLowerCase()) as Building
 
 export const removeThe = (name:string) => name.toLowerCase().startsWith('the') ? name.substring(4) : name
 export const addThe = (name:string) => name.toLowerCase().startsWith('the') ? name : `the ${name}`

@@ -1,13 +1,14 @@
 import dotenv from "dotenv"
 import { FramesMiddleware } from "frames.js/types"
-import { NFT } from '@/lib/utils'
-import { createPublicClient, createWalletClient, http, custom } from 'viem'
+import { type Building, getTransactionReceipt } from '@/lib/utils'
+import { createPublicClient, createWalletClient, http, custom, decodeEventLog } from 'viem'
 import { EthereumProvider } from '@walletconnect/ethereum-provider'
 import { base, baseSepolia } from 'viem/chains'
 import { mintclub, getMintClubContractAddress } from 'mint.club-v2-sdk'
 import { ethers } from 'ethers'
 import zap_abi from '@/data/zap_abi.json'
 import building_abi from '@/data/mc_building_abi.json'
+import bond_abi from '@/data/mcv2bond_abi.json'
 dotenv.config()
 
 const chain = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base : baseSepolia
@@ -57,7 +58,7 @@ export const connectWalletClient = async () => {
   return walletClient
 }
 
-export const tradeBuilding = async (client:any, address:`0x${string}`, buidingAddress:`0x${string}`, qty:bigint, isSell:boolean) => {
+export const tradeBuilding = async (client: any, address: `0x${string}`, buidingAddress: `0x${string}`, qty: bigint, isSell: boolean) => {
 
   const estimated = await estimatePrice(buidingAddress, qty, isSell)
 
@@ -82,12 +83,53 @@ export const tradeBuilding = async (client:any, address:`0x${string}`, buidingAd
   return (await client.writeContract(request))
 }
 
+export const getTradeDetails = async (txId: `0x${string}`): Promise<{ receipt: any, buidingAddress: `0x${string}`, quantityTraded: number, amount: bigint, addressUsed: `0x${string}`, isSell: boolean } | any> => {
+
+  const bond_contract_address = getMintClubContractAddress('BOND', chain.id)
+  let receipt
+  try {
+    receipt = await getTransactionReceipt(txId as `0x${string}`)
+  } catch (e) {
+    console.error(e)
+    return e
+  }
+
+  // Find the 'Mint' or 'Burn' event log with the bond contract address
+  const mintOrBurnEvent = receipt.logs
+    .filter(log => log.address.toLowerCase() === bond_contract_address.toLowerCase())
+    .map(log => decodeEventLog({
+      abi: bond_abi,
+      data: log.data,
+      topics: log.topics
+    }))
+    .find(decodedLog => decodedLog.eventName === 'Mint' || decodedLog.eventName === 'Burn')
+
+  const isSell = mintOrBurnEvent?.eventName === 'Burn'
+
+  const building_address = (mintOrBurnEvent as any).args.token
+
+  console.log('mintOrBurnEvent', mintOrBurnEvent)
+
+  if (!mintOrBurnEvent) {
+    return 'no mint or burn event found'
+  }
+
+  // get the building object from the buildings json based on the address
+  const quantityTraded: number = isSell ? (mintOrBurnEvent as any).args.amountBurned : (mintOrBurnEvent as any).args.amountMinted
+  const amount: bigint = isSell ? (mintOrBurnEvent?.args as any).refundAmount : (mintOrBurnEvent?.args as any)?.reserveAmount
+
+  let addressUsed: `0x${string}` = receipt.from
+
+  return { receipt, building_address, quantityTraded, amount, addressUsed, isSell }
+
+}
+
 export const getIsApproved = async (target: `0x${string}`, address: `0x${string}`): Promise<boolean> => mintclub.network(chainString).nft(target).getIsApprovedForAll({
   owner: (address),
   spender: zap_contract_address
 })
 
-export const approveForSelling = async (client:any, address:`0x${string}`, buidingAddress:`0x${string}`) => {
+export const approveForSelling = async (client: any, address: `0x${string}`, buidingAddress: `0x${string}`) => {
 
   const { request } = await publicClient.simulateContract({
     account: address,
@@ -142,7 +184,7 @@ export const estimatePriceMiddleware: FramesMiddleware<any, { priceEstimate: big
     throw new Error("No building in searchParams")
   }
 
-  const building: NFT = JSON.parse(ctx.searchParams.building)
+  const building: Building = JSON.parse(ctx.searchParams.building)
   const details = await mintclub.network(chainString).token(building.address).getDetail()
 
   let qty: bigint = BigInt(1)

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { formatWeiToETH, type NFT } from '@/lib/utils'
+import { formatWeiToETH, type Building } from '@/lib/utils'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
 import { getOwnedTokens } from '@/app/api/alchemy'
@@ -47,7 +47,7 @@ export default function AdminWallets() {
             return building
         }).filter((building: any) => building.balance)
 
-        setOwnedBuildings(filtered as NFT[])
+        setOwnedBuildings(filtered as Building[])
     }
 
     useEffect(() => {

@@ -46,26 +46,14 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
       let bValue: string | number | bigint = 0
 
       if (key === 'buildingsTraded') {
-        aValue = a.trades.length
-        bValue = b.trades.length
+        aValue = a.trades?.length || 0
+        bValue = b.trades?.length || 0
       } else if (key === 'fid') {
         aValue = a[key] as number
         bValue = b[key] as number
       } else if (key === 'handle') {
         aValue = a[key] as string
         bValue = b[key] as string
-      } else if (key === 'numberMinted') {
-        aValue = a.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
-        bValue = b.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
-      } else if (key === 'mintedAmount') {
-        aValue = BigInt(a.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted?.totalAmount)) ? 0 : Number(trade.minted?.totalAmount)), 0))
-        bValue = BigInt(b.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted?.totalAmount)) ? 0 : Number(trade.minted?.totalAmount)), 0))
-      } else if (key === 'numberBurned') {
-        aValue = a.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
-        bValue = b.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
-      } else if (key === 'burnedAmount') {
-        aValue = BigInt(a.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned?.totalAmount)) ? 0 : Number(trade.burned?.totalAmount)), 0))
-        bValue = BigInt(b.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.burned?.totalAmount)) ? 0 : Number(trade.burned?.totalAmount)), 0))
       }
 
       if (!aValue) aValue = 0
@@ -85,13 +73,13 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
   }
 
   // Helper to format trade details
-  const getTradeDetails = (user: User): TradeDetails[] => user.trades.map(trade => ({
+  /* const getTradeDetails = (user: User): TradeDetails[] => user.trades.map(trade => ({
     buildingId: trade.buildingId,
     mintedQuantity: (trade.minted?.quantity || 0),
     mintedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.minted?.totalAmount)) ? 0 : Number(trade.minted?.totalAmount)), false),
     burnedQuantity: (trade.burned?.quantity || 0),
     burnedAmount: formatWeiToETH(BigInt(Number.isNaN(Number(trade.burned?.totalAmount)) ? 0 : Number(trade.burned?.totalAmount)), false),
-  }))
+  })) */
 
   // Handle row click to open modal
   const handleRowClick = (user: User) => {
@@ -139,7 +127,7 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
           Burned Amount (ETH)<span className="absolute -right-5">{getSortIndicator('burnedAmount')}</span>
         </div>
       </div>
-      {sortedUsers.map(user => {
+      {/* {sortedUsers.map(user => {
         const numberMinted = user.trades.reduce((sum, trade) => sum + (trade.minted?.quantity || 0), 0)
         const mintedAmount = BigInt(user.trades.reduce((sum, trade) => sum + (Number.isNaN(Number(trade.minted?.totalAmount)) ? 0 : Number(trade.minted?.totalAmount)), 0))
         const numberBurned = user.trades.reduce((sum, trade) => sum + (trade.burned?.quantity || 0), 0)
@@ -160,7 +148,7 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
             <div>{formatWeiToETH(burnedAmount, false)}</div>
           </div>
         )
-      })}
+      })} */}
 
       {/* Modal */}
       {isModalOpen && selectedUser && (
@@ -180,7 +168,7 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
               <div>Burned</div>
               <div>Burned Amount (ETH)</div>
             </div>
-            {getTradeDetails(selectedUser).map((trade, index) => (
+            {/* {getTradeDetails(selectedUser).map((trade, index) => (
               <div key={index} className="grid grid-cols-5 gap-4 text-center py-1 even:bg-gray-200">
                 <div>{getBuildingById(trade.buildingId)?.metadata.name}</div>
                 <div>{trade.mintedQuantity}</div>
@@ -188,7 +176,7 @@ const UsersComponent: React.FC<{ users: User[] }> = ({ users }) => {
                 <div>{trade.burnedQuantity}</div>
                 <div>{trade.burnedAmount}</div>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       )}

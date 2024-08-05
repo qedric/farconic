@@ -2,7 +2,7 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
-import { getBuildingByAddress, type NFT, addThe } from '@/lib/utils'
+import { getBuildingByAddress, type Building, addThe } from '@/lib/utils'
 import { markPackageWinnerAsClaimed } from '@/app/api/mongodb'
 import { getTxReceiptFromSyndicateId } from '@/app/api/syndicate'
 import { claim } from './deliverPackage'
@@ -72,7 +72,7 @@ const handleRequest = frames(async (ctx: any) => {
             }
         })
 
-        const buildings: NFT[] = bulidingAddresses.map(buildingAddress => getBuildingByAddress(buildingAddress))
+        const buildings: Building[] = bulidingAddresses.map(buildingAddress => getBuildingByAddress(buildingAddress))
 
         // mark the winner as having claimed their prize, in the database
         const result = await markPackageWinnerAsClaimed(ctx.searchParams.name, ctx.message.requesterFid, buildings.map(building => building.id))

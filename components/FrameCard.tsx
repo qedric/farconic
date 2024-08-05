@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element, jsx-a11y/alt-text */
 import { ethers } from 'ethers'
-import { type NFT } from '@/lib/utils'
+import { type Building } from '@/lib/utils'
 import { getDetail } from '@/app/api/mintclub'
 import { getOwnersOfToken } from '@/app/api/alchemy'
 
 export const CardImage = async (
-    building:NFT,
+    building:Building,
     userImg:string | undefined = undefined,
     userName:string | undefined = undefined,
     scale:string | undefined = undefined,
@@ -14,8 +14,8 @@ export const CardImage = async (
 
     const getStats = async () => {
         const [tokenHolders, mc_detail] = await Promise.all([
-            getOwnersOfToken((building as NFT).address),
-            getDetail((building as NFT).address)
+            getOwnersOfToken((building as Building).address),
+            getDetail((building as Building).address)
         ])
         return [tokenHolders, mc_detail]
     }

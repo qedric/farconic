@@ -2,18 +2,14 @@
 import { Button } from "frames.js/next"
 import { frames } from "../../frames"
 import { getUserDataForFid } from 'frames.js'
-import { getTransactionReceipt, NFT, addThe, removeThe } from '@/lib/utils'
-import { decodeEventLog } from 'viem'
-import { baseSepolia, base } from "viem/chains"
-import { getMintClubContractAddress } from 'mint.club-v2-sdk'
+import { type Building, addThe, removeThe } from '@/lib/utils'
+import { getTradeDetails } from '@/app/api/mintclub'
 import { ErrorFrame } from "@/components/FrameError"
 import { CardImage } from '@/components/FrameCard'
-import { addTradeToUser } from '@/app/api/mongodb'
-import abi from '@/data/mcv2bond_abi.json'
+import { addTradeToDb } from '@/app/api/mongodb'
 import mainnet_buildings from '@/data/buildings.json'
 import testnet_buildings from '@/data/buildings_testnet.json'
 
-const chainId = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? base.id : baseSepolia.id
 const buildings = process.env.NEXT_PUBLIC_CHAIN === 'MAINNET' ? mainnet_buildings : testnet_buildings
 
 const handleRequest = frames(async (ctx) => {
@@ -24,53 +20,12 @@ const handleRequest = frames(async (ctx) => {
 
         //console.log('transactionId', txId)
         const url = `${process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL}/${txId}`
-        const bond_contract_address = getMintClubContractAddress('BOND', chainId)
-        let receipt
-        try {
-            receipt = await getTransactionReceipt(txId as `0x${string}`)
-        } catch (e) {
-            console.log(e)
-            return ErrorFrame(
-                "Transaction Receipt Not Found",
-                'Refresh',
-                JSON.stringify({ query: { transactionId: txId }, pathname: "/trade/txStatusTrade" }),
-                "Refresh and see if that helps. If not, let us know!",
-                ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
-            )
-        }
-
         const userData = await getUserDataForFid({ fid: (ctx.message?.requesterFid as number) })
-        
-        // Find the 'Mint' or 'Burn' event log with the bond contract address
-        const mintOrBurnEvent = receipt.logs
-        .filter(log => log.address.toLowerCase() === bond_contract_address.toLowerCase())
-        .map(log => decodeEventLog({
-            abi: abi,
-            data: log.data,
-            topics: log.topics
-        }))
-        .find(decodedLog => decodedLog.eventName === 'Mint' || decodedLog.eventName === 'Burn')
-
-        const isSell = mintOrBurnEvent?.eventName === 'Burn'
-
-        console.log('mintOrBurnEvent', mintOrBurnEvent)
-
-        if (!mintOrBurnEvent) {
-            return ErrorFrame(
-                "Transaction Details Not Found",
-                'Refresh',
-                JSON.stringify({ query: { transactionId: txId }, pathname: "/trade/txStatusTrade" }),
-                "Refresh and see if that helps. If not, let us know!",
-                ctx.searchParams.mode == 'search' || ctx.state.searchMode ? 'search' : 'building'
-            )
-        }
+        const { receipt, building_address, quantityTraded, amount, addressUsed, isSell } = await getTradeDetails((txId as `0x${string}`))
 
         if (receipt.status == 'success') {
 
             // get the building object from the buildings json based on the address
-            const building_address = (mintOrBurnEvent as any).args.token
-            const quantityTraded:number = isSell ? (mintOrBurnEvent as any).args.amountBurned : (mintOrBurnEvent as any).args.amountMinted
-            const amount:bigint = isSell ? (mintOrBurnEvent?.args as any).refundAmount : (mintOrBurnEvent?.args as any)?.reserveAmount
             const building = buildings.find((building) => building.address?.toLowerCase() === building_address.toLowerCase())
 
             if (!building) {
@@ -84,10 +39,8 @@ const handleRequest = frames(async (ctx) => {
             }
 
             // update the database with the details of the transaction
-            const recordsUpdated = ctx.message?.requesterFid
-                ? await addTradeToUser(ctx.message, building.id, amount, quantityTraded, isSell)
-                : 0
-                
+            addTradeToDb(addressUsed, ctx.message, building.id, amount, quantityTraded, isSell)
+
             const successString = `${isSell ? "You've parted with" : "You've acquired"} ${ quantityTraded > BigInt(1) ? `${quantityTraded} ${removeThe(building.metadata.name)} cards!` : `${addThe(building.metadata.name)} card!`}`
 
             const shareText = isSell 
@@ -103,7 +56,7 @@ const handleRequest = frames(async (ctx) => {
                     <div tw="flex w-full h-full" style={{ backgroundImage: `url(${process.env.NEXT_PUBLIC_GATEWAY_URL}/QmRJx4BNegoXtzsZ64zqFwxqoXUFRZAmAQmG6ToLxU2SdV)`}}>
                         <div tw="flex flex-col relative bottom-[40px] w-full h-full items-center justify-center">
                             <h1 tw="text-[60px]">{ isSell ? 'SOLD!' : 'CONGRATULATIONS!' }</h1>
-                            { await CardImage(building as NFT, undefined, undefined, '0.5') }
+                            { await CardImage(building as Building, undefined, undefined, '0.5') }
                             { userData && 
                                 <div tw="absolute top-[330px] w-full flex flex-col justify-center items-center">
                                     <img src={userData.profileImage} tw="w-[4.55vw] h-[4.55vw] rounded-full" />

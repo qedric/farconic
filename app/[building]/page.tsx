@@ -1,5 +1,5 @@
 import { fetchMetadata } from "frames.js/next"
-import { type NFT, getBuildingByName, formatWeiToETH } from "@/lib/utils"
+import { type Building, getBuildingByName, formatWeiToETH } from "@/lib/utils"
 import { getDetail } from "@/app/api/mintclub"
 import CardSVG from "@/components/CardSVG"
 import { getOwnersOfToken } from '@/app/api/alchemy'
@@ -29,7 +29,7 @@ const PageContent = async ({
   params: { building: string }
 }) => {
 
-  const building: NFT = getBuildingByName(params.building.replaceAll('-', ' '))
+  const building: Building = getBuildingByName(params.building.replaceAll('-', ' '))
 
   if (!building) {
     return (
@@ -47,8 +47,8 @@ const PageContent = async ({
   })
 
   const [holders, detail] = await Promise.all([
-    getOwnersOfToken((building as NFT).address),
-    getDetail((building as NFT).address)
+    getOwnersOfToken((building as Building).address),
+    getDetail((building as Building).address)
   ])
 
   const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(10000))

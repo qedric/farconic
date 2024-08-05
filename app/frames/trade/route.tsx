@@ -3,7 +3,7 @@ import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
 import { 
-    type NFT,
+    type Building,
     formatWeiToETH,
     abbreviateAddress,
     getTokenBalancesForAddresses
@@ -29,7 +29,7 @@ const handleRequest = frames(async (ctx:any) => {
         }
 
         const estimation = BigInt(ctx.priceEstimate)
-        const building:NFT = JSON.parse(ctx.searchParams.building)
+        const building:Building = JSON.parse(ctx.searchParams.building)
 
         let isApproved = false
         let approvedAddresses: { address: string, balance: string }[] = []
@@ -75,8 +75,8 @@ const handleRequest = frames(async (ctx:any) => {
         }
 
         const [holders, detail] = await Promise.all([
-            getOwnersOfToken((building as NFT).address),
-            getDetail((building as NFT).address)
+            getOwnersOfToken((building as Building).address),
+            getDetail((building as Building).address)
         ])
     
         const priceForNextMintWithRoyalty = detail.info.priceForNextMint + (detail.info.priceForNextMint * BigInt(detail.mintRoyalty) / BigInt(10000))

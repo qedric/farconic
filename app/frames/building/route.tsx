@@ -3,13 +3,13 @@ import { Button } from "frames.js/next"
 import { frames } from "../frames"
 import { getUserDataForFid } from 'frames.js'
 import { CardImage } from '@/components/FrameCard'
-import { getRandomBuildingAmongFavourites, getBuildingByName, type NFT, addThe } from '@/lib/utils'
+import { getRandomBuildingAmongFavourites, getBuildingByName, type Building, addThe } from '@/lib/utils'
 
 export const maxDuration = 20
 
 const handleRequest = frames(async (ctx) => {
 
-    let building: NFT = ctx.searchParams.building
+    let building: Building = ctx.searchParams.building
         ? JSON.parse(ctx.searchParams.building)
         : ctx.searchParams.buildingName
             ? getBuildingByName(ctx.searchParams?.buildingName?.replaceAll('-', ' ')) || getRandomBuildingAmongFavourites()

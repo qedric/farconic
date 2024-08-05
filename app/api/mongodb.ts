@@ -65,6 +65,8 @@ type Trade = {
     type: 'mint' | 'burn'
     quantity: number
     amount: bigint
+    address: `0x${string}`
+    fid?: number // foreign key - User
     castId: any
     connectedAddress: `0x${string}` | undefined
     transactionId: `0x${string}` | undefined
@@ -74,22 +76,14 @@ type Trade = {
     recastedCast?: boolean,
     requesterVerifiedAddresses?: `0x${string}`[],
     requesterCustodyAddress?: `0x${string}`
-    minted?: { // deprecated
-        quantity: number
-        totalAmount: bigint
-    }
-    burned?: { // deprecated
-        quantity: number
-        totalAmount: bigint
-    }
 }
 
 export type User = {
     fid: number
     handle?: string
-    trades: Array<Trade>
     streak?: number
     referrals?: number
+    trades?: Trade[]
 }
 
 export const getAllUsers = async (): Promise<string> => {
@@ -105,15 +99,35 @@ export const getAllUsers = async (): Promise<string> => {
     }
 }
 
-export const addTradeToUser = async (message:any, buildingId:string, amount:bigint, quantity:number, isSell:boolean): Promise<number> => {
+export const addUserToDb = async (fid: number): Promise<number> => {
     try {
         await client.connect()
         const collection = client.db('farconic').collection('users')
 
-        const fid = Number(message?.requesterFid)
-
         // Find the user by fid
-        const userToUpdate = await collection.findOne({ fid }) as User | null
+        const existingUser = await collection.findOne({ fid }) as User | null
+
+        if (existingUser) {
+            console.log('User already exists')
+            return 0
+        }
+        const result = await collection.insertOne({ fid })
+        console.log('New user created:', result)
+        return result.acknowledged ? 1 : 0
+    } catch (e) {
+        console.error(e)
+        return -1
+    } finally {
+        await client.close()
+    }
+}
+
+export const addTradeToDb = async (address:`0x${string}`, message:any, buildingId:string, amount:bigint, quantity:number, isSell:boolean): Promise<number> => {
+    try {
+        await client.connect()
+        const collection = client.db('farconic').collection('trades')
+
+        const fid = Number(message?.requesterFid)
 
         const trade:Trade = {
             timestamp: Date.now(),
@@ -121,33 +135,23 @@ export const addTradeToUser = async (message:any, buildingId:string, amount:bigi
             type: isSell ? 'burn' : 'mint',
             quantity,
             amount,
-            castId: message.castId,
-            connectedAddress: message.connectedAddress,
-            transactionId: message.transactionId,
-            casterFollowsRequester: message.casterFollowsRequester,
-            requesterFollowsCaster: message.requesterFollowsCaster,
-            likedCast: message.likedCast,
-            recastedCast: message.recastedCast,
-            requesterVerifiedAddresses: message.requesterVerifiedAddresses,
-            requesterCustodyAddress: message.requesterCustodyAddress
+            address,
+            fid,
+            castId: message?.castId,
+            connectedAddress: message?.connectedAddress,
+            transactionId: message?.transactionId,
+            casterFollowsRequester: message?.casterFollowsRequester,
+            requesterFollowsCaster: message?.requesterFollowsCaster,
+            likedCast: message?.likedCast,
+            recastedCast: message?.recastedCast,
+            requesterVerifiedAddresses: message?.requesterVerifiedAddresses,
+            requesterCustodyAddress: message?.requesterCustodyAddress
         }
 
-        if (userToUpdate) {
-            userToUpdate.trades.push(trade)
-            // Update the user document
-            const result = await collection.updateOne({ fid }, { $set: { trades: userToUpdate.trades } })
-            console.log('Records updated:', result.modifiedCount)
-            return result.modifiedCount
-        } else {
-            // User does not exist, create a new user with the trade
-            const newUser: User = {
-                fid,
-                trades: [trade],
-            }
-            const result = await collection.insertOne(newUser)
-            console.log('New user created:', result)
-            return result.acknowledged ? 1 : 0
-        }
+        const result = await collection.insertOne(trade)
+        console.log('New trade created:', result)
+        return result.acknowledged ? 1 : 0
+
     } catch (e) {
         console.error(e)
         return -1
