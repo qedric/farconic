@@ -4026,7 +4026,7 @@
       "name": "Hyatt Regency",
       "description": "Hyatt Regency Dallas, completed in 1978, is known for its distinctive, cylindrical design and serves as a prominent hotel near the Reunion Tower.",
       "image": "ipfs://QmTmFyQq6HqE9Msw1FXydnkhspcPX3xGk4Q45yZ3Kcec9v/building%20card_Dallas-01.gif",
-      "external_url": "https://farconic.xyz",
+      "external_url": "https://farconic.xyz/hyatt-regency",
       "background_color": "F7F3EE",
       "attributes": [
         {
@@ -4050,13 +4050,17 @@
           "value": "1970s"
         },
         {
+          "trait_type": "Type of Building",
+          "value": "Hotel"
+        },
+        {
           "value": "Building"
         }
       ]
     },
     "id": "111",
-    "tokenURI": "ipfs://QmSGD5u8a7h3DRE7CSDe1MRq2uqVvEBRD1bcjUWNABDxc6",
-    "address": "0x89b942A10ed186Eb06d1771dBF174Ecc9E2a9C6f",
+    "tokenURI": "ipfs://Qmdh3x9tXzbAHhSuK8bUVArxbXf4eQCkJVUFpNMPR6hraY",
+    "address": "0x217536fEEe4E63351D83410a4528Bb634370fB6A",
     "building_color": "#3aae63"
   },
   {
@@ -10125,7 +10129,7 @@
       "name": "Mercury City Tower",
       "description": "Mercury City Tower, completed in 2013 in Moscow, is a high-rise building noted for its golden glass façade, standing as one of the tallest in Europe.",
       "image": "ipfs://QmPeKzHqZXnj2ExCdYUifR3WfJyLY16FMGvYAe9Mccj12M/building%20card_4.gif",
-      "external_url": "https://farconic.xyz",
+      "external_url": "https://farconic.xyz/mercury-city-tower",
       "background_color": "F7F3EE",
       "attributes": [
         {
@@ -10145,13 +10149,17 @@
           "value": "2010s"
         },
         {
+          "trait_type": "Type of Building",
+          "value": "Skyscraper"
+        },
+        {
           "value": "Building"
         }
       ]
     },
     "id": "285",
-    "tokenURI": "ipfs://QmWwrLWq4pmV4rkbiSc2XpBSGHJhRe3FypoJVPL2TgzE1w",
-    "address": "0xFEdE11ae7e87842a8C4ec541Eb0F375B0B27a520",
+    "tokenURI": "ipfs://QmXUseNQn6FcGr5MA3zApkq1392eYNfXwdFroBGakF6do3",
+    "address": "0x54EDff3d2011474A5c55Df01248D9Dcd24acACdc",
     "building_color": "#fabd52"
   },
   {
@@ -11569,7 +11577,7 @@
       "name": "Kimmel Center",
       "description": "The Kimmel Center, opened in 2001 in Philadelphia, is a performing arts venue known for its vaulted glass roof providing dramatic city views.",
       "image": "ipfs://QmSmS3BgcRWpoPcUqpZLxkucZT318cqSeoCw9xxqGSDjpK/building%20card__8.gif",
-      "external_url": "https://farconic.xyz",
+      "external_url": "https://farconic.xyz/kimmel-center",
       "background_color": "F7F3EE",
       "attributes": [
         {
@@ -11593,13 +11601,17 @@
           "value": "2000s"
         },
         {
+          "trait_type": "Type of Building",
+          "value": "Performing Arts Center"
+        },
+        {
           "value": "Building"
         }
       ]
     },
     "id": "325",
-    "tokenURI": "ipfs://QmbbD7PnraYN8HUDTTRZbwpzCDVzGVkT57Pbxu6LeRfxVg",
-    "address": "0x0DD74aAC8Ef8E921082f7bE413B82d2C5E62DAE9",
+    "tokenURI": "ipfs://QmZv238Wk638vopF9eWQ98LEci2Agbx51JFghXz6CAdb19",
+    "address": "0x7604828388b6795e2ff536b867D121fdf46AaCcb",
     "building_color": "#1a75bb"
   },
   {

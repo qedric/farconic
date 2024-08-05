@@ -356,5 +356,127 @@
       "tokenURI": "ipfs://QmcJWwQLv1apZ8j1sRuqXmnBi1SVEP7m3sQKdEBqXHqi1o",
       "address": "0xE8c956EE316A2f11c7412A8dA96426fD611aA4a6",
       "building_color": "#e94081"
+    },
+    {
+      "metadata": {
+        "name": "Mercury City Tower",
+        "description": "Mercury City Tower, completed in 2013 in Moscow, is a high-rise building noted for its golden glass façade, standing as one of the tallest in Europe.",
+        "image": "ipfs://QmPeKzHqZXnj2ExCdYUifR3WfJyLY16FMGvYAe9Mccj12M/building%20card_4.gif",
+        "external_url": "https://farconic.xyz/mercury-city-tower",
+        "background_color": "F7F3EE",
+        "attributes": [
+          {
+            "trait_type": "City",
+            "value": "Moscow"
+          },
+          {
+            "trait_type": "Country",
+            "value": "Russia"
+          },
+          {
+            "trait_type": "Height (m)",
+            "value": "\"339\""
+          },
+          {
+            "trait_type": "Construction Era",
+            "value": "2010s"
+          },
+          {
+            "trait_type": "Type of Building",
+            "value": "Skyscraper"
+          },
+          {
+            "value": "Building"
+          }
+        ]
+      },
+      "id": "285",
+      "tokenURI": "ipfs://QmXUseNQn6FcGr5MA3zApkq1392eYNfXwdFroBGakF6do3",
+      "address": "0xfE5ED4cd65Cf4147bF0E545e00fF1beEADb5619D",
+      "building_color": "#fabd52"
+    },
+    {
+      "metadata": {
+        "name": "Kimmel Center",
+        "description": "The Kimmel Center, opened in 2001 in Philadelphia, is a performing arts venue known for its vaulted glass roof providing dramatic city views.",
+        "image": "ipfs://QmSmS3BgcRWpoPcUqpZLxkucZT318cqSeoCw9xxqGSDjpK/building%20card__8.gif",
+        "external_url": "https://farconic.xyz/kimmel-center",
+        "background_color": "F7F3EE",
+        "attributes": [
+          {
+            "trait_type": "City",
+            "value": "Philadelphia"
+          },
+          {
+            "trait_type": "State",
+            "value": "Pennsylvania"
+          },
+          {
+            "trait_type": "Country",
+            "value": "United States"
+          },
+          {
+            "trait_type": "Height (m)",
+            "value": "\"18\""
+          },
+          {
+            "trait_type": "Construction Era",
+            "value": "2000s"
+          },
+          {
+            "trait_type": "Type of Building",
+            "value": "Performing Arts Center"
+          },
+          {
+            "value": "Building"
+          }
+        ]
+      },
+      "id": "325",
+      "tokenURI": "ipfs://QmZv238Wk638vopF9eWQ98LEci2Agbx51JFghXz6CAdb19",
+      "address": "0x119f06846d0D404c87112E846451CFe6303fC38c",
+      "building_color": "#1a75bb"
+    },
+    {
+      "metadata": {
+        "name": "Hyatt Regency",
+        "description": "Hyatt Regency Dallas, completed in 1978, is known for its distinctive, cylindrical design and serves as a prominent hotel near the Reunion Tower.",
+        "image": "ipfs://QmTmFyQq6HqE9Msw1FXydnkhspcPX3xGk4Q45yZ3Kcec9v/building%20card_Dallas-01.gif",
+        "external_url": "https://farconic.xyz/hyatt-regency",
+        "background_color": "F7F3EE",
+        "attributes": [
+          {
+            "trait_type": "City",
+            "value": "Dallas"
+          },
+          {
+            "trait_type": "State",
+            "value": "Texas"
+          },
+          {
+            "trait_type": "Country",
+            "value": "United States"
+          },
+          {
+            "trait_type": "Height (m)",
+            "value": "\"105\""
+          },
+          {
+            "trait_type": "Construction Era",
+            "value": "1970s"
+          },
+          {
+            "trait_type": "Type of Building",
+            "value": "Hotel"
+          },
+          {
+            "value": "Building"
+          }
+        ]
+      },
+      "id": "111",
+      "tokenURI": "ipfs://Qmdh3x9tXzbAHhSuK8bUVArxbXf4eQCkJVUFpNMPR6hraY",
+      "address": "0xd46AE9fcc5E42D59318D9e7d11119F0Aa95F31FA",
+      "building_color": "#3aae63"
     }
 ]
